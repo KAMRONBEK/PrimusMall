@@ -33,8 +33,8 @@ const Header = ({
             onPress={() => {
               if (navigation) {
                 console.warn(navigation);
-                // navigation.goBack();
-                NavigationService.goBack();
+                navigation.goBack();
+                // NavigationService.goBack();
                 return;
               }
             }}>

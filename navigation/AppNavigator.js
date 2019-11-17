@@ -24,7 +24,7 @@ import Filter from '../screens/Filter';
 import ShopPage from '../screens/ShopPage';
 
 import colors from '../constants/colors';
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import {createDrawerNavigator} from 'react-navigation-drawer';
@@ -38,10 +38,13 @@ const MainStack = createStackNavigator(
         header: null,
       },
     },
-    Register: {
-      screen: Register,
+    ProductPage: {
+      screen: ProductPage,
       navigationOptions: {
         header: null,
+        // ({navigation}) => (
+        //   <Header backwardArrow rightRender navigation={navigation} />
+        // ),
       },
     },
   },
@@ -51,7 +54,7 @@ const MainStack = createStackNavigator(
 const TabNavigator = createMaterialTopTabNavigator(
   {
     Main: {
-      screen: MainStack,
+      screen: Main,
       navigationOptions: {
         tabBarIcon: () => {
           return <Icon name="home" size={25} />;
@@ -208,7 +211,7 @@ const ShopStack = createStackNavigator({
   },
 });
 
-const AuthNavigator = createStackNavigator(
+const SwitchNavigator = createSwitchNavigator(
   {
     Home: {
       screen: Home,
@@ -272,7 +275,7 @@ const DrawerNavigator = createDrawerNavigator(
   {
     all: createStackNavigator(
       {
-        AuthNavigator,
+        SwitchNavigator,
         Filter: {
           screen: FilterStack,
           navigationOptions: {
@@ -294,10 +297,19 @@ const DrawerNavigator = createDrawerNavigator(
   {
     drawerWidth: 300,
     contentComponent: DrawerContent,
+    navigationOptions: {
+      header: null,
+    },
   },
 );
 
+const AuthNavigator = createStackNavigator({
+  DrawerNavigator: {
+    screen: DrawerNavigator,
+  },
+});
+
 // const MainNavigator = createAppContainer(DrawerNavigator);
-const MainNavigator = createAppContainer(DrawerNavigator);
+const MainNavigator = createAppContainer(AuthNavigator);
 
 export default MainNavigator;
