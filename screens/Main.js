@@ -7,6 +7,7 @@ import {
   FlatList,
   View,
   Image,
+  LayoutAnimation,
 } from 'react-native';
 import Slider from '../components/Slider';
 import ProductCart from '../components/ProductCart';
@@ -76,6 +77,10 @@ export default function Main({navigation}) {
     'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
     'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
   ];
+
+  let [columnNum, setColumnNum] = useState(0);
+  let [isHorizontal, setIsHorizontal] = useState(true);
+
   return (
     <ScrollView>
       <TouchableWithoutFeedback onPress={() => navigate('Shop', {})}>
@@ -93,7 +98,23 @@ export default function Main({navigation}) {
           onPress={() => {
             console.warn('nope');
           }}>
-          <Text style={styles.link}>{strings.viewAll}</Text>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              LayoutAnimation.Types.easeInEaseOut;
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut,
+              );
+              setColumnNum(2);
+              console.columnNum;
+              setIsHorizontal(!isHorizontal);
+            }}>
+            <View
+              style={{
+                padding: 5,
+              }}>
+              <Text style={styles.link}>{strings.viewAll}</Text>
+            </View>
+          </TouchableWithoutFeedback>
         </TouchableWithoutFeedback>
       </View>
       <TouchableWithoutFeedback
@@ -102,12 +123,14 @@ export default function Main({navigation}) {
         }}>
         <FlatList
           keyExtractor={(e, index) => index.toString()}
-          horizontal
+          horizontal={isHorizontal}
           showsHorizontalScrollIndicator={false}
           data={ProductListData}
+          columnNum={columnNum}
           renderItem={({item}) => <ProductCart item={item} />}
           contentContainerStyle={{
-            paddingRight: 10,
+            // paddingRight: 10,
+            marginBottom: 10,
           }}
           style={{
             backgroundColor: colors.superLightGray,

@@ -7,6 +7,7 @@ import {tagImage} from '../assets/image/tag-new.png';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
 import BlurFooter from '../components/BlurFooter';
+import Header from '../components/Header';
 
 const ProductPage = ({navigation}) => {
   return (

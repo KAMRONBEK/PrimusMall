@@ -17,28 +17,37 @@ const TextInputField = ({
   textWeight,
 }) => {
   let [text, setText] = useState('');
+  let [borderColor, setBorderColor] = useState(colors.lightGray);
 
   return (
-    <View style={{borderColor: colors.red, marginTop: 10}}>
+    <View style={styles.container}>
       <Text style={styles.legend}>{legend}</Text>
       <View
         style={[
           styles.input,
           {
-            borderColor: !noBorder ? colors.red : colors.white,
+            borderColor: !noBorder ? borderColor : colors.white,
+            marginTop: notEntry ? 10 : 0,
           },
         ]}>
         <View style={styles.iconWrap}>
           <Icon
             name={iconName}
             size={15}
-            style={{paddingRight: 20, marginLeft: -5}}
+            style={{marginRight: 10, marginLeft: -5}}
           />
         </View>
         {!notEntry ? (
           <TextInput
+            numberOfLines={1}
             onChangeText={text => {
               setText(text);
+            }}
+            onFocus={() => {
+              setBorderColor(colors.red);
+            }}
+            onEndEditing={() => {
+              setBorderColor(colors.lightGray);
             }}
             value={text}
             placeholder={placeholder}
@@ -63,13 +72,18 @@ const TextInputField = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    // flex: 1,
+    borderColor: colors.red,
+    marginTop: 5,
+  },
   input: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     borderBottomWidth: 1,
     borderColor: 'black',
-    padding: 5,
+    paddingRight: 5,
   },
   iconWrap: {
     width: 50,
@@ -77,10 +91,12 @@ const styles = StyleSheet.create({
   },
   inputField: {
     width: Dimensions.get('window').width / 2,
-    fontSize: 20,
+    // flex: 1,
+    fontSize: 15,
   },
   legend: {
     opacity: 0.3,
+    marginBottom: -5,
   },
 });
 
