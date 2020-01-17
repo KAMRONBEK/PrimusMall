@@ -1,55 +1,49 @@
 import React from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
-import strings from '../localization/strings';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Header from '../components/Header';
 import Icon from '../constants/icons';
-import {TouchableWithoutFeedback} from 'react-native';
-import {NavigationEvents} from 'react-navigation';
+import strings from '../localization/strings';
 
 const Catalog = ({navigation}) => {
   const {navigate} = navigation;
+  let childs = navigation.getParam('childs');
+  let index = navigation.getParam('index');
+  let {name: title} = childs[index];
   return (
     <View style={styles.container}>
+      <Header
+        simpleTitle={title}
+        backwardArrow
+        rightRender
+        navigation={navigation}
+      />
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.top}>
-          <View style={[styles.category, styles.active]}>
-            <Text style={[styles.text, styles.activeText]}>
-              {strings.sneakers}
-            </Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.boots}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.slippons}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.gumshoes}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.slippons}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.gumshoes}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.slippons}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.gumshoes}</Text>
-          </View>
+          {childs.map((e, i) => {
+            return (
+              <View
+                key={e.id}
+                style={[styles.category, i === index && styles.active]}>
+                <Text style={[styles.text, i === index && styles.activeText]}>
+                  {e.name}
+                </Text>
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
       <View style={styles.selectorWrap}>
         <TouchableWithoutFeedback onPress={() => navigate('Filter')}>
           <View style={styles.selector}>
             <Icon name="controls" size={18} />
-            <Text
-              style={{
-                marginLeft: 10,
-              }}>
-              {strings.filter}
-            </Text>
+            <Text style={styles.ml10}>{strings.filter}</Text>
           </View>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback>
@@ -58,12 +52,7 @@ const Catalog = ({navigation}) => {
               <Ionicons name="ios-arrow-round-down" size={22} />
               <Ionicons name="ios-arrow-round-up" size={22} />
             </View>
-            <Text
-              style={{
-                marginLeft: 10,
-              }}>
-              {strings.byPopularity}
-            </Text>
+            <Text style={styles.ml10}>{strings.byPopularity}</Text>
           </View>
         </TouchableWithoutFeedback>
       </View>
@@ -73,6 +62,9 @@ const Catalog = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {},
+  ml10: {
+    marginLeft: 10,
+  },
   top: {
     paddingTop: 20,
     paddingBottom: 20,

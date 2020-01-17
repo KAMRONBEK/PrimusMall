@@ -17,11 +17,10 @@ import {
 
 const ProductCart = ({item}) => {
   let [favIcon, setFavIcon] = useState('heart-empty');
-
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        NavigationService.navigate('ProductPage');
+        NavigationService.navigate('ProductPage', {item});
       }}>
       <View
         style={[
@@ -45,7 +44,7 @@ const ProductCart = ({item}) => {
                   color: colors.white,
                 },
               ]}>
-              {item.brand}
+              {item.brand_id}
             </Text>
           </View>
           <TouchableWithoutFeedback
@@ -64,7 +63,7 @@ const ProductCart = ({item}) => {
               width: (Dimensions.get('window').width - 30) / 2 - 20,
             }}
             source={{
-              uri: item.image,
+              uri: item.preview_image,
             }}
           />
         </View>
@@ -76,8 +75,8 @@ const ProductCart = ({item}) => {
           <View style={styles.priceWrap}>
             <View style={styles.prices}>
               <Text style={styles.prevPrice}>
-                {item.prevPrice}
-                {item.priceType}
+                {item.price && item.price.old_price_value}
+                {item.price && item.price.preview_text}
               </Text>
               <Text
                 style={[
@@ -86,8 +85,8 @@ const ProductCart = ({item}) => {
                     color: colors.red,
                   },
                 ]}>
-                {item.price}
-                {item.priceType}
+                {item.price.price_value}
+                {item.price.preview_text}
               </Text>
             </View>
             <Icon

@@ -1,6 +1,13 @@
 import React, {useState} from 'react';
 
-import {TextInput, Text, StyleSheet, View, Dimensions} from 'react-native';
+import {
+  TextInput,
+  Text,
+  StyleSheet,
+  View,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import colors from '../constants/colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from '../constants/icons';
@@ -15,8 +22,9 @@ const TextInputField = ({
   textValue,
   noBorder,
   textWeight,
+  value,
+  onChangeText = () => {},
 }) => {
-  let [text, setText] = useState('');
   let [borderColor, setBorderColor] = useState(colors.lightGray);
 
   return (
@@ -41,7 +49,7 @@ const TextInputField = ({
           <TextInput
             numberOfLines={1}
             onChangeText={text => {
-              setText(text);
+              onChangeText(text);
             }}
             onFocus={() => {
               setBorderColor(colors.red);
@@ -49,7 +57,7 @@ const TextInputField = ({
             onEndEditing={() => {
               setBorderColor(colors.lightGray);
             }}
-            value={text}
+            value={value}
             placeholder={placeholder}
             style={[styles.inputField]}
             secureTextEntry={secureTextEntry}
@@ -62,10 +70,13 @@ const TextInputField = ({
             {textValue}
           </Text>
         )}
-        <MaterialCommunityIcons
-          name={secondaryIconName}
-          size={18}
-          style={{opacity: 0.5}}></MaterialCommunityIcons>
+        <TouchableOpacity onPress={() => onChangeText(null)}>
+          <MaterialCommunityIcons
+            name={secondaryIconName}
+            size={18}
+            style={{opacity: 0.5}}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

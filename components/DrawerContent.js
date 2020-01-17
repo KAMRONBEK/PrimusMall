@@ -105,7 +105,6 @@ const DrawerContent = ({navigation}) => {
 
 const styles = StyleSheet.create({
   top: {
-    // width: Dimensions.get("window").width - 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
