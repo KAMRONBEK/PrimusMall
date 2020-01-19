@@ -1,15 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Image, Dimensions, Text} from 'react-native';
-import {ScrollView} from 'react-native';
-
-// tag image
-import {tagImage} from '../assets/image/tag-new.png';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import BlurFooter from '../components/BlurFooter';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
-import BlurFooter from '../components/BlurFooter';
-import Header from '../components/Header';
 
-const ProductPage = ({navigation}) => {
+
+const ProductPage = ({ navigation }) => {
   return (
     <React.Fragment>
       <ScrollView>
@@ -39,6 +35,7 @@ const ProductPage = ({navigation}) => {
               resizeMode={'cover'}
               style={{
                 height: 300,
+                width: Dimensions.get('window').width - 60,
               }}
             />
           </View>
@@ -58,7 +55,7 @@ const ProductPage = ({navigation}) => {
               }}>
               Артикул: 2655kjhdfi
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
               <Text
                 style={[
                   styles.price,

@@ -18,7 +18,6 @@ function navigate(routeName, params) {
 }
 
 function goBack() {
-  _navigator.dispatch(NavigationActions.back());
   console.warn(_navigator);
 }
 

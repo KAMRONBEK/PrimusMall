@@ -28,29 +28,29 @@ import Shop from '../screens/Shop';
 import ShopPage from '../screens/ShopPage';
 import Categories from '../screens/Categories';
 
-const MainHeader = createStackNavigator(
-  {
-    Main: {
-      screen: Main,
-    },
-  },
-  {
-    defaultNavigationOptions: {
-      header: ({ navigation }) => (
-        <Header hasDrawer rightRender navigation={navigation} />
-      ),
-    },
-  },
-);
+// const MainHeader = createStackNavigator(
+//   {
+//     Main: {
+//       screen: Main,
+//     },
+//   },
+//   {
+//     defaultNavigationOptions: {
+//       header: ({ navigation }) => (
+//         <Header hasDrawer rightRender navigation={navigation} />
+//       ),
+//     },
+//   },
+// );
 
-const MainStack = createStackNavigator({
-  ProductPage: {
-    screen: ProductPage,
-    navigationOptions: {
-      header: null,
-    },
-  },
-});
+// const MainStack = createStackNavigator({
+//   ProductPage: {
+//     screen: ProductPage,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+// });
 
 const CheckoutStack = createStackNavigator({
   Checkout: {
@@ -117,28 +117,28 @@ const BasketStack = createStackNavigator(
   },
 );
 
-const FilterStack = createStackNavigator(
-  {
-    Filter: {
-      screen: Filter,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {
-    headerMode: 'none',
-    mode: 'modal',
-    transparentCard: true,
-    cardStyle: {
-      backgroundColor: 'transparent',
-      opacity: 1,
-    },
-    navigationOptions: {
-      mode: 'modal',
-    },
-  },
-);
+// const FilterStack = createStackNavigator(
+//   {
+//     Filter: {
+//       screen: Filter,
+//       navigationOptions: {
+//         header: null,
+//       },
+//     },
+//   },
+//   {
+//     headerMode: 'none',
+//     mode: 'modal',
+//     transparentCard: true,
+//     cardStyle: {
+//       backgroundColor: 'transparent',
+//       opacity: 1,
+//     },
+//     navigationOptions: {
+//       mode: 'modal',
+//     },
+//   },
+// );
 
 const ShopStack = createStackNavigator({
   Shop: {
@@ -153,7 +153,7 @@ const ShopStack = createStackNavigator({
     screen: ShopPage,
     navigationOptions: {
       header: ({ navigation }) => (
-        <Header hasDrawer rightRender navigation={navigation} />
+        <Header backwardArrow rightRender navigation={navigation} />
       ),
     },
   },
@@ -172,38 +172,38 @@ const ProfileStack = createStackNavigator(
   },
 );
 
-const RestOfStackNavigator = createStackNavigator({
-  Main: {
-    screen: MainStack,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  Checkout: {
-    screen: CheckoutStack,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  BasketStack: {
-    screen: BasketStack,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  Shop: {
-    screen: ShopStack,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  Filter: {
-    screen: FilterStack,
-    navigationOptions: {
-      header: null,
-    },
-  },
-});
+// const RestOfStackNavigator = createStackNavigator({
+//   Main: {
+//     screen: MainStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   Checkout: {
+//     screen: CheckoutStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   BasketStack: {
+//     screen: BasketStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   Shop: {
+//     screen: ShopStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   Filter: {
+//     screen: FilterStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+// });
 
 let CategoriesStack = createStackNavigator(
   {
@@ -216,10 +216,33 @@ let CategoriesStack = createStackNavigator(
       },
     },
     Catalog,
-    FilterStack,
+    Filter,
   },
-  { defaultNavigationOptions: { header: null } },
+  {
+    mode: 'modal',
+    transparentCard: true,
+    cardStyle: {
+      backgroundColor: 'transparent',
+      opacity: 1,
+    },
+    navigationOptions: {
+      mode: 'modal',
+    },
+    defaultNavigationOptions: {
+      header: null
+    }
+  },
 );
+
+let FavoritesStack = createStackNavigator({
+  Favorite, ProductPage
+}, {
+  defaultNavigationOptions: {
+    header: ({ navigation }) => (
+      <Header hasDrawer rightRender navigation={navigation} />
+    ),
+  }
+})
 
 const TabNavigator = createMaterialTopTabNavigator(
   {
@@ -240,7 +263,7 @@ const TabNavigator = createMaterialTopTabNavigator(
       },
     },
     Favorite: {
-      screen: Favorite,
+      screen: FavoritesStack,
       navigationOptions: {
         tabBarIcon: () => {
           return <Icon name="heart-empty" size={25} />;

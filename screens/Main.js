@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer} from 'react';
+import React, { useEffect, useReducer } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-navigation';
+import { SafeAreaView } from 'react-navigation';
 import api from '../api/api';
 import Header from '../components/Header';
 import ProductCart from '../components/ProductCart';
@@ -24,19 +24,19 @@ const SliderImageList = [
 
 let SET = 'SET';
 
-export default function Main({navigation}) {
-  let reducer = (state, {type, key, value}) => {
+export default function Main({ navigation }) {
+  let reducer = (state, { type, key, value }) => {
     switch (type) {
       case SET:
-        return {...state, [key]: value};
+        return { ...state, [key]: value };
       default:
         return state;
     }
   };
-  const [state, setState] = useReducer(reducer, {loading: true});
-  const {navigate} = navigation;
+  const [state, setState] = useReducer(reducer, { loading: true });
+  const { navigate } = navigation;
   let updateState = (key, value) => {
-    setState({type: SET, value, key});
+    setState({ type: SET, value, key });
   };
   useEffect(() => {
     api.main
@@ -44,7 +44,7 @@ export default function Main({navigation}) {
       .then(res => {
         updateState('products', res.data.data);
       })
-      .catch(({response: res}) => {
+      .catch(({ response: res }) => {
         alert(res.data.error);
       })
       .finally(() => {
@@ -63,40 +63,41 @@ export default function Main({navigation}) {
     <SafeAreaView style={styles.safeArea}>
       <Header hasDrawer rightRender navigation={navigation} />
       <Slider images={SliderImageList} flex animated />
-      <View>
+      <View
+        style={[
+          styles.titleWrap,
+          {
+            backgroundColor: colors.superLightGray,
+          },
+        ]}>
+        <Text style={styles.title}>{strings.newItems}</Text>
         <View
-          style={[
-            styles.titleWrap,
-            {
-              backgroundColor: colors.superLightGray,
-            },
-          ]}>
-          <Text style={styles.title}>{strings.newItems}</Text>
-          <View
-            style={{
-              padding: 5,
-            }}>
-            <Text style={styles.link}>{strings.viewAll}</Text>
-          </View>
+          style={{
+            padding: 5,
+          }}>
+          <Text style={styles.link}>{strings.viewAll}</Text>
         </View>
+      </View>
+      <View style={{ flex: 1 }}>
         <FlatList
           keyExtractor={(e, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           data={state.products}
           horizontal={true}
-          renderItem={({item}) => <ProductCart item={item} />}
+          renderItem={({ item }) => <ProductCart item={item} />}
           contentContainerStyle={styles.flatList}
           style={{
             backgroundColor: colors.superLightGray,
           }}
         />
       </View>
+
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {backgroundColor: colors.superLightGray, flex: 1},
+  safeArea: { backgroundColor: colors.superLightGray, flex: 1 },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -107,8 +108,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 0,
+    paddingTop: 10,
+    paddingHorizontal: 10
   },
   title: {
     fontSize: 20,

@@ -1,9 +1,10 @@
 'use strict';
 
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import colors from '../constants/colors';
 import Icon from '../constants/icons';
 import NavigationService from '../services/NavigationServices';
+import { toggleFavorite } from '../redux/actions'
 
 import {
   Dimensions,
@@ -14,13 +15,18 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { connect } from 'react-redux';
 
-const ProductCart = ({item}) => {
-  let [favIcon, setFavIcon] = useState('heart-empty');
+const ProductCart = ({ item, index, favorite, dispatch }) => {
+  // let [favIcon, setFavIcon] = useState('heart-empty');
+  let favIcon = 'heart-empty'
+  if (favorite[item.id]) {
+    favIcon = "heart"
+  }
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        NavigationService.navigate('ProductPage', {item});
+        NavigationService.navigate('ProductPage', { item });
       }}>
       <View
         style={[
@@ -49,9 +55,7 @@ const ProductCart = ({item}) => {
           </View>
           <TouchableWithoutFeedback
             onPress={() => {
-              let active = setFavIcon(
-                favIcon == 'heart' ? 'heart-empty' : 'heart',
-              );
+              dispatch(toggleFavorite(item))
             }}>
             <Icon style={styles.favorite} name={favIcon} size={25} />
           </TouchableWithoutFeedback>
@@ -59,7 +63,7 @@ const ProductCart = ({item}) => {
         <View style={styles.image}>
           <Image
             style={{
-              height: 100,
+              height: 80,
               width: (Dimensions.get('window').width - 30) / 2 - 20,
             }}
             source={{
@@ -107,8 +111,8 @@ const styles = StyleSheet.create({
   container: {
     width: (Dimensions.get('window').width - 30) / 2,
     marginLeft: 10,
-    marginTop: 20,
-    paddingBottom: 20,
+    marginTop: 10,
+    paddingBottom: 0,
     borderWidth: 1,
     borderColor: '#dedede',
   },
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
   },
   bottom: {},
   brand: {
-    marginTop: 20,
+    marginTop: 10,
     marginRight: 10,
     height: 25,
     justifyContent: 'center',
@@ -142,7 +146,6 @@ const styles = StyleSheet.create({
   },
   titleWrap: {
     marginLeft: 15,
-    marginBottom: 20,
   },
   modelName: {
     fontSize: 16,
@@ -173,4 +176,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductCart;
+const mapStateToProps = ({ favorite, cart }) => ({
+  favorite, cart
+})
+
+
+
+export default connect(mapStateToProps)(ProductCart);

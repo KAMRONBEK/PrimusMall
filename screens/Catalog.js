@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,58 +10,66 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../components/Header';
 import Icon from '../constants/icons';
 import strings from '../localization/strings';
+import colors from '../constants/colors';
 
-const Catalog = ({navigation}) => {
-  const {navigate} = navigation;
+const Catalog = ({ navigation }) => {
+  const { navigate } = navigation;
   let childs = navigation.getParam('childs');
   let index = navigation.getParam('index');
-  let {name: title} = childs[index];
+  let item = navigation.getParam('item');
+  let { name: title } = childs[index];
+  const [selectedIndex, setselectedIndex] = useState(index)
   return (
     <View style={styles.container}>
-      <Header
-        simpleTitle={title}
-        backwardArrow
-        rightRender
-        navigation={navigation}
-      />
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.top}>
-          {childs.map((e, i) => {
-            return (
-              <View
-                key={e.id}
-                style={[styles.category, i === index && styles.active]}>
-                <Text style={[styles.text, i === index && styles.activeText]}>
-                  {e.name}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
-      <View style={styles.selectorWrap}>
-        <TouchableWithoutFeedback onPress={() => navigate('Filter')}>
-          <View style={styles.selector}>
-            <Icon name="controls" size={18} />
-            <Text style={styles.ml10}>{strings.filter}</Text>
+      <View>
+        <Header
+          simpleTitle={title}
+          backwardArrow
+          rightRender
+          navigation={navigation}
+        />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.top}>
+            {childs.map((e, i) => {
+              return (
+                <TouchableWithoutFeedback onPress={() => setselectedIndex(i)}>
+                  <View
+                    key={e.id}
+                    style={[styles.category, i === selectedIndex && styles.active]}>
+                    <Text style={[styles.text, i === selectedIndex && styles.activeText]}>
+                      {e.name}
+                    </Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              );
+            })}
           </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback>
-          <View style={styles.selector}>
-            <View style={styles.icons}>
-              <Ionicons name="ios-arrow-round-down" size={22} />
-              <Ionicons name="ios-arrow-round-up" size={22} />
+        </ScrollView>
+        <View style={styles.selectorWrap}>
+          <TouchableWithoutFeedback onPress={() => navigate('Filter', { item })}>
+            <View style={styles.selector}>
+              <Icon name="controls" size={18} />
+              <Text style={styles.ml10}>{strings.filter}</Text>
             </View>
-            <Text style={styles.ml10}>{strings.byPopularity}</Text>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback>
+            <View style={styles.selector}>
+              <View style={styles.icons}>
+                <Ionicons name="ios-arrow-round-down" size={22} />
+                <Ionicons name="ios-arrow-round-up" size={22} />
+              </View>
+              <Text style={styles.ml10}>{strings.byPopularity}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </View>
+      <View style={styles.container} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: { backgroundColor: colors.superLightGray, flex: 1 },
   ml10: {
     marginLeft: 10,
   },
