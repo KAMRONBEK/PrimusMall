@@ -1,64 +1,17 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {ScrollView, FlatList} from 'react-native';
 import SingleProductInBasket from '../components/SingleProductInBasket';
 import colors from '../constants/colors';
 import BlurFooter from '../components/BlurFooter';
 import {NavigationEvents} from 'react-navigation';
 import {connect} from 'react-redux';
+import strings from '../localization/strings';
 
 const Basket = ({navigation, style, cart}) => {
   let {navigate} = navigation;
-  // const ProductListInBasket = [
-  //   {
-  //     image:
-  //       'https://cdn.shopify.com/s/files/1/0347/5017/products/aj1_top3.png?v=1494457361',
-  //     nameOfProduct: 'TERRA PRO-DUNK',
-  //     type: 'Кроссовки',
-  //     articleNumber: '689fkjri569',
-  //     size: '48',
-  //     color: '#EC8151',
-  //     price: '200000',
-  //     currency: ' сум',
-  //     amount: 1,
-  //   },
-  //   {
-  //     image:
-  //       'https://cdn.shopify.com/s/files/1/0347/5017/products/aj1_top3.png?v=1494457361',
-  //     nameOfProduct: 'TERRA PRO-DUNK',
-  //     type: 'Кроссовки',
-  //     articleNumber: '689fkjri569',
-  //     size: '48',
-  //     color: '#EC8151',
-  //     price: '200000',
-  //     currency: ' сум',
-  //     amount: 1,
-  //   },
-  //   {
-  //     image:
-  //       'https://cdn.shopify.com/s/files/1/0347/5017/products/aj1_top3.png?v=1494457361',
-  //     nameOfProduct: 'TERRA PRO-DUNK',
-  //     type: 'Кроссовки',
-  //     articleNumber: '689fkjri569',
-  //     size: '48',
-  //     color: '#EC8151',
-  //     price: '200000',
-  //     currency: ' сум',
-  //     amount: 1,
-  //   },
-  //   {
-  //     image:
-  //       'https://cdn.shopify.com/s/files/1/0347/5017/products/aj1_top3.png?v=1494457361',
-  //     nameOfProduct: 'TERRA PRO-DUNK',
-  //     type: 'Кроссовки',
-  //     articleNumber: '689fkjri569',
-  //     size: '48',
-  //     color: '#EC8151',
-  //     price: '200000',
-  //     currency: ' сум',
-  //     amount: 1,
-  //   },
-  // ];
+
+  console.warn(cart);
 
   return (
     <React.Fragment>
@@ -70,16 +23,21 @@ const Basket = ({navigation, style, cart}) => {
               backgroundColor: colors.superLightGray,
             },
           ]}>
-          {cart.items != null ? (
+          {cart.items.length === 0 ? (
+            <View
+              style={{
+                backgroundColor: colors.white,
+                flex: 1,
+                alignItems: 'center',
+              }}>
+              <Text style={{paddingVertical: 20}}>{strings.noItems}</Text>
+            </View>
+          ) : (
             <FlatList
               keyExtractor={(e, index) => index.toString()}
               data={cart.items}
               renderItem={itemProps => <SingleProductInBasket {...itemProps} />}
             />
-          ) : (
-            <View>
-              <Text>No item</Text>
-            </View>
           )}
         </View>
       </ScrollView>
