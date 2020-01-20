@@ -1,5 +1,12 @@
+
+// USER
 export const USER_LOADED = 'USER_LAODED';
+export const USER_LOGGED_IN = 'USER_LOGGED_IN'
+
+// FAVORITES
 export const TOGGLE_ITEM = 'TOGGLE_ITEM'
+
+// CART
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
 export const EMPTY_CART = 'EMPTY_CART'
