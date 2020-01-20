@@ -235,7 +235,7 @@ let CategoriesStack = createStackNavigator(
 );
 
 let FavoritesStack = createStackNavigator({
-  Favorite, ProductPage
+  Favorite,
 }, {
   defaultNavigationOptions: {
     header: ({ navigation }) => (
@@ -321,7 +321,8 @@ const DrawerNavigator = createDrawerNavigator(
       {
         TabNavigator,
         ProductStack,
-        ShopStack
+        ShopStack,
+        BasketStack
       },
       {
         headerMode: 'none',

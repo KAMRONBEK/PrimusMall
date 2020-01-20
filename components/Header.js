@@ -1,13 +1,14 @@
 'use strict';
 
 import React from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {withNavigation} from 'react-navigation';
+import { withNavigation } from 'react-navigation';
 import colors from '../constants/colors';
 import Icon from '../constants/icons';
 import NavigationService from '../services/NavigationServices';
+import { connect } from 'react-redux';
 
 const Header = ({
   hasDrawer,
@@ -16,6 +17,7 @@ const Header = ({
   dropdownTitle,
   rightRender,
   navigation,
+  cart
 }) => {
   const renderLeft = () => {
     return (
@@ -27,20 +29,20 @@ const Header = ({
             </View>
           </TouchableWithoutFeedback>
         ) : (
-          backwardArrow && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                if (navigation) {
-                  navigation.goBack();
-                  return;
-                }
-              }}>
-              <View>
-                <Icon name="arrow-back" size={22} />
-              </View>
-            </TouchableWithoutFeedback>
-          )
-        )}
+            backwardArrow && (
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  if (navigation) {
+                    navigation.goBack();
+                    return;
+                  }
+                }}>
+                <View>
+                  <Icon name="arrow-back" size={22} />
+                </View>
+              </TouchableWithoutFeedback>
+            )
+          )}
       </View>
     );
   };
@@ -71,8 +73,8 @@ const Header = ({
             {simpleTitle}
           </Text>
         ) : (
-          <React.Fragment />
-        )}
+              <React.Fragment />
+            )}
       </View>
     );
   };
@@ -88,7 +90,7 @@ const Header = ({
               }}>
               <View style={styles.bagIcon}>
                 <Icon name="bag" size={25} />
-                <View
+                {cart.items && cart.items.length > 0 && <View
                   style={[
                     styles.notification,
                     {
@@ -102,9 +104,10 @@ const Header = ({
                         color: colors.white,
                       },
                     ]}>
-                    4
+                    {cart.items.length}
                   </Text>
                 </View>
+                }
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -173,4 +176,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withNavigation(Header);
+const mapStateToProps = ({ cart }) => ({
+  cart
+})
+
+
+export default connect(mapStateToProps)(withNavigation(Header));

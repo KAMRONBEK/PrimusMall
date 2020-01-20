@@ -5,7 +5,7 @@ export const url = 'https://pmall.uz/api';
 export default {
   auth: {
     login: credentials =>
-      axios.post(`${url}/auth/login`, credentials).then(res => res),
+      axios.post(`${url}/auth/signin`, credentials).then(res => res),
     register: data => axios.post(`${url}/auth/signup`, data).then(res => res),
   },
   main: {
@@ -17,5 +17,6 @@ export default {
     getStores: () => axios.get(`${url}/stores`).then(res => res),
     getStore: id => axios.get(`${url}/store/${id}`).then(res => res),
     getStoreProducts: id => axios.get(`${url}/store/${id}/products`).then(res => res),
+    getProduct: id => axios.get(`${url}/product/${id}`).then(res => res),
   },
 };

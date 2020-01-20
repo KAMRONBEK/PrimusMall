@@ -45,7 +45,7 @@ export default function Main({ navigation }) {
         updateState('products', res.data.data);
       })
       .catch(({ response: res }) => {
-        alert(res.data.error);
+        console.warn(res);
       })
       .finally(() => {
         updateState('loading', false);
@@ -78,7 +78,7 @@ export default function Main({ navigation }) {
           <Text style={styles.link}>{strings.viewAll}</Text>
         </View>
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1.2 }}>
         <FlatList
           keyExtractor={(e, index) => index.toString()}
           showsHorizontalScrollIndicator={false}

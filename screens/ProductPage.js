@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import BlurFooter from '../components/BlurFooter';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
+import Carousel from 'react-native-snap-carousel';
+import requests from '../api/api'
+import { connect } from 'react-redux';
+import { addToCart } from '../redux/actions';
 
 
-const ProductPage = ({ navigation }) => {
+const ProductPage = ({ navigation, dispatch, favorite }) => {
+  let data = navigation.getParam('item')
+  const [item, setItem] = useState(data)
+  useEffect(() => {
+    requests.main.getProduct(data.id).then((res) => {
+      setItem(res.data.data)
+    }).catch(({ response }) => console.warn(response));
+  }, [])
   return (
     <React.Fragment>
       <ScrollView>
@@ -16,44 +27,51 @@ const ProductPage = ({ navigation }) => {
               backgroundColor: colors.superLightGray,
             },
           ]}>
-          <View
+          {item.images && <View
             style={[
-              styles.banner,
               {
                 backgroundColor: colors.white,
               },
             ]}>
+            <Carousel
+              loop={true}
+              containerCustomStyle={{ overflow: 'visible' }}
+              layout={'stack'}
+              sliderWidth={Dimensions.get('window').width - 60}
+              itemWidth={Dimensions.get('window').width - 60}
+              data={item.images}
+              renderItem={({ item: element }) => <Image
+                source={{
+                  uri:
+                    element.image,
+                }}
+                resizeMode={'cover'}
+                style={{
+                  height: 300,
+                  width: Dimensions.get('window').width - 60,
+                }}
+              />}
+              layoutCardOffset={`18`} />
             <View style={styles.newTag}>
               <View style={styles.whiteDot} />
               <Text style={styles.tagText}>New!</Text>
             </View>
-            <Image
-              source={{
-                uri:
-                  'http://www.af-usa.org/seeimg/big/4/43369_jordan-sneaker-wallpaper.jpg',
-              }}
-              resizeMode={'cover'}
-              style={{
-                height: 300,
-                width: Dimensions.get('window').width - 60,
-              }}
-            />
-          </View>
+          </View>}
           <View style={styles.info}>
-            <Text style={styles.name}>TERRA PRO-DUNK </Text>
+            <Text style={styles.name}>{item.name}</Text>
             <Text
               style={{
                 fontSize: 15,
                 marginTop: 12,
               }}>
-              Кроссовки
+              {item.category_name}
             </Text>
             <Text
               style={{
                 fontSize: 15,
                 marginTop: 12,
               }}>
-              Артикул: 2655kjhdfi
+              Артикул: {item.code}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
               <Text
@@ -63,7 +81,7 @@ const ProductPage = ({ navigation }) => {
                     color: colors.red,
                   },
                 ]}>
-                200 000
+                {item.price && item.price.price_value}
               </Text>
               <Text
                 style={[
@@ -127,7 +145,7 @@ const ProductPage = ({ navigation }) => {
                   marginBottom: 10,
                 },
               ]}>
-              {strings.nikeDescription}
+              {item.description}
             </Text>
             <Text style={styles.shopTitle}>{strings.address}</Text>
             <Text style={styles.paragraph}>
@@ -140,7 +158,9 @@ const ProductPage = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      <BlurFooter favIcon="heart-empty" buttonText="В корзину" />
+      <BlurFooter favIcon={favorite[item.id] ? "heart" : "heart-empty"} onPress={() => {
+        dispatch(addToCart(item))
+      }} buttonText="В корзину" />
     </React.Fragment>
   );
 };
@@ -160,8 +180,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    marginBottom: 5,
-    marginRight: 20,
+    position: 'absolute',
+    transform: [{ translateY: -100 }]
   },
   whiteDot: {
     backgroundColor: 'white',
@@ -237,4 +257,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductPage;
+const mapStateToProps = ({ favorite }) => ({
+  favorite
+})
+
+
+
+export default connect(mapStateToProps)(ProductPage);

@@ -73,7 +73,7 @@ const ProductCart = ({ item, index, favorite, dispatch }) => {
         </View>
         <View style={styles.bottom}>
           <View style={styles.titleWrap}>
-            <Text style={styles.modelName}>{item.name}</Text>
+            <Text numberOfLines={3} style={styles.modelName}>{item.name}</Text>
             <Text style={styles.type}>{item.brand}</Text>
           </View>
           <View style={styles.priceWrap}>

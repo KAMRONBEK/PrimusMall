@@ -43,8 +43,8 @@ const BlurFooter = ({
 						</View>
 					</View>
 				) : (
-					<Icon name={favIcon} size={25} />
-				)}
+						<Icon name={favIcon} size={25} />
+					)}
 			</View>
 			<View style={styles.right}>
 				<TouchableWithoutFeedback onPress={onPress}>
