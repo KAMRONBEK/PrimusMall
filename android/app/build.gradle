@@ -149,7 +149,7 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-          release {
+        release {
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
                 storeFile file(MYAPP_UPLOAD_STORE_FILE)
                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
@@ -197,7 +197,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

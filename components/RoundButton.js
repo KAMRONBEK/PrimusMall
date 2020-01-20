@@ -1,15 +1,15 @@
 'use strict';
 
 import React from 'react';
-import colors from '../constants/colors';
-
 import {
-  View,
-  Text,
-  TouchableWithoutFeedback,
+  ActivityIndicator,
   Dimensions,
   StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
+
 const RoundButton = ({
   text,
   isFilled,
@@ -18,6 +18,7 @@ const RoundButton = ({
   textColor,
   onPress,
   bold,
+  loading,
 }) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -30,16 +31,20 @@ const RoundButton = ({
             borderWidth: isFilled ? 0 : 2,
           },
         ]}>
-        <Text
-          style={[
-            styles.buttonText,
-            {
-              color: textColor,
-              fontWeight: bold ? '600' : '400',
-            },
-          ]}>
-          {text}
-        </Text>
+        {loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <Text
+            style={[
+              styles.buttonText,
+              {
+                color: textColor,
+                fontWeight: bold ? '600' : '400',
+              },
+            ]}>
+            {text}
+          </Text>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );

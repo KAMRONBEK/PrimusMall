@@ -1,91 +1,68 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useReducer } from 'react';
 import {
+  ActivityIndicator,
+  FlatList,
   StyleSheet,
   Text,
-  ScrollView,
-  Dimensions,
-  FlatList,
   View,
-  Image,
-  LayoutAnimation,
 } from 'react-native';
-import Slider from '../components/Slider';
+import { SafeAreaView } from 'react-navigation';
+import api from '../api/api';
+import Header from '../components/Header';
 import ProductCart from '../components/ProductCart';
+import Slider from '../components/Slider';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
 
-import {TouchableWithoutFeedback} from 'react-native';
+const SliderImageList = [
+  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+];
 
-export default function Main({navigation}) {
-  let [name, setName] = useState('Product list');
+let SET = 'SET';
 
-  const {navigate} = navigation;
-  const ProductListData = [
-    {
-      brand: 'NIKE',
-      image:
-        'https://wallsheaven.com/photos/A11859449/400/pair-of-red-sneakers-on-a-white-background.jpg',
-      name: 'TERRA DUNK ',
-      type: 'Кроссовки',
-      priceType: ' сум',
-      prevPrice: '350 000',
-      price: '200 000',
-    },
-    {
-      brand: 'NIKE UNK',
-      image:
-        'https://hdwallpaperim.com/wp-content/uploads/2017/09/16/56586-shoes-748x445.jpg',
-      name: 'TERRA PRO-DUNK ',
-      type: 'Кроссовки',
-      priceType: ' сум',
-      prevPrice: '350000',
-      price: '200000',
-    },
-    {
-      brand: 'NiKe',
-      image: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-      name: 'TERRA PRO-DUNK ',
-      type: 'Кроссовки',
-      priceType: ' сум',
-      prevPrice: '350000',
-      price: '200000',
-    },
-    {
-      brand: 'Nive',
-      image: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-      name: 'TERRA PRO-DUNK ',
-      type: 'Кроссовки',
-      priceType: ' сум',
-      prevPrice: '350000',
-      price: '200000',
-    },
-    {
-      brand: 'Nive',
-      image: 'https://facebook.github.io/react-native/docs/assets/favicon.png',
-      name: 'TERRA PRO-DUNK ',
-      type: 'Кроссовки',
-      priceType: ' сум',
-      prevPrice: '350 000',
-      price: '200 000',
-    },
-  ];
-
-  const SliderImageList = [
-    'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-    'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-    'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-    'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-    'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-  ];
-
-  let [columnNum, setColumnNum] = useState(0);
-  let [isHorizontal, setIsHorizontal] = useState(true);
+export default function Main({ navigation }) {
+  let reducer = (state, { type, key, value }) => {
+    switch (type) {
+      case SET:
+        return { ...state, [key]: value };
+      default:
+        return state;
+    }
+  };
+  const [state, setState] = useReducer(reducer, { loading: true });
+  const { navigate } = navigation;
+  let updateState = (key, value) => {
+    setState({ type: SET, value, key });
+  };
+  useEffect(() => {
+    api.main
+      .getProducts()
+      .then(res => {
+        updateState('products', res.data.data);
+      })
+      .catch(({ response: res }) => {
+        console.warn(res);
+      })
+      .finally(() => {
+        updateState('loading', false);
+      });
+  }, []);
+  if (state.loading) {
+    return (
+      <View style={styles.centerdContainer}>
+        <ActivityIndicator size={'large'} />
+      </View>
+    );
+  }
 
   return (
-    <ScrollView>
-      <TouchableWithoutFeedback onPress={() => navigate('Shop', {})}>
-        <Slider images={SliderImageList} animated />
-      </TouchableWithoutFeedback>
+    <SafeAreaView style={styles.safeArea}>
+      <Header hasDrawer rightRender navigation={navigation} />
+      <Slider images={SliderImageList} flex animated />
       <View
         style={[
           styles.titleWrap,
@@ -94,54 +71,33 @@ export default function Main({navigation}) {
           },
         ]}>
         <Text style={styles.title}>{strings.newItems}</Text>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            console.warn('nope');
+        <View
+          style={{
+            padding: 5,
           }}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              LayoutAnimation.Types.easeInEaseOut;
-              LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut,
-              );
-              setColumnNum(2);
-              console.columnNum;
-              setIsHorizontal(!isHorizontal);
-            }}>
-            <View
-              style={{
-                padding: 5,
-              }}>
-              <Text style={styles.link}>{strings.viewAll}</Text>
-            </View>
-          </TouchableWithoutFeedback>
-        </TouchableWithoutFeedback>
+          <Text style={styles.link}>{strings.viewAll}</Text>
+        </View>
       </View>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigate('ProductPage', {});
-        }}>
+      <View style={{ flex: 1.2 }}>
         <FlatList
           keyExtractor={(e, index) => index.toString()}
-          horizontal={isHorizontal}
           showsHorizontalScrollIndicator={false}
-          data={ProductListData}
-          columnNum={columnNum}
-          renderItem={({item}) => <ProductCart item={item} />}
-          contentContainerStyle={{
-            // paddingRight: 10,
-            marginBottom: 10,
-          }}
+          data={state.products}
+          horizontal={true}
+          renderItem={({ item }) => <ProductCart item={item} />}
+          contentContainerStyle={styles.flatList}
           style={{
             backgroundColor: colors.superLightGray,
           }}
         />
-      </TouchableWithoutFeedback>
-    </ScrollView>
+      </View>
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { backgroundColor: colors.superLightGray, flex: 1 },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -152,13 +108,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 0,
+    paddingTop: 10,
+    paddingHorizontal: 10
   },
   title: {
     fontSize: 20,
   },
   link: {
     fontSize: 10,
+  },
+  flatList: {
+    // paddingBottom: 10,
+  },
+  centerdContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

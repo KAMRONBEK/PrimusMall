@@ -1,78 +1,78 @@
-import React from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
-import strings from '../localization/strings';
+import React, { useState } from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Header from '../components/Header';
 import Icon from '../constants/icons';
-import {TouchableWithoutFeedback} from 'react-native';
-import {NavigationEvents} from 'react-navigation';
+import strings from '../localization/strings';
+import colors from '../constants/colors';
 
-const Catalog = ({navigation}) => {
-  const {navigate} = navigation;
+const Catalog = ({ navigation }) => {
+  const { navigate } = navigation;
+  let childs = navigation.getParam('childs');
+  let index = navigation.getParam('index');
+  let item = navigation.getParam('item');
+  let { name: title } = childs[index];
+  const [selectedIndex, setselectedIndex] = useState(index)
   return (
     <View style={styles.container}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.top}>
-          <View style={[styles.category, styles.active]}>
-            <Text style={[styles.text, styles.activeText]}>
-              {strings.sneakers}
-            </Text>
+      <View>
+        <Header
+          simpleTitle={title}
+          backwardArrow
+          rightRender
+          navigation={navigation}
+        />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.top}>
+            {childs.map((e, i) => {
+              return (
+                <TouchableWithoutFeedback onPress={() => setselectedIndex(i)}>
+                  <View
+                    key={e.id}
+                    style={[styles.category, i === selectedIndex && styles.active]}>
+                    <Text style={[styles.text, i === selectedIndex && styles.activeText]}>
+                      {e.name}
+                    </Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              );
+            })}
           </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.boots}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.slippons}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.gumshoes}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.slippons}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.gumshoes}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.slippons}</Text>
-          </View>
-          <View style={styles.category}>
-            <Text style={styles.text}>{strings.gumshoes}</Text>
-          </View>
-        </View>
-      </ScrollView>
-      <View style={styles.selectorWrap}>
-        <TouchableWithoutFeedback onPress={() => navigate('Filter')}>
-          <View style={styles.selector}>
-            <Icon name="controls" size={18} />
-            <Text
-              style={{
-                marginLeft: 10,
-              }}>
-              {strings.filter}
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback>
-          <View style={styles.selector}>
-            <View style={styles.icons}>
-              <Ionicons name="ios-arrow-round-down" size={22} />
-              <Ionicons name="ios-arrow-round-up" size={22} />
+        </ScrollView>
+        <View style={styles.selectorWrap}>
+          <TouchableWithoutFeedback onPress={() => navigate('Filter', { item })}>
+            <View style={styles.selector}>
+              <Icon name="controls" size={18} />
+              <Text style={styles.ml10}>{strings.filter}</Text>
             </View>
-            <Text
-              style={{
-                marginLeft: 10,
-              }}>
-              {strings.byPopularity}
-            </Text>
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback>
+            <View style={styles.selector}>
+              <View style={styles.icons}>
+                <Ionicons name="ios-arrow-round-down" size={22} />
+                <Ionicons name="ios-arrow-round-up" size={22} />
+              </View>
+              <Text style={styles.ml10}>{strings.byPopularity}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </View>
+      <View style={styles.container} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: { backgroundColor: colors.superLightGray, flex: 1 },
+  ml10: {
+    marginLeft: 10,
+  },
   top: {
     paddingTop: 20,
     paddingBottom: 20,

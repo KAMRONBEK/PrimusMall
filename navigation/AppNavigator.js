@@ -1,65 +1,56 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-
-import Home from '../screens/Home';
-import Main from '../screens/Main';
-import Catalog from '../screens/Catalog';
-import Profile from '../screens/Profile';
-import Favorite from '../screens/Favorite';
-import Login from '../screens/Login';
-import Register from '../screens/Register';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import DrawerContent from '../components/DrawerContent';
 import Header from '../components/Header';
-import Basket from '../screens/Basket';
+import colors from '../constants/colors';
 import Icon from '../constants/icons';
-import ProductPage from '../screens/ProductPage';
+import strings from '../localization/strings';
+import Basket from '../screens/Basket';
+import Catalog from '../screens/Catalog';
 import Checkout from '../screens/Checkout';
 import Checkout_2 from '../screens/Checkout_2';
 import Checkout_3 from '../screens/Checkout_3';
 import Checkout_4 from '../screens/Checkout_4';
 import Checkout_5 from '../screens/Checkout_5';
 import Checkout_6 from '../screens/Checkout_6';
-import Shop from '../screens/Shop';
-import DrawerContent from '../components/DrawerContent';
+import Favorite from '../screens/Favorite';
 import Filter from '../screens/Filter';
+import Home from '../screens/Home';
+import Login from '../screens/Login';
+import Main from '../screens/Main';
+import ProductPage from '../screens/ProductPage';
+import Profile from '../screens/Profile';
+import Register from '../screens/Register';
+import Shop from '../screens/Shop';
 import ShopPage from '../screens/ShopPage';
+import Categories from '../screens/Categories';
 
-import colors from '../constants/colors';
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
-import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
-import {createDrawerNavigator} from 'react-navigation-drawer';
-import strings from '../localization/strings';
+// const MainHeader = createStackNavigator(
+//   {
+//     Main: {
+//       screen: Main,
+//     },
+//   },
+//   {
+//     defaultNavigationOptions: {
+//       header: ({ navigation }) => (
+//         <Header hasDrawer rightRender navigation={navigation} />
+//       ),
+//     },
+//   },
+// );
 
-const MainHeader = createStackNavigator(
-  {
-    Main: {
-      screen: Main,
-    },
-  },
-  {
-    defaultNavigationOptions: {
-      header: ({navigation}) => (
-        <Header hasDrawer rightRender navigation={navigation} />
-      ),
-    },
-  },
-);
-
-const MainStack = createStackNavigator({
-  // Main: {
-  //   screen: Main,
-  //   navigationOptions: {},
-  // },
-  ProductPage: {
-    screen: ProductPage,
-    navigationOptions: {
-      header: null,
-      // ({navigation}) => (
-      //   <Header backwardArrow rightRender navigation={navigation} />
-      // ),
-    },
-  },
-});
+// const MainStack = createStackNavigator({
+//   ProductPage: {
+//     screen: ProductPage,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+// });
 
 const CheckoutStack = createStackNavigator({
   Checkout: {
@@ -104,7 +95,7 @@ const BasketStack = createStackNavigator(
     Basket: {
       screen: Basket,
       navigationOptions: {
-        header: ({navigation}) => (
+        header: ({ navigation }) => (
           <Header backwardArrow rightRender navigation={navigation} />
         ),
       },
@@ -115,7 +106,7 @@ const BasketStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header
           simpleTitle={strings.checkout}
           backwardArrow
@@ -126,37 +117,44 @@ const BasketStack = createStackNavigator(
   },
 );
 
-const FilterStack = createStackNavigator(
-  {
-    Filter: {
-      screen: Filter,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {
-    headerMode: 'none',
-    mode: 'modal',
-    transparentCard: true,
-    cardStyle: {
-      backgroundColor: 'transparent',
-      opacity: 1,
-    },
-  },
-);
+// const FilterStack = createStackNavigator(
+//   {
+//     Filter: {
+//       screen: Filter,
+//       navigationOptions: {
+//         header: null,
+//       },
+//     },
+//   },
+//   {
+//     headerMode: 'none',
+//     mode: 'modal',
+//     transparentCard: true,
+//     cardStyle: {
+//       backgroundColor: 'transparent',
+//       opacity: 1,
+//     },
+//     navigationOptions: {
+//       mode: 'modal',
+//     },
+//   },
+// );
 
 const ShopStack = createStackNavigator({
   Shop: {
     screen: Shop,
     navigationOptions: {
-      header: null,
+      header: ({ navigation }) => (
+        <Header hasDrawer rightRender navigation={navigation} />
+      ),
     },
   },
   ShopPage: {
     screen: ShopPage,
     navigationOptions: {
-      header: null,
+      header: ({ navigation }) => (
+        <Header backwardArrow rightRender navigation={navigation} />
+      ),
     },
   },
 });
@@ -167,50 +165,89 @@ const ProfileStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header hasDrawer rightRender navigation={navigation} />
       ),
     },
   },
 );
 
-const RestOfStackNavigator = createStackNavigator({
-  Main: {
-    screen: MainStack,
-    navigationOptions: {
-      header: null,
+// const RestOfStackNavigator = createStackNavigator({
+//   Main: {
+//     screen: MainStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   Checkout: {
+//     screen: CheckoutStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   BasketStack: {
+//     screen: BasketStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   Shop: {
+//     screen: ShopStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+//   Filter: {
+//     screen: FilterStack,
+//     navigationOptions: {
+//       header: null,
+//     },
+//   },
+// });
+
+let CategoriesStack = createStackNavigator(
+  {
+    Categories: {
+      screen: Categories,
+      navigationOptions: {
+        header: ({ navigation }) => (
+          <Header hasDrawer rightRender navigation={navigation} />
+        ),
+      },
     },
+    Catalog,
+    Filter,
   },
-  Checkout: {
-    screen: CheckoutStack,
-    navigationOptions: {
-      header: null,
+  {
+    mode: 'modal',
+    transparentCard: true,
+    cardStyle: {
+      backgroundColor: 'transparent',
+      opacity: 1,
     },
-  },
-  BasketStack: {
-    screen: BasketStack,
     navigationOptions: {
-      header: null,
+      mode: 'modal',
     },
+    defaultNavigationOptions: {
+      header: null
+    }
   },
-  Shop: {
-    screen: ShopStack,
-    navigationOptions: {
-      header: null,
-    },
-  },
-  Filter: {
-    screen: FilterStack,
-    navigationOptions: {
-      header: null,
-    },
-  },
-});
+);
+
+let FavoritesStack = createStackNavigator({
+  Favorite,
+}, {
+  defaultNavigationOptions: {
+    header: ({ navigation }) => (
+      <Header hasDrawer rightRender navigation={navigation} />
+    ),
+  }
+})
 
 const TabNavigator = createMaterialTopTabNavigator(
   {
     Main: {
-      screen: MainHeader,
+      screen: Main,
       navigationOptions: {
         tabBarIcon: () => {
           return <Icon name="home" size={25} />;
@@ -226,15 +263,15 @@ const TabNavigator = createMaterialTopTabNavigator(
       },
     },
     Favorite: {
-      screen: Favorite,
+      screen: FavoritesStack,
       navigationOptions: {
         tabBarIcon: () => {
           return <Icon name="heart-empty" size={25} />;
         },
       },
     },
-    Catalog: {
-      screen: Catalog,
+    Categories: {
+      screen: CategoriesStack,
       navigationOptions: {
         tabBarIcon: () => {
           return <Icon name="list-sort" size={25} />;
@@ -266,19 +303,26 @@ const TabNavigator = createMaterialTopTabNavigator(
   },
 );
 
+let ProductStack = createStackNavigator({
+  ProductPage: {
+    screen: ProductPage,
+    navigationOptions: {
+      header: ({ navigation }) => (
+        <Header backwardArrow rightRender navigation={navigation} />
+      ),
+    },
+  },
+});
+
 // Drawer
 const DrawerNavigator = createDrawerNavigator(
   {
     all: createStackNavigator(
       {
         TabNavigator,
-        RestOfStackNavigator,
-        Filter: {
-          screen: FilterStack,
-          navigationOptions: {
-            header: null,
-          },
-        },
+        ProductStack,
+        ShopStack,
+        BasketStack
       },
       {
         headerMode: 'none',
@@ -292,50 +336,44 @@ const DrawerNavigator = createDrawerNavigator(
     ),
   },
   {
-    drawerWidth: 300,
     contentComponent: DrawerContent,
-    navigationOptions: {
-      header: null,
-    },
   },
 );
 
-const AuthNavigator = createStackNavigator({
-  Home: {
-    screen: Home,
-    navigationOptions: {
-      header: null,
+const AuthNavigator = createStackNavigator(
+  {
+    Home: {
+      screen: Home,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Login: {
+      screen: Login,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: {
+        header: null,
+      },
     },
   },
-  Login: {
-    screen: Login,
-    navigationOptions: {
-      header: null,
-    },
+  {
+    // initialRouteName: 'Login',
   },
-  Register: {
-    screen: Register,
-    navigationOptions: {
-      header: null,
-    },
-  },
-});
-{
-  navigationOptions: {
-    header: null;
-  }
-}
+);
 
-const SwitchNavigator = createSwitchNavigator({
-  AuthNavigator: {
-    screen: AuthNavigator,
+const SwitchNavigator = createSwitchNavigator(
+  {
+    AuthNavigator,
+    DrawerNavigator,
   },
-  DrawerNavigator: {
-    screen: DrawerNavigator,
-  },
-});
+  { initialRouteName: 'DrawerNavigator' },
+);
 
-// const MainNavigator = createAppContainer(DrawerNavigator);
 const MainNavigator = createAppContainer(SwitchNavigator);
 
 export default MainNavigator;

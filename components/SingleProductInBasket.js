@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -12,9 +12,10 @@ import ColorDemo from './ColorDemo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import colors from '../constants/colors';
+import { connect } from 'react-redux';
+import { decrementCartItemCount, incrementCartItemCount } from '../redux/actions';
 
-const SingleProductInBasket = ({item}) => {
-  let [amount, setAmount] = useState(item.amount);
+const SingleProductInBasket = ({ item, dispatch, index }) => {
   return (
     <View
       style={[
@@ -35,17 +36,17 @@ const SingleProductInBasket = ({item}) => {
           <Image
             style={styles.image}
             source={{
-              uri: item.image,
+              uri: item.preview_image,
             }}
           />
         </View>
         <View style={styles.infoWrap}>
           <View style={styles.info}>
-            <Text style={styles.name}>{item.nameOfProduct}</Text>
-            <Text style={styles.type}>{item.type}</Text>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.type}>{item.category}</Text>
             <Text style={styles.text}>
               {strings.article}
-              {item.articleNumber}
+              {item.code}
             </Text>
             <Text style={styles.text}>
               {strings.size}
@@ -55,7 +56,7 @@ const SingleProductInBasket = ({item}) => {
             <View
               style={[
                 styles.text,
-                {flexDirection: 'row', alignItems: 'center'},
+                { flexDirection: 'row', alignItems: 'center' },
               ]}>
               <Text
                 style={{
@@ -82,12 +83,13 @@ const SingleProductInBasket = ({item}) => {
         <View style={styles.left}>
           <TouchableWithoutFeedback
             onPress={() => {
-              amount > 1 ? setAmount(amount - 1) : setAmount(1);
+              if (item.count > 1)
+                dispatch(decrementCartItemCount(index))
             }}>
             <AntDesign
               name="minus"
               size={20}
-              color={amount > 1 ? colors.red : colors.lightGray}
+              color={item.count > 1 ? colors.red : colors.lightGray}
               style={{
                 marginRight: 10,
               }}
@@ -107,12 +109,12 @@ const SingleProductInBasket = ({item}) => {
                 fontSize: 17,
                 fontWeight: '500',
               }}>
-              {amount}
+              {item.count}
             </Text>
           </View>
           <TouchableWithoutFeedback
             onPress={() => {
-              setAmount(amount + 1);
+              dispatch(incrementCartItemCount(index))
             }}>
             <AntDesign
               name="plus"
@@ -126,13 +128,14 @@ const SingleProductInBasket = ({item}) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.right}>
-          <Text style={styles.price}>{parseInt(item.price, 10) * amount}</Text>
+          <Text style={styles.price}>{item.price.price_value * item.count}</Text>
           <Text
             style={{
               color: colors.darkGray,
               paddingTop: 5,
             }}>
-            {item.currency}
+            {/* {item.currency} */}
+            сум
           </Text>
         </View>
       </View>
@@ -210,4 +213,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SingleProductInBasket;
+export default connect(null)(SingleProductInBasket);

@@ -1,15 +1,14 @@
 'use strict';
 
 import React from 'react';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { withNavigation } from 'react-navigation';
+import colors from '../constants/colors';
 import Icon from '../constants/icons';
 import NavigationService from '../services/NavigationServices';
-// import SafeAreaView from 'react-native-safe-area-view';
-
-import {Text, StyleSheet, View, StatusBar, Platform} from 'react-native';
-import colors from '../constants/colors';
-import {TouchableWithoutFeedback} from 'react-native';
+import { connect } from 'react-redux';
 
 const Header = ({
   hasDrawer,
@@ -18,6 +17,7 @@ const Header = ({
   dropdownTitle,
   rightRender,
   navigation,
+  cart
 }) => {
   const renderLeft = () => {
     return (
@@ -28,23 +28,21 @@ const Header = ({
               <SimpleLineIcons name="menu" size={25} />
             </View>
           </TouchableWithoutFeedback>
-        ) : backwardArrow ? (
-          <TouchableWithoutFeedback
-            onPress={() => {
-              if (navigation) {
-                console.warn(navigation);
-                navigation.goBack();
-                // NavigationService.goBack();
-                return;
-              }
-            }}>
-            <View>
-              <Icon name="arrow-back" size={22} />
-            </View>
-          </TouchableWithoutFeedback>
         ) : (
-          <View />
-        )}
+            backwardArrow && (
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  if (navigation) {
+                    navigation.goBack();
+                    return;
+                  }
+                }}>
+                <View>
+                  <Icon name="arrow-back" size={22} />
+                </View>
+              </TouchableWithoutFeedback>
+            )
+          )}
       </View>
     );
   };
@@ -69,21 +67,21 @@ const Header = ({
             style={[
               styles.title,
               {
-                fontWeight: '100',
+                fontWeight: '500',
               },
             ]}>
             {simpleTitle}
           </Text>
         ) : (
-          <React.Fragment />
-        )}
+              <React.Fragment />
+            )}
       </View>
     );
   };
   const renderRight = () => {
     return (
       <React.Fragment>
-        {rightRender ? (
+        {rightRender && (
           <View style={styles.right}>
             <AntDesign name="search1" size={25} />
             <TouchableWithoutFeedback
@@ -92,7 +90,7 @@ const Header = ({
               }}>
               <View style={styles.bagIcon}>
                 <Icon name="bag" size={25} />
-                <View
+                {cart.items && cart.items.length > 0 && <View
                   style={[
                     styles.notification,
                     {
@@ -106,14 +104,13 @@ const Header = ({
                         color: colors.white,
                       },
                     ]}>
-                    4
+                    {cart.items.length}
                   </Text>
                 </View>
+                }
               </View>
             </TouchableWithoutFeedback>
           </View>
-        ) : (
-          <View />
         )}
       </React.Fragment>
     );
@@ -179,4 +176,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+const mapStateToProps = ({ cart }) => ({
+  cart
+})
+
+
+export default connect(mapStateToProps)(withNavigation(Header));
