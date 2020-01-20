@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { ScrollView, FlatList } from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import {ScrollView, FlatList} from 'react-native';
 import SingleProductInBasket from '../components/SingleProductInBasket';
 import colors from '../constants/colors';
 import BlurFooter from '../components/BlurFooter';
-import { NavigationEvents } from 'react-navigation';
-import { connect } from 'react-redux';
+import {NavigationEvents} from 'react-navigation';
+import {connect} from 'react-redux';
 
-const Basket = ({ navigation, style, cart }) => {
-  let { navigate } = navigation;
+const Basket = ({navigation, style, cart}) => {
+  let {navigate} = navigation;
   // const ProductListInBasket = [
   //   {
   //     image:
@@ -70,15 +70,27 @@ const Basket = ({ navigation, style, cart }) => {
               backgroundColor: colors.superLightGray,
             },
           ]}>
-          <FlatList
-            keyExtractor={(e, index) => index.toString()}
-            data={cart.items}
-            renderItem={(itemProps) => <SingleProductInBasket {...itemProps} />}
-          />
+          {cart.items != null ? (
+            <FlatList
+              keyExtractor={(e, index) => index.toString()}
+              data={cart.items}
+              renderItem={itemProps => <SingleProductInBasket {...itemProps} />}
+            />
+          ) : (
+            <View>
+              <Text>No item</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
       <BlurFooter
-        price={cart.items && cart.items.reduce((prev, current) => (prev + current.price.price_value), 0)}
+        price={
+          cart.items &&
+          cart.items.reduce(
+            (prev, current) => prev + current.price.price_value,
+            0,
+          )
+        }
         currency=" сум"
         buttonText="Оформить"
         onPress={() => {
@@ -95,9 +107,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ cart }) => ({
-  cart
-})
-
+const mapStateToProps = ({cart}) => ({
+  cart,
+});
 
 export default connect(mapStateToProps)(Basket);
