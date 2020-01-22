@@ -27,6 +27,7 @@ import Register from '../screens/Register';
 import Shop from '../screens/Shop';
 import ShopPage from '../screens/ShopPage';
 import Categories from '../screens/Categories';
+import Loader from '../screens/Loader';
 
 // const MainHeader = createStackNavigator(
 //   {
@@ -376,10 +377,11 @@ const AuthNavigator = createStackNavigator(
 
 const SwitchNavigator = createSwitchNavigator(
   {
+    Loader,
     AuthNavigator,
     DrawerNavigator,
   },
-  {initialRouteName: 'DrawerNavigator'},
+  {},
 );
 
 const MainNavigator = createAppContainer(SwitchNavigator);

@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import TextInputField from '../components/TextInputField';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import RoundButton from '../components/RoundButton';
 import colors from '../constants/colors';
 import BlackButton from '../components/BlackButton';
@@ -9,22 +9,23 @@ import {userLoaded} from '../redux/actions/user';
 import {connect} from 'react-redux';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import manager from '../oauth/OAuthManager';
+import { userLoggedIn } from '../redux/actions/user';
+import { connect } from 'react-redux';
 
-const Login = ({navigation, dispatch}) => {
-  const [state, setState] = useState({});
+const Login = ({ navigation, dispatch }) => {
+  const [state, setState] = useState({ username: "+998" });
   const [loading, setloading] = useState(false);
   const [error, setError] = useState('');
-  const {navigate} = navigation;
+  const { navigate } = navigation;
   let login = () => {
     setloading(true);
     api.auth
       .login(state)
       .then(res => {
-        console.warn(res.status);
-        dispatch(userLoaded(res.data));
+        dispatch(userLoggedIn(res.data));
         navigate('Main');
       })
-      .catch(({response: res}) => {
+      .catch(({ response: res }) => {
         setError(res.data.error);
       })
       .finally(e => {
@@ -32,7 +33,7 @@ const Login = ({navigation, dispatch}) => {
       });
   };
   let updateState = (key, value) => {
-    setState({...state, [key]: value});
+    setState({ ...state, [key]: value });
   };
   return (
     <View style={styles.container}>
@@ -42,12 +43,12 @@ const Login = ({navigation, dispatch}) => {
           <Text style={styles.errorText}>{error}</Text>
         </View>
         <TextInputField
-          placeholder={'Username'}
-          iconName={'user'}
+          placeholder={'Phone number'}
+          iconName={'phone'}
           secondaryIconName={'close'}
-          legend={'Имя'}
-          value={state.email}
-          onChangeText={data => updateState('email', data)}
+          legend={'Номер телефона'}
+          value={state.username}
+          onChangeText={data => updateState('username', data)}
         />
         <TextInputField
           placeholder={'Password'}

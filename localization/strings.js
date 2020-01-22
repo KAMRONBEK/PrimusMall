@@ -69,6 +69,8 @@ export default {
   brand: 'Бренд',
   viewAll: 'Посмотреть все',
   newItems: 'Новинки',
+  logout: 'Выйти',
+  pleaseLogin: "Пожалуйста,\n войдите в свой аккаунт.",
   noItems: 'нет предмета',
   today: 'Сегодня',
   tomorrow: 'Завтра',
