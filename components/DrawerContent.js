@@ -1,53 +1,63 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import NavigationServices from '../services/NavigationServices';
 import colors from '../constants/colors';
 import DrawerMenuItem from '../components/DrawerMenuItem';
 import strings from '../localization/strings';
 import Header from '../components/Header';
 import Feather from 'react-native-vector-icons/Feather';
+import placeholder from '../assets/black-profile.png';
+import { connect } from 'react-redux'
+import { userLoggedOut } from '../redux/actions';
 
-const DrawerContent = ({navigation}) => {
+const DrawerContent = ({ navigation, user: parent, dispatch }) => {
+  let { data: user, token } = parent;
+  let renderAccount = () => {
+    let shouldRender = user && token;
+    if (!shouldRender) {
+      return null
+    }
+    return (<View
+      style={[
+        styles.top,
+        {
+          borderBottomColor: colors.lightGray,
+          backgroundColor: colors.superLightGray,
+        },
+      ]}>
+      <View style={styles.nameWrap}>
+        <Text style={styles.name}>{user.name}</Text>
+        <Text style={styles.name}>{user.surname}</Text>
+      </View>
+      <View style={styles.imageWithIcon}>
+        <View style={styles.imageWrap}>
+          <Image
+            style={{
+              width: 84,
+              borderRadius: 84,
+              height: 84,
+            }}
+            source={user.avatar ? {
+              uri: user.avatar.path
+            } : placeholder}
+          />
+        </View>
+        <View
+          style={[
+            styles.plusIcon,
+            {
+              backgroundColor: colors.superLightGray,
+            },
+          ]}>
+          <Feather name="plus" />
+        </View>
+      </View>
+    </View>)
+  }
   return (
     <React.Fragment>
       <Header backwardArrow navigation={navigation} />
-      <View
-        style={[
-          styles.top,
-          {
-            borderBottomColor: colors.lightGray,
-            backgroundColor: colors.superLightGray,
-          },
-        ]}>
-        <View style={styles.nameWrap}>
-          <Text style={styles.name}>АНДРЕЙ</Text>
-          <Text style={styles.name}>КИМ</Text>
-        </View>
-        <View style={styles.imageWithIcon}>
-          <View style={styles.imageWrap}>
-            <Image
-              style={{
-                width: 84,
-                borderRadius: 84,
-                height: 84,
-              }}
-              source={{
-                uri:
-                  'https://www.menshairstylestoday.com/wp-content/uploads/2018/10/Triangle-Face-Shape-Hairstyles-Men.jpg',
-              }}
-            />
-          </View>
-          <View
-            style={[
-              styles.plusIcon,
-              {
-                backgroundColor: colors.superLightGray,
-              },
-            ]}>
-            <Feather name="plus" />
-          </View>
-        </View>
-      </View>
+      {renderAccount()}
       <View style={styles.bottom}>
         <DrawerMenuItem
           text={strings.shops}
@@ -99,11 +109,28 @@ const DrawerContent = ({navigation}) => {
           text={strings.myProfile}
         />
       </View>
+      <View style={styles.logoutContainer}>
+        <DrawerMenuItem
+          iconName="logout"
+          custom
+          onPress={() => {
+            NavigationServices.toggleDrawer();
+            dispatch(userLoggedOut())
+          }}
+          text={strings.logout}
+        />
+      </View>
     </React.Fragment>
   );
 };
 
 const styles = StyleSheet.create({
+  logoutContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingVertical: 10,
+    paddingHorizontal: 40
+  },
   top: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -140,4 +167,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DrawerContent;
+export default connect(({ user }) => ({ user: user }))(DrawerContent);

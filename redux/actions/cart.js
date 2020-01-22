@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, EMPTY_CART, INCEREMENT_COUNT, DECREMENT_COUNT } from "../types";
+import { ADD_TO_CART, REMOVE_FROM_CART, EMPTY_CART, INCEREMENT_COUNT, DECREMENT_COUNT, CART_LOADED } from "../types";
 
 export const addToCart = (payload) => ({
     type: ADD_TO_CART,
@@ -25,3 +25,7 @@ export const decrementCartItemCount = (payload) => ({
     payload
 })
 
+export const cartLoaded = (payload) => ({
+    type: CART_LOADED,
+    payload
+})

@@ -1,7 +1,17 @@
+
+// USER
 export const USER_LOADED = 'USER_LAODED';
+export const USER_LOGGED_IN = 'USER_LOGGED_IN'
+export const USER_LOGGED_OUT = 'USER_LOGGED_OUT'
+
+// FAVORITES
 export const TOGGLE_ITEM = 'TOGGLE_ITEM'
+export const FAVORITES_LOADED = 'FAVORITES_LOADED'
+
+// CART
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
 export const EMPTY_CART = 'EMPTY_CART'
 export const INCEREMENT_COUNT = 'INCEREMENT_COUNT'
 export const DECREMENT_COUNT = 'DECREMENT_COUNT'
+export const CART_LOADED = 'CART_LOADED'

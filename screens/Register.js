@@ -1,40 +1,38 @@
-import React, {useReducer} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {connect} from 'react-redux';
+import React, { useReducer } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
 import api from '../api/api';
 import RoundButton from '../components/RoundButton';
 import TextInputField from '../components/TextInputField';
 import colors from '../constants/colors';
-import {userLoaded} from '../redux/actions/user';
+import { userLoaded, userLoggedIn } from '../redux/actions/user';
 
 let SET = 'SET';
 
-const Register = ({navigation, dispatch}) => {
-  const {navigate} = navigation;
-  let reducer = (state, {type, value, key}) => {
+const Register = ({ navigation, dispatch }) => {
+  const { navigate } = navigation;
+  let reducer = (state, { type, value, key }) => {
     switch (type) {
       case SET:
-        return {...state, [key]: value};
+        return { ...state, [key]: value };
       default:
         return state;
     }
   };
   const [state, setState] = useReducer(reducer, {});
   let updateState = (key, value) => {
-    setState({type: SET, value, key});
+    setState({ type: SET, value, key });
   };
   let register = () => {
     updateState('loading', true);
     updateState('error', '');
-    let {email, password} = state;
-    console.warn(email);
     api.auth
-      .register({email, password, password_confirmation: state.password})
+      .register(state)
       .then(res => {
-        dispatch(userLoaded(res.data));
+        dispatch(userLoggedIn(res.data));
         navigate('Main');
       })
-      .catch(({response: res}) => {
+      .catch(({ response: res }) => {
         updateState('error', res.data.error);
       })
       .finally(() => {
@@ -62,12 +60,20 @@ const Register = ({navigation, dispatch}) => {
         value={state.name}
       />
       <TextInputField
+        placeholder={'Введите свое фамилию'}
+        iconName={'user'}
+        legend={'Фамилия'}
+        secondaryIconName={'close'}
+        onChangeText={e => updateState('surname', e)}
+        value={state.surname}
+      />
+      <TextInputField
         placeholder={'Введите номер телефона'}
         iconName={'phone'}
         legend={'Номер телефона'}
         secondaryIconName={'close'}
-        onChangeText={e => updateState('phone', e)}
-        value={state.phone}
+        onChangeText={e => updateState('username', e)}
+        value={state.username}
       />
       <TextInputField
         placeholder={'Введите пароль'}
@@ -77,6 +83,15 @@ const Register = ({navigation, dispatch}) => {
         secureTextEntry={true}
         onChangeText={e => updateState('password', e)}
         value={state.password}
+      />
+      <TextInputField
+        placeholder={'Введите подтверждение пароля'}
+        iconName={'lock'}
+        legend={'Подтверждение пароля'}
+        secondaryIconName={'eye-off'}
+        secureTextEntry={true}
+        onChangeText={e => updateState('password_confirmation', e)}
+        value={state.password_confirmation}
       />
       <View
         style={{

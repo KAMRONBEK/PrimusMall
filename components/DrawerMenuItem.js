@@ -1,8 +1,9 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import { Text, View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import Icon from '../constants/icons';
+import Simple from 'react-native-vector-icons/SimpleLineIcons'
 
-const DrawerMenuItem = ({iconName, text, small, onPress}) => {
+const DrawerMenuItem = ({ iconName, text, small, onPress, custom }) => {
   // const { navigate } = navigation;
   return (
     <React.Fragment>
@@ -10,7 +11,7 @@ const DrawerMenuItem = ({iconName, text, small, onPress}) => {
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.container}>
           <View style={styles.icon}>
-            <Icon name={iconName} size={!small ? 30 : 15} />
+            {custom ? <Simple name={iconName} size={!small ? 30 : 15} /> : <Icon name={iconName} size={!small ? 30 : 15} />}
           </View>
           <Text>{text}</Text>
         </View>
