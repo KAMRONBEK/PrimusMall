@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import TextInputField from '../components/TextInputField';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import RoundButton from '../components/RoundButton';
 import colors from '../constants/colors';
 import BlackButton from '../components/BlackButton';
 import api from '../api/api';
-import { userLoggedIn } from '../redux/actions/user';
-import { connect } from 'react-redux';
+import {userLoaded} from '../redux/actions/user';
+import {connect} from 'react-redux';
+import manager from '../oauth/OAuthManager';
+import {userLoggedIn} from '../redux/actions/user';
 
-const Login = ({ navigation, dispatch }) => {
-  const [state, setState] = useState({ username: "+998" });
+const Login = ({navigation, dispatch}) => {
+  const [state, setState] = useState({username: '+998'});
   const [loading, setloading] = useState(false);
   const [error, setError] = useState('');
-  const { navigate } = navigation;
+  const {navigate} = navigation;
   let login = () => {
     setloading(true);
     api.auth
@@ -21,7 +29,7 @@ const Login = ({ navigation, dispatch }) => {
         dispatch(userLoggedIn(res.data));
         navigate('Main');
       })
-      .catch(({ response: res }) => {
+      .catch(({response: res}) => {
         setError(res.data.error);
       })
       .finally(e => {
@@ -29,7 +37,7 @@ const Login = ({ navigation, dispatch }) => {
       });
   };
   let updateState = (key, value) => {
-    setState({ ...state, [key]: value });
+    setState({...state, [key]: value});
   };
   return (
     <View style={styles.container}>
@@ -78,7 +86,21 @@ const Login = ({ navigation, dispatch }) => {
       <View style={styles.footer}>
         <Text>ВОЙТИ ЧЕРЕЗ:</Text>
         <View style={styles.iconsWrapper}>
-          <BlackButton iconName="google-plus" />
+          <TouchableWithoutFeedback
+            onPress={() => {
+              manager
+                .authorize('google', {scopes: 'email,profile'})
+                .then(response => {
+                  console.warn(response);
+                })
+                .catch(error => {
+                  console.warn(error);
+                });
+            }}>
+            <View>
+              <BlackButton iconName="google-plus" />
+            </View>
+          </TouchableWithoutFeedback>
           <BlackButton iconName="facebook" />
         </View>
       </View>
