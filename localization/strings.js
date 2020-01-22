@@ -68,4 +68,5 @@ export default {
   brand: 'Бренд',
   viewAll: 'Посмотреть все',
   newItems: 'Новинки',
+  noItems: 'нет предмета',
 };
