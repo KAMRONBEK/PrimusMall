@@ -69,5 +69,6 @@ export default {
   viewAll: 'Посмотреть все',
   newItems: 'Новинки',
   logout: 'Выйти',
-  pleaseLogin: "Пожалуйста,\n войдите в свой аккаунт."
+  pleaseLogin: "Пожалуйста,\n войдите в свой аккаунт.",
+  noItems: 'нет предмета',
 };
