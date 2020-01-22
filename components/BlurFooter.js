@@ -10,8 +10,8 @@ const BlurFooter = ({
 	currency,
 	buttonText,
 	favIcon,
-	iconPress,
-	onPress
+	onPress,
+	onLeftPress
 }) => {
 	return (
 		<View
@@ -43,7 +43,9 @@ const BlurFooter = ({
 						</View>
 					</View>
 				) : (
-						<Icon name={favIcon} size={25} />
+						<TouchableWithoutFeedback onPress={onLeftPress}>
+							<Icon name={favIcon} size={25} />
+						</TouchableWithoutFeedback>
 					)}
 			</View>
 			<View style={styles.right}>

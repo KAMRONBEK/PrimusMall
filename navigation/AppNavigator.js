@@ -1,8 +1,8 @@
 import React from 'react';
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import {createDrawerNavigator} from 'react-navigation-drawer';
-import {createStackNavigator} from 'react-navigation-stack';
-import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import DrawerContent from '../components/DrawerContent';
 import Header from '../components/Header';
 import colors from '../constants/colors';
@@ -93,7 +93,6 @@ const CheckoutStack = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Checkout_4',
   },
 );
 const BasketStack = createStackNavigator(
@@ -101,7 +100,7 @@ const BasketStack = createStackNavigator(
     Basket: {
       screen: Basket,
       navigationOptions: {
-        header: ({navigation}) => (
+        header: ({ navigation }) => (
           <Header backwardArrow rightRender navigation={navigation} />
         ),
       },
@@ -115,7 +114,7 @@ const BasketStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header
           simpleTitle={strings.checkout}
           backwardArrow
@@ -153,7 +152,7 @@ const ShopStack = createStackNavigator({
   Shop: {
     screen: Shop,
     navigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header hasDrawer rightRender navigation={navigation} />
       ),
     },
@@ -161,7 +160,7 @@ const ShopStack = createStackNavigator({
   ShopPage: {
     screen: ShopPage,
     navigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header backwardArrow rightRender navigation={navigation} />
       ),
     },
@@ -174,7 +173,7 @@ const ProfileStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header hasDrawer rightRender navigation={navigation} />
       ),
     },
@@ -219,7 +218,7 @@ let CategoriesStack = createStackNavigator(
     Categories: {
       screen: Categories,
       navigationOptions: {
-        header: ({navigation}) => (
+        header: ({ navigation }) => (
           <Header hasDrawer rightRender navigation={navigation} />
         ),
       },
@@ -249,7 +248,7 @@ let FavoritesStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header hasDrawer rightRender navigation={navigation} />
       ),
     },
@@ -270,7 +269,7 @@ const TabNavigator = createMaterialTopTabNavigator(
       screen: ProfileStack,
       navigationOptions: {
         tabBarIcon: () => {
-          return <Icon name="user-alternative" size={25} />;
+          return <Icon name="user-alternative" size={22} />;
         },
       },
     },
@@ -278,7 +277,7 @@ const TabNavigator = createMaterialTopTabNavigator(
       screen: FavoritesStack,
       navigationOptions: {
         tabBarIcon: () => {
-          return <Icon name="heart-empty" size={25} />;
+          return <Icon name="heart-empty" size={22} />;
         },
       },
     },
@@ -286,7 +285,7 @@ const TabNavigator = createMaterialTopTabNavigator(
       screen: CategoriesStack,
       navigationOptions: {
         tabBarIcon: () => {
-          return <Icon name="list-sort" size={25} />;
+          return <Icon name="list-sort" size={20} />;
         },
       },
     },
@@ -319,7 +318,7 @@ let ProductStack = createStackNavigator({
   ProductPage: {
     screen: ProductPage,
     navigationOptions: {
-      header: ({navigation}) => (
+      header: ({ navigation }) => (
         <Header backwardArrow rightRender navigation={navigation} />
       ),
     },
