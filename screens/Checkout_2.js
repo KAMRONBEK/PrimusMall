@@ -1,47 +1,45 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
 import strings from '../localization/strings';
 import colors from '../constants/colors';
-import Icon from '../constants/icons';
 import Pill from '../components/Pill';
+import { connect } from 'react-redux';
+import requests from '../api/api'
 
 
-const Checkout_2 = ({ navigation }) => {
+const Checkout_2 = ({ navigation, dispatch }) => {
+	const [state, setState] = useState([])
+	const [loading, setLoading] = useState(true)
+	useEffect(() => {
+		requests.main.getShippingTypes().then(res => {
+			setState(res.data)
+		}).finally(() => setLoading(false))
+	}, [])
+	let icons = { "1": "location-1", "2": "shipping-truck", "3": 'lightning' }
 	const { navigate } = navigation;
 	return (
 		<View style={styles.container}>
-			<Text style={[styles.title, {
-				borderBottomColor: colors.lightGray
-			}]}>{strings.howToReceiveOrder}</Text>
-			<Pill
-				iconName='location-1'
-				title={strings.freeDelivery}
-				deliveryPeriod={25}
-				onPress={() => navigate('Checkout_3', {})}
-			/>
-			<Pill
-				iconName='shipping-truck'
-				title={strings.freeDelivery}
-				deliveryPeriod={25}
-				shippingPrice='15 000'
-				currency=' сум'
-				onPress={() => navigate('Checkout_3', {})}
-			/>
-			<Pill
-				iconName='lightning'
-				title={strings.freeDelivery}
-				deliveryPeriod={25}
-				shippingPrice='15 000'
-				currency=' сум'
-				onPress={() => navigate('Checkout_3', {})}
-			/>
+			{loading ? <View style={styles.centeredContainer}><ActivityIndicator size={'large'} color={colors.orange} /></View> : <View>
+				<Text style={[styles.title, {
+					borderBottomColor: colors.lightGray
+				}]}>{strings.howToReceiveOrder}</Text>
+				{state && state.map(e => {
+					return <Pill
+						iconName={icons[e.code]}
+						title={e.name}
+						deliveryPeriod={e.price_value}
+						onPress={() => navigate('Checkout_3', {})}
+					/>
+				})}
+			</View>}
 		</View>
 	);
 };
 
 const styles = StyleSheet.create({
+	centeredContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 	container: {
-		flexDirection: 'column'
+		flexDirection: 'column', flex: 1
 	},
 	title: {
 		textAlign: 'center',
@@ -52,4 +50,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Checkout_2;
+export default connect()(Checkout_2);
