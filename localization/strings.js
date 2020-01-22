@@ -1,7 +1,7 @@
 export default {
   ru: 'Русский',
   uz: 'Узбекский',
-  login: 'Login',
+  login: 'Вход',
   forMen: 'Мужчинам ',
   forWomen: 'Женщинам',
   forKids: 'Детям',
@@ -39,6 +39,7 @@ export default {
   next: 'Далее',
   howToReceiveOrder: 'Выберите способ получения заказа',
   freeDelivery: 'Бесплатная доставка',
+  day: ' дней',
   days: ' дней',
   city: 'Город',
   district: 'Район',
@@ -69,4 +70,9 @@ export default {
   viewAll: 'Посмотреть все',
   newItems: 'Новинки',
   noItems: 'нет предмета',
+  today: 'Сегодня',
+  tomorrow: 'Завтра',
+  hours: 'Часов',
+  minutes: 'Минута',
+  time: 'Время',
 };
