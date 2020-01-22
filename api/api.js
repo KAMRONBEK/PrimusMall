@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { userLoaded } from '../redux/actions';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const url = 'https://pmall.uz/api';
 
@@ -46,6 +47,7 @@ let requests = {
   },
   main: {
     getProducts: () => axios.get(`${url}/products`).then(res => res),
+    filterProducts: (filters) => axios.get(`${url}/products${filters}`).then(res => res),
     getCategories: () => axios.get(`${url}/categories`).then(res => res),
     getCategoryChilds: id =>
       axios.get(`${url}/category/${id}/children`).then(res => res),
@@ -54,7 +56,8 @@ let requests = {
     getStore: id => axios.get(`${url}/store/${id}`).then(res => res),
     getStoreProducts: id => axios.get(`${url}/store/${id}/products`).then(res => res),
     getProduct: id => axios.get(`${url}/product/${id}`).then(res => res),
-    getBanner: () => axios.get(`${url}/banners/main`)
+    getBanner: () => axios.get(`${url}/banners/main`),
+    getShippingTypes: () => axios.get(`${url}/shippingtypelist`)
   },
   user: {
     getUser: token => axios.get(`${url}/user/get`, { headers: { Authorization: `Bearer ${token}` } }),

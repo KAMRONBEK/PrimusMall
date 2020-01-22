@@ -103,18 +103,12 @@ const BasketStack = createStackNavigator(
     },
     Checkout: {
       screen: CheckoutStack,
+      navigationOptions: {
+        header: () => <Header backwardArrow />
+      }
     },
   },
   {
-    defaultNavigationOptions: {
-      header: ({ navigation }) => (
-        <Header
-          simpleTitle={strings.checkout}
-          backwardArrow
-          navigation={navigation}
-        />
-      ),
-    },
   },
 );
 

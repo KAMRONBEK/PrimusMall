@@ -70,5 +70,5 @@ export default {
   newItems: 'Новинки',
   logout: 'Выйти',
   pleaseLogin: "Пожалуйста,\n войдите в свой аккаунт.",
-  noItems: 'нет предмета',
+  noItems: 'Нет продуктов',
 };
