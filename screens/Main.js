@@ -14,13 +14,13 @@ import Slider from '../components/Slider';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
 
-const SliderImageList = [
-  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-  'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
-];
+// const SliderImageList = [
+//   'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+//   'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+//   'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+//   'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+//   'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
+// ];
 
 let SET = 'SET';
 
@@ -33,7 +33,7 @@ export default function Main({ navigation }) {
         return state;
     }
   };
-  const [state, setState] = useReducer(reducer, { loading: true });
+  const [state, setState] = useReducer(reducer, { loading: true, banner: [] });
   const { navigate } = navigation;
   let updateState = (key, value) => {
     setState({ type: SET, value, key });
@@ -48,7 +48,13 @@ export default function Main({ navigation }) {
         console.warn(res);
       })
       .finally(() => {
-        updateState('loading', false);
+        api.main.getBanner().then(res => {
+          updateState('banner', res.data.data)
+        }).catch(res => {
+          console.warn(res.response)
+        }).finally(() => {
+          updateState('loading', false);
+        })
       });
   }, []);
   if (state.loading) {
@@ -62,7 +68,7 @@ export default function Main({ navigation }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header hasDrawer rightRender navigation={navigation} />
-      <Slider images={SliderImageList} flex animated />
+      <Slider images={state.banner} imagePath={'image.path'} flex animated />
       <View
         style={[
           styles.titleWrap,

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import {
   TextInput,
@@ -23,7 +23,7 @@ const TextInputField = ({
   noBorder,
   textWeight,
   value,
-  onChangeText = () => {},
+  onChangeText = () => { },
 }) => {
   let [borderColor, setBorderColor] = useState(colors.lightGray);
 
@@ -42,7 +42,7 @@ const TextInputField = ({
           <Icon
             name={iconName}
             size={15}
-            style={{marginRight: 10, marginLeft: -5}}
+            style={{ marginRight: 10, marginLeft: -5 }}
           />
         </View>
         {!notEntry ? (
@@ -57,24 +57,24 @@ const TextInputField = ({
             onEndEditing={() => {
               setBorderColor(colors.lightGray);
             }}
-            value={value}
+            value={value || textValue}
             placeholder={placeholder}
             style={[styles.inputField]}
             secureTextEntry={secureTextEntry}
           />
         ) : (
-          <Text
-            style={{
-              fontWeight: textWeight != '' ? textWeight : '400',
-            }}>
-            {textValue}
-          </Text>
-        )}
+            <Text
+              style={{
+                fontWeight: textWeight != '' ? textWeight : '400',
+              }}>
+              {textValue}
+            </Text>
+          )}
         <TouchableOpacity onPress={() => onChangeText(null)}>
           <MaterialCommunityIcons
             name={secondaryIconName}
             size={18}
-            style={{opacity: 0.5}}
+            style={{ opacity: 0.5 }}
           />
         </TouchableOpacity>
       </View>

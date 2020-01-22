@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,103 +7,136 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import TextInputFiled from '../components/TextInputField';
 import colors from '../constants/colors';
 import Feather from 'react-native-vector-icons/Feather';
 import TextInputField from '../components/TextInputField';
-import {TouchableWithoutFeedback, FlatList} from 'react-native';
+import { TouchableWithoutFeedback, FlatList } from 'react-native';
 import Order from '../components/Order';
 import strings from '../localization/strings';
+import { connect } from 'react-redux'
+import placeholder from '../assets/black-profile.png'
+import { reducer, SET } from '../utils/state';
+import ImagePicker from 'react-native-image-picker';
+import requests from '../api/api';
 
-export default function Profile() {
-  const orderList = [
-    {
-      orderNumber: '65998',
-      status: 'waiting',
-      price: '400 000',
-      currency: ' сум',
-    },
-    {
-      orderNumber: '65998',
-      status: 'delivered',
-      price: '400 000',
-      currency: ' сум',
-    },
-    {
-      orderNumber: '65998',
-      status: 'canceled',
-      price: '400 000',
-      currency: ' сум',
-    },
-  ];
+
+const Profile = ({ user, }) => {
+  let { data: initial, token } = user;
+  const [data, dispatcher] = useReducer(reducer, { ...initial, editing: true });
+  let updateState = (name, value) => {
+    dispatcher({ type: SET, name, value });
+  }
+  let pickImage = () => {
+    const options = {
+      title: 'Select Avatar',
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+
+      if (response.didCancel) {
+      } else if (response.error) {
+      } else if (response.customButton) {
+      } else {
+        updateState('image', { uri: response.uri, type: response.type, name: response.fileName })
+      }
+    });
+  }
+  let applyChanges = () => {
+    let { image: avatar, name, username, user_address, } = data;
+    let newState = { name, username, user_address };
+    if (avatar) {
+      newState.avatar = avatar
+    }
+    requests.user.updateUser(newState, token).then(res => {
+      console.warn(res.data)
+    }).catch(res => {
+      console.warn(res.response)
+    })
+  }
+  if (!initial || !token) {
+    return <View style={styles.centeredContainer}>
+      <Text style={styles.bigText}>{strings.pleaseLogin}</Text>
+    </View>
+  }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <View style={styles.top}>
           <View style={styles.nameWrap}>
-            <Text style={styles.name}>АНДРЕЙ</Text>
-            <Text style={styles.name}>КИМ</Text>
+            <Text style={styles.name}>{data.surname}</Text>
+            <Text style={styles.name}>{data.name}</Text>
           </View>
-          <View style={styles.imageWithIcon}>
-            <View style={styles.imageWrap}>
-              <Image
-                style={{
-                  width: 84,
-                  borderRadius: 84,
-                  height: 84,
-                }}
-                source={{
-                  uri:
-                    'https://www.menshairstylestoday.com/wp-content/uploads/2018/10/Triangle-Face-Shape-Hairstyles-Men.jpg',
-                }}
-              />
+          <TouchableWithoutFeedback onPress={pickImage}>
+            <View style={styles.imageWithIcon}>
+              <View style={styles.imageWrap}>
+                <Image
+                  style={{
+                    width: 84,
+                    borderRadius: 84,
+                    height: 84,
+                  }}
+                  source={data.avatar ? {
+                    uri:
+                      data.avatar.path,
+                  } : data.image ? data.image : placeholder}
+                />
+              </View>
+              <View
+                style={[
+                  styles.plusIcon,
+                  {
+                    backgroundColor: colors.superLightGray,
+                  },
+                ]}>
+                <Feather name="plus" />
+              </View>
             </View>
-            <View
-              style={[
-                styles.plusIcon,
-                {
-                  backgroundColor: colors.superLightGray,
-                },
-              ]}>
-              <Feather name="plus" />
-            </View>
-          </View>
+          </TouchableWithoutFeedback>
         </View>
         <View style={styles.infoWrap}>
           <TextInputField
-            notEntry
-            textValue="+998 (90) 999-99-99"
+            notEntry={data.editing}
+            textValue={data.username}
             legend="Номер телефона"
             iconName="phone"
-            noBorder
+            noBorder={data.editing}
             textWeight="600"
+            onChangeText={e => { updateState('username', e) }}
           />
           <TextInputField
-            notEntry
-            textValue="INFO@MAIL.RU"
+            notEntry={data.editing}
+            textValue={data.email}
             legend="Email"
             iconName="e-mail"
             textWeight="600"
-            noBorder
+            noBorder={data.editing}
+            onChangeText={e => { updateState('email', e) }}
           />
           <TextInputField
-            notEntry
-            textValue="ТАШКЕНТ"
+            notEntry={data.editing}
+            textValue={data.user_address}
             legend="Город"
             iconName="compass"
             textWeight="600"
-            noBorder
+            noBorder={data.editing}
+            onChangeText={e => { updateState('user_address', e) }}
           />
 
-          <TouchableWithoutFeedback onPress={() => {}}>
+          <TouchableWithoutFeedback onPress={() => {
+            if (!data.editing) {
+              updateState('editing', !data.editing)
+              applyChanges()
+              return;
+            }
+            updateState('editing', !data.editing)
+          }}>
             <Text
               style={[
                 styles.change,
                 {
-                  color: colors.blue,
+                  color: data.editing ? colors.blue : colors.orange,
                 },
               ]}>
-              Изменить
+              {data.editing ? "Изменить" : "Сохранить"}
             </Text>
           </TouchableWithoutFeedback>
         </View>
@@ -111,12 +144,12 @@ export default function Profile() {
           <Text style={styles.order}>{strings.order}</Text>
           <FlatList
             keyExtractor={(e, index) => index.toString()}
-            data={orderList}
+            data={[]}
             renderItem={Order}
           />
           <TouchableWithoutFeedback
             onPress={() => {
-              console.warn('otahon huyet qimang');
+              // console.warn('otahon huyet qimang');
             }}>
             <Text
               style={[
@@ -134,7 +167,14 @@ export default function Profile() {
   );
 }
 
+const mapStateToProps = ({ user }) => ({
+  user
+});
+
+export default connect(mapStateToProps)(Profile)
+
 const styles = StyleSheet.create({
+  bigText: { fontSize: 19, fontWeight: 'bold', color: colors.black,textAlign:'center' },
   container: {
     padding: 30,
     flex: 1,
@@ -186,4 +226,9 @@ const styles = StyleSheet.create({
     width: 26,
     borderRadius: 18,
   },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

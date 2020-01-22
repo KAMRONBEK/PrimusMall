@@ -1,13 +1,16 @@
 import axios from 'axios';
+import { userLoaded } from '../redux/actions';
 
 export const url = 'https://pmall.uz/api';
 
 export const configureAxios = (store) => {
-  axios.interceptors.response.use((res) => res, error => {
+  let interceptor = axios.interceptors.response.use((res) => res, error => {
     if (!error || !error.response || error.response.status !== 401) {
       return Promise.reject(error);
     }
     axios.interceptors.response.eject(interceptor);
+    console.warn(store.getState());
+
     return requests.auth
       .refreshToken(store.getState().user.token)
       .then(res => {
@@ -15,7 +18,7 @@ export const configureAxios = (store) => {
           Authorization: `Bearer ${res.data.data}`,
         };
         AsyncStorage.setItem('@token', res.data.data);
-        store.dispatch(bootstrap({ token: res.data.data }));
+        store.dispatch(userLoaded({ token: res.data.data }));
         return axios(error.response.config);
       })
       .catch(response => {
@@ -24,6 +27,15 @@ export const configureAxios = (store) => {
       .finally(() => configureAxios(store));
   })
 }
+
+
+let formData = rawData => {
+  let form = new FormData();
+  Object.keys(rawData).forEach(key => {
+    form.append(key, rawData[key]);
+  });
+  return form;
+};
 
 let requests = {
   auth: {
@@ -42,9 +54,11 @@ let requests = {
     getStore: id => axios.get(`${url}/store/${id}`).then(res => res),
     getStoreProducts: id => axios.get(`${url}/store/${id}/products`).then(res => res),
     getProduct: id => axios.get(`${url}/product/${id}`).then(res => res),
+    getBanner: () => axios.get(`${url}/banners/main`)
   },
   user: {
-    getUser: token => axios.get(`${url}/user/get?token=${token}`)
+    getUser: token => axios.get(`${url}/user/get`, { headers: { Authorization: `Bearer ${token}` } }),
+    updateUser: (credentials, token) => axios.post(`${url}/user/update`, formData(credentials), { headers: { Authorization: `Bearer ${token}` } })
   }
 };
 

@@ -9,7 +9,7 @@ import { userLoggedIn } from '../redux/actions/user';
 import { connect } from 'react-redux';
 
 const Login = ({ navigation, dispatch }) => {
-  const [state, setState] = useState({});
+  const [state, setState] = useState({ username: "+998" });
   const [loading, setloading] = useState(false);
   const [error, setError] = useState('');
   const { navigate } = navigation;
