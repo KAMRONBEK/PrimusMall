@@ -7,6 +7,8 @@ import BlackButton from '../components/BlackButton';
 import api from '../api/api';
 import {userLoaded} from '../redux/actions/user';
 import {connect} from 'react-redux';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import manager from '../oauth/OAuthManager';
 
 const Login = ({navigation, dispatch}) => {
   const [state, setState] = useState({});
@@ -79,7 +81,12 @@ const Login = ({navigation, dispatch}) => {
       <View style={styles.footer}>
         <Text>ВОЙТИ ЧЕРЕЗ:</Text>
         <View style={styles.iconsWrapper}>
-          <BlackButton iconName="google-plus" />
+          <TouchableWithoutFeedback
+            onPress={() => {
+              manager.authorize('google');
+            }}>
+            <BlackButton iconName="google-plus" />
+          </TouchableWithoutFeedback>
           <BlackButton iconName="facebook" />
         </View>
       </View>
