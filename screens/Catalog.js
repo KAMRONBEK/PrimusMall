@@ -20,8 +20,9 @@ const Catalog = ({ navigation }) => {
   const { navigate } = navigation;
   let index = navigation.getParam('index');
   let item = navigation.getParam('item');
-  let { name: title } = childs[index];
-  const [selectedIndex, setselectedIndex] = useState(index);
+  let items = navigation.getParam('childs');
+  let { name: title } = item.id;
+  const [selectedIndex, setselectedIndex] = useState(-1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [childs, setChildren] = useState([]);
@@ -41,7 +42,7 @@ const Catalog = ({ navigation }) => {
   useEffect(() => {
     filters['category'] = item.id;
     populateProducts();
-    requests.main.getCategoryChilds(item.id).then(res=>{
+    requests.main.getCategoryChilds(items[index].id).then(res => {
       setChildren(res.data.data)
     })
   }, []);

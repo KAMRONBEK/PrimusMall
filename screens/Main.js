@@ -38,6 +38,7 @@ export default function Main({ navigation }) {
   let updateState = (key, value) => {
     setState({ type: SET, value, key });
   };
+  let filters = { sort: 'new', perpage: 20, page: 1 }
   useEffect(() => {
     api.main
       .getProducts()
@@ -65,6 +66,8 @@ export default function Main({ navigation }) {
     );
   }
 
+  let onEndReach = {}
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header hasDrawer dropdown rightRender navigation={navigation} />
@@ -77,12 +80,6 @@ export default function Main({ navigation }) {
           },
         ]}>
         <Text style={styles.title}>{strings.newItems}</Text>
-        {/* <View
-          style={{
-            padding: 5,
-          }}>
-          <Text style={styles.link}>{strings.viewAll}</Text>
-        </View> */}
       </View>
       <View style={{ flex: 1.2 }}>
         <FlatList
@@ -92,6 +89,8 @@ export default function Main({ navigation }) {
           horizontal={true}
           renderItem={({ item }) => <ProductCart item={item} />}
           contentContainerStyle={styles.flatList}
+          onEndReachedThreshold={.5}
+          onEndReached={onEndReach}
           style={{
             backgroundColor: colors.superLightGray,
           }}
