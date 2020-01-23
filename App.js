@@ -14,6 +14,13 @@ import { configureStore } from './redux/configureStore';
 import { SafeAreaView } from 'react-navigation';
 import colors from './constants/colors';
 import { configureAxios } from './api/api';
+import { Platform, UIManager } from 'react-native';
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 const App = () => {
   let store = configureStore();

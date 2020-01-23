@@ -109,6 +109,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
             </View>
           </View>
           <View style={styles.about}>
+            <Text style={[styles.name, { paddingBottom: 20 }]}>{strings.aboutProduct}</Text>
             <Text style={styles.title}>{item.description}</Text>
             {/* <Text style={styles.up}>{strings.upperMaterial}</Text>
             <Text style={styles.down}>{strings.fauxLeather}</Text>
@@ -220,7 +221,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   about: {
-    marginTop: 50,
+    marginTop: 20,
   },
   title: {
     fontSize: 19,

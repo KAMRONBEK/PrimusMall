@@ -41,7 +41,7 @@ const ProductCart = ({ item, index, favorite, dispatch, navigation }) => {
             style={[
               styles.brand,
               {
-                backgroundColor: colors.red,
+                backgroundColor: item.brand_name ? colors.red : 'transparent',
               },
             ]}>
             <Text
@@ -64,8 +64,8 @@ const ProductCart = ({ item, index, favorite, dispatch, navigation }) => {
         <View style={styles.image}>
           <Image
             style={{
-              height: 80,
-              width: (Dimensions.get('window').width - 30) / 2 - 20,
+              height: 120,
+              width: 120,
             }}
             source={{
               uri: item.preview_image,
@@ -74,15 +74,15 @@ const ProductCart = ({ item, index, favorite, dispatch, navigation }) => {
         </View>
         <View style={styles.bottom}>
           <View style={styles.titleWrap}>
-            <Text numberOfLines={3} style={styles.modelName}>{item.name}</Text>
+            <Text numberOfLines={1} style={styles.modelName}>{item.name}</Text>
             <Text style={styles.type}>{item.category_name}</Text>
           </View>
           <View style={styles.priceWrap}>
             <View style={styles.prices}>
-              <Text style={styles.prevPrice}>
+              {item.price && item.price.old_price_value ? <><Text style={styles.prevPrice}>
                 {item.price && item.price.old_price_value}
                 {item.price && item.price.preview_text}
-              </Text>
+              </Text></> : <View />}
               <Text
                 style={[
                   styles.currentPrice,
@@ -130,8 +130,11 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').width - 30) / 2 - 20,
     margin: 10,
     borderColor: 'red',
+    alignItems: 'center'
   },
-  bottom: {},
+  bottom: {
+    paddingBottom:10
+  },
   brand: {
     marginTop: 10,
     marginRight: 10,
@@ -147,14 +150,14 @@ const styles = StyleSheet.create({
     fontWeight: '200',
   },
   favorite: {
-    marginTop: 20,
-    marginRight: 20,
+    marginTop: 10,
+    marginRight: 10,
   },
   titleWrap: {
     marginLeft: 15,
   },
   modelName: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: 'bold',
 
   },

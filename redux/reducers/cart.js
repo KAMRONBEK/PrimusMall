@@ -35,7 +35,6 @@ export default (state = initialState, { type, payload }) => {
             AsyncStorage.setItem("@cart", JSON.stringify(newState))
             return newState
         case CART_LOADED:
-            console.warn(payload);
             return payload
         default:
             return state

@@ -44,7 +44,7 @@ const BlurFooter = ({
 					</View>
 				) : (
 						<TouchableWithoutFeedback onPress={onLeftPress}>
-							<Icon name={favIcon} size={25} />
+							<Icon name={favIcon} size={30} />
 						</TouchableWithoutFeedback>
 					)}
 			</View>
@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
 	redButton: {
 		borderRadius: 40,
 		padding: 12,
-		paddingLeft: 25,
-		paddingRight: 25
+		paddingLeft: 40,
+		paddingRight: 40
 	},
 	buttonText: {
 		fontSize: 18,

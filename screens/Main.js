@@ -67,7 +67,7 @@ export default function Main({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Header hasDrawer rightRender navigation={navigation} />
+      <Header hasDrawer dropdown rightRender navigation={navigation} />
       <Slider images={state.banner} imagePath={'image.path'} flex animated />
       <View
         style={[
@@ -77,12 +77,12 @@ export default function Main({ navigation }) {
           },
         ]}>
         <Text style={styles.title}>{strings.newItems}</Text>
-        <View
+        {/* <View
           style={{
             padding: 5,
           }}>
           <Text style={styles.link}>{strings.viewAll}</Text>
-        </View>
+        </View> */}
       </View>
       <View style={{ flex: 1.2 }}>
         <FlatList

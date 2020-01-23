@@ -174,7 +174,7 @@ const ProfileStack = createStackNavigator(
   {
     defaultNavigationOptions: {
       header: ({ navigation }) => (
-        <Header hasDrawer rightRender navigation={navigation} />
+        <Header hasDrawer dropdown rightRender navigation={navigation} />
       ),
     },
   },
@@ -219,7 +219,7 @@ let CategoriesStack = createStackNavigator(
       screen: Categories,
       navigationOptions: {
         header: ({ navigation }) => (
-          <Header hasDrawer rightRender navigation={navigation} />
+          <Header hasDrawer dropdown rightRender navigation={navigation} />
         ),
       },
     },
@@ -249,7 +249,7 @@ let FavoritesStack = createStackNavigator(
   {
     defaultNavigationOptions: {
       header: ({ navigation }) => (
-        <Header hasDrawer rightRender navigation={navigation} />
+        <Header hasDrawer dropdown rightRender navigation={navigation} />
       ),
     },
   },
