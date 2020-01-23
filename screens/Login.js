@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
+  TouchableWithoutFeedbackComponent,
 } from 'react-native';
 import RoundButton from '../components/RoundButton';
 import colors from '../constants/colors';
@@ -89,19 +90,39 @@ const Login = ({navigation, dispatch}) => {
           <TouchableWithoutFeedback
             onPress={() => {
               manager
-                .authorize('google', {scopes: 'email,profile'})
+                .authorize('google', {scopes: 'email'})
                 .then(response => {
                   console.warn(response);
                 })
                 .catch(error => {
                   console.warn(error);
                 });
+              // .finally(res => {
+              //   console.warn(res);
+              // });
             }}>
             <View>
               <BlackButton iconName="google-plus" />
             </View>
           </TouchableWithoutFeedback>
-          <BlackButton iconName="facebook" />
+          <TouchableWithoutFeedback
+            onPress={() => {
+              manager
+                .authorize('facebook', {scopes: 'profile,email'})
+                .then(response => {
+                  console.warn(response);
+                })
+                .catch(error => {
+                  console.warn(error);
+                })
+                .finally(res => {
+                  console.warn(res);
+                });
+            }}>
+            <View>
+              <BlackButton iconName="facebook" />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </View>
     </View>

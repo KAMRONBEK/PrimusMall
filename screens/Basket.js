@@ -23,7 +23,7 @@ const Basket = ({navigation, style, cart}) => {
               backgroundColor: colors.superLightGray,
             },
           ]}>
-          {cart.items.length === 0 ? (
+          {cart && cart.items.length === 0 ? (
             <View
               style={{
                 backgroundColor: colors.white,
