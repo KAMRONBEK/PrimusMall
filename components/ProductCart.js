@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import colors from '../constants/colors';
 import Icon from '../constants/icons';
 import NavigationService from '../services/NavigationServices';
-import { toggleFavorite } from '../redux/actions'
+import { toggleFavorite, addToCart } from '../redux/actions'
 
 import {
   Dimensions,
@@ -16,8 +16,9 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { connect } from 'react-redux';
+import { withNavigation } from 'react-navigation';
 
-const ProductCart = ({ item, index, favorite, dispatch }) => {
+const ProductCart = ({ item, index, favorite, dispatch, navigation }) => {
   // let [favIcon, setFavIcon] = useState('heart-empty');
   let favIcon = 'heart-empty'
   if (favorite[item.id]) {
@@ -40,7 +41,7 @@ const ProductCart = ({ item, index, favorite, dispatch }) => {
             style={[
               styles.brand,
               {
-                backgroundColor: colors.red,
+                backgroundColor: item.brand_name ? colors.red : 'transparent',
               },
             ]}>
             <Text
@@ -50,7 +51,7 @@ const ProductCart = ({ item, index, favorite, dispatch }) => {
                   color: colors.white,
                 },
               ]}>
-              {item.brand_id}
+              {item.brand_name}
             </Text>
           </View>
           <TouchableWithoutFeedback
@@ -63,8 +64,8 @@ const ProductCart = ({ item, index, favorite, dispatch }) => {
         <View style={styles.image}>
           <Image
             style={{
-              height: 80,
-              width: (Dimensions.get('window').width - 30) / 2 - 20,
+              height: 120,
+              width: 120,
             }}
             source={{
               uri: item.preview_image,
@@ -73,15 +74,15 @@ const ProductCart = ({ item, index, favorite, dispatch }) => {
         </View>
         <View style={styles.bottom}>
           <View style={styles.titleWrap}>
-            <Text numberOfLines={3} style={styles.modelName}>{item.name}</Text>
-            <Text style={styles.type}>{item.brand}</Text>
+            <Text numberOfLines={1} style={styles.modelName}>{item.name}</Text>
+            <Text style={styles.type}>{item.category_name}</Text>
           </View>
           <View style={styles.priceWrap}>
             <View style={styles.prices}>
-              <Text style={styles.prevPrice}>
+              {item.price && item.price.old_price_value ? <><Text style={styles.prevPrice}>
                 {item.price && item.price.old_price_value}
                 {item.price && item.price.preview_text}
-              </Text>
+              </Text></> : <View />}
               <Text
                 style={[
                   styles.currentPrice,
@@ -93,13 +94,18 @@ const ProductCart = ({ item, index, favorite, dispatch }) => {
                 {item.price.preview_text}
               </Text>
             </View>
-            <Icon
-              name="bag"
-              size={30}
-              style={{
-                marginRight: 20,
-              }}
-            />
+            <TouchableWithoutFeedback onPress={() => {
+              dispatch(addToCart(item));
+              navigation.navigate('Basket')
+            }}>
+              <Icon
+                name="bag"
+                size={30}
+                style={{
+                  marginRight: 20,
+                }}
+              />
+            </TouchableWithoutFeedback>
           </View>
         </View>
       </View>
@@ -124,8 +130,11 @@ const styles = StyleSheet.create({
     width: (Dimensions.get('window').width - 30) / 2 - 20,
     margin: 10,
     borderColor: 'red',
+    alignItems: 'center'
   },
-  bottom: {},
+  bottom: {
+    paddingBottom:10
+  },
   brand: {
     marginTop: 10,
     marginRight: 10,
@@ -135,25 +144,27 @@ const styles = StyleSheet.create({
     left: -5,
   },
   brandText: {
-    fontSize: 15,
-    paddingRight: 25,
-    paddingLeft: 25,
+    fontSize: 12,
+    paddingRight: 10,
+    paddingLeft: 10,
     fontWeight: '200',
   },
   favorite: {
-    marginTop: 20,
-    marginRight: 20,
+    marginTop: 10,
+    marginRight: 10,
   },
   titleWrap: {
     marginLeft: 15,
   },
   modelName: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 12,
+    fontWeight: 'bold',
+
   },
   type: {
     fontSize: 14,
     fontWeight: '200',
+    color: colors.gray
   },
   priceWrap: {
     marginLeft: 15,
@@ -182,4 +193,4 @@ const mapStateToProps = ({ favorite, cart }) => ({
 
 
 
-export default connect(mapStateToProps)(ProductCart);
+export default connect(mapStateToProps)(withNavigation(ProductCart));

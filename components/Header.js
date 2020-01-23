@@ -1,7 +1,7 @@
 'use strict';
 
-import React from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, TouchableWithoutFeedback, View, LayoutAnimation, Picker } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { withNavigation } from 'react-navigation';
@@ -9,21 +9,47 @@ import colors from '../constants/colors';
 import Icon from '../constants/icons';
 import NavigationService from '../services/NavigationServices';
 import { connect } from 'react-redux';
+import requests from '../api/api';
+import { setCategory, categoriesLoaded } from '../redux/actions/category';
 
 const Header = ({
   hasDrawer,
   backwardArrow,
   simpleTitle,
-  dropdownTitle,
+  dropdown,
   rightRender,
   navigation,
-  cart
+  cart,
+  selectedItem,
+  items,
+  dispatch
 }) => {
+  useEffect(() => {
+    requests.main.getCategories().then(res => {
+      dispatch(categoriesLoaded(res.data.data))
+    })
+  }, [])
+  let renderPicker = () => {
+    return <View style={{ flex: 1 }}>
+      <Picker
+        style={{ marginTop: -10, fontSize: 18, fontWeight: 'bold' }}
+        itemStyle={{ fontSize: 18, fontWeight: 'bold' }}
+
+        selectedValue={selectedItem}
+        onValueChange={(val) => {
+          dispatch(setCategory(val))
+        }}>
+        {items && items.map((el, i) => {
+          return <Picker.Item style={{ fontSize: 18, fontWeight: 'bold' }} key={el.id} label={el.name} value={el.id} />
+        })}
+      </Picker>
+    </View>
+  }
   const renderLeft = () => {
     return (
       <View style={styles.left}>
         {hasDrawer ? (
-          <TouchableWithoutFeedback onPress={NavigationService.toggleDrawer}>
+          <TouchableWithoutFeedback onPress={navigation.toggleDrawer}>
             <View>
               <SimpleLineIcons name="menu" size={25} />
             </View>
@@ -49,20 +75,7 @@ const Header = ({
   const renderMiddle = () => {
     return (
       <View style={styles.middle}>
-        {dropdownTitle ? (
-          <React.Fragment>
-            <Text
-              style={[
-                styles.title,
-                {
-                  fontWeight: '500',
-                },
-              ]}>
-              {dropdownTitle}
-            </Text>
-            <Icon name="angle-down" size={25} />
-          </React.Fragment>
-        ) : simpleTitle ? (
+        {dropdown ? renderPicker() : simpleTitle ? (
           <Text
             style={[
               styles.title,
@@ -73,12 +86,13 @@ const Header = ({
             {simpleTitle}
           </Text>
         ) : (
-              <React.Fragment />
-            )}
+            <React.Fragment />
+          )}
       </View>
     );
   };
   const renderRight = () => {
+
     return (
       <React.Fragment>
         {rightRender && (
@@ -86,7 +100,7 @@ const Header = ({
             <AntDesign name="search1" size={25} />
             <TouchableWithoutFeedback
               onPress={() => {
-                NavigationService.navigate('Basket', {});
+                navigation.navigate('Basket', {});
               }}>
               <View style={styles.bagIcon}>
                 <Icon name="bag" size={25} />
@@ -176,8 +190,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ cart }) => ({
-  cart
+const mapStateToProps = ({ cart, category }) => ({
+  cart, selectedItem: category.selected, items: category.items
 })
 
 

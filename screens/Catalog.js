@@ -18,13 +18,13 @@ import ProductCart from '../components/ProductCart'
 
 const Catalog = ({ navigation }) => {
   const { navigate } = navigation;
-  let childs = navigation.getParam('childs');
   let index = navigation.getParam('index');
   let item = navigation.getParam('item');
   let { name: title } = childs[index];
   const [selectedIndex, setselectedIndex] = useState(index);
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [childs, setChildren] = useState([]);
   let filters = {};
   let normalizeFilters = (data) => {
     return Object.keys(data).reduce((prev, key) => {
@@ -39,8 +39,11 @@ const Catalog = ({ navigation }) => {
       .finally(() => setLoading(false));
   }
   useEffect(() => {
-    filters['category'] = childs[index].id;
+    filters['category'] = item.id;
     populateProducts();
+    requests.main.getCategoryChilds(item.id).then(res=>{
+      setChildren(res.data.data)
+    })
   }, []);
   return (
     <View style={styles.container}>
@@ -139,6 +142,7 @@ const styles = StyleSheet.create({
   selectorWrap: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    paddingBottom: 10
   },
   selector: {
     flexDirection: 'row',
