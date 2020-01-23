@@ -1,11 +1,11 @@
 import OAuthManager from 'react-native-oauth';
 
-const manager = new OAuthManager('firestackexample');
+const manager = new OAuthManager('Pmall');
 manager.configure({
   facebook: {
     client_id: '2338841292888111',
     client_secret: '235c84be2069a051ea2cfee5ab2aa3ef',
-    callback_url: 'https://pmall.uz/flynsarmy/sociallogin/Facebook/callback',
+    // callback_url: 'https://pmall.uz/flynsarmy/sociallogin/Facebook/callback',
   },
   google: {
     callback_url: `https://pmall.uz/flynsarmy/sociallogin/Google/callback`,
