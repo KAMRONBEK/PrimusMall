@@ -197,6 +197,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-oauth')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
@@ -210,6 +211,25 @@ dependencies {
       releaseImplementation files(hermesPath + "hermes-release.aar")
     } else {
       implementation jscFlavor
+    }
+}
+
+subprojects {
+    project.configurations.all {
+        afterEvaluate {project ->
+            if (project.hasProperty("android")) {
+                android {
+                    compileSdkVersion rootProject.ext.compileSdkVersion
+                    buildToolsVersion rootProject.ext.buildToolsVersion
+                }
+            }
+        }
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion rootProject.ext.buildToolsVersion
+            }
+        }
     }
 }
 

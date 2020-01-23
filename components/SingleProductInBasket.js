@@ -13,7 +13,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import colors from '../constants/colors';
 import { connect } from 'react-redux';
-import { decrementCartItemCount, incrementCartItemCount } from '../redux/actions';
+import { decrementCartItemCount, incrementCartItemCount, removeFromCart } from '../redux/actions';
 
 const SingleProductInBasket = ({ item, dispatch, index }) => {
   return (
@@ -43,7 +43,7 @@ const SingleProductInBasket = ({ item, dispatch, index }) => {
         <View style={styles.infoWrap}>
           <View style={styles.info}>
             <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.type}>{item.category}</Text>
+            <Text style={styles.type}>{typeof item.category === 'object' ? item.category.name : item.category_name}</Text>
             <Text style={styles.text}>
               {strings.article}
               {item.code}
@@ -74,9 +74,13 @@ const SingleProductInBasket = ({ item, dispatch, index }) => {
               />
             </View>
           </View>
-          <View style={styles.trash}>
-            <EvilIcons name="trash" color={colors.red} size={25} />
-          </View>
+          <TouchableWithoutFeedback onPress={() => {
+            dispatch(removeFromCart(item.id))
+          }}>
+            <View style={styles.trash}>
+              <EvilIcons name="trash" color={colors.red} size={35} />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </View>
       <View style={styles.bottom}>
@@ -179,9 +183,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   trash: {
-    marginTop: 4,
-    paddingRight: 20,
-    paddingLeft: 20,
+    // marginTop: 4,
+    // paddingRight: 20,
+    // paddingLeft: 20,
+    marginLeft: -15
   },
   bottom: {
     paddingRight: 20,

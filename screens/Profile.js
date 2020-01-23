@@ -98,8 +98,9 @@ const Profile = ({ user, }) => {
             textValue={data.username}
             legend="Номер телефона"
             iconName="phone"
+            textWeight="bold"
+            fontSize={18}
             noBorder={data.editing}
-            textWeight="600"
             onChangeText={e => { updateState('username', e) }}
           />
           <TextInputField
@@ -107,7 +108,8 @@ const Profile = ({ user, }) => {
             textValue={data.email}
             legend="Email"
             iconName="e-mail"
-            textWeight="600"
+            textWeight="bold"
+            fontSize={18}
             noBorder={data.editing}
             onChangeText={e => { updateState('email', e) }}
           />
@@ -116,7 +118,8 @@ const Profile = ({ user, }) => {
             textValue={data.user_address}
             legend="Город"
             iconName="compass"
-            textWeight="600"
+            textWeight="bold"
+            fontSize={18}
             noBorder={data.editing}
             onChangeText={e => { updateState('user_address', e) }}
           />
@@ -193,7 +196,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 23,
-    fontWeight: '400',
+    fontWeight: 'bold',
   },
   infoWrap: {
     width: Dimensions.get('window').width - 40,

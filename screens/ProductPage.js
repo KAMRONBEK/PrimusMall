@@ -6,12 +6,13 @@ import strings from '../localization/strings';
 import Carousel from 'react-native-snap-carousel';
 import requests from '../api/api'
 import { connect } from 'react-redux';
-import { addToCart } from '../redux/actions';
+import { addToCart, toggleFavorite } from '../redux/actions';
 
 
 const ProductPage = ({ navigation, dispatch, favorite }) => {
   let data = navigation.getParam('item')
   const [item, setItem] = useState(data)
+  let store = item.store || {};
   useEffect(() => {
     requests.main.getProduct(data.id).then((res) => {
       setItem(res.data.data)
@@ -64,7 +65,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
                 fontSize: 15,
                 marginTop: 12,
               }}>
-              {item.category_name}
+              {item.category && item.category.name}
             </Text>
             <Text
               style={{
@@ -103,16 +104,20 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               ]}>
               Выбрать размер
             </Text>
+            <View>
+
+            </View>
           </View>
           <View style={styles.about}>
-            <Text style={styles.title}>{strings.aboutProduct}</Text>
-            <Text style={styles.up}>{strings.upperMaterial}</Text>
+            <Text style={[styles.name, { paddingBottom: 20 }]}>{strings.aboutProduct}</Text>
+            <Text style={styles.title}>{item.description}</Text>
+            {/* <Text style={styles.up}>{strings.upperMaterial}</Text>
             <Text style={styles.down}>{strings.fauxLeather}</Text>
             <Text style={styles.up}>{strings.innerMaterial}</Text>
             <Text style={styles.down}>{strings.fauxFur}</Text>
             <Text style={styles.up}>{strings.outsoleMaterial}</Text>
-            <Text style={styles.down}>{strings.thermoplasticRubber}</Text>
-            <Text
+            <Text style={styles.down}>{strings.thermoplasticRubber}</Text> */}
+            {/* <Text
               style={[
                 styles.selectSize,
                 {
@@ -120,16 +125,16 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
                 },
               ]}>
               Подробнее
-            </Text>
+            </Text> */}
           </View>
           <View style={styles.shop}>
             <Text style={styles.title}>{strings.shop}</Text>
-            <View style={styles.nikeWrap}>
-              <Text style={styles.nike}>{strings.nike}</Text>
+            {store.logo && <View style={styles.nikeWrap}>
+              <Text style={styles.nike}>{store.name}</Text>
               <Image
                 source={{
                   uri:
-                    'https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c4f3.png',
+                    store.logo.path,
                 }}
                 style={{
                   width: 100,
@@ -138,6 +143,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
                 resizeMode="cover"
               />
             </View>
+            }
             <Text
               style={[
                 styles.paragraph,
@@ -145,20 +151,20 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
                   marginBottom: 10,
                 },
               ]}>
-              {item.description}
+              {store.content}
             </Text>
             <Text style={styles.shopTitle}>{strings.address}</Text>
             <Text style={styles.paragraph}>
-              ул. Амира Темура, 60 (Юнус-Абадский р-н). Метро: Абдулла Кодирий.
+              {store.address}
             </Text>
             <Text style={styles.shopTitle}>{strings.phone}</Text>
-            <Text style={styles.paragraph}>(+998) 71-235-0999</Text>
-            <Text style={styles.shopTitle}>{strings.workingHours}</Text>
-            <Text style={styles.paragraph}>с 10:00 до 22:00 (без обеда).</Text>
+            <Text style={styles.paragraph}>{store.contacts}</Text>
+            {/* <Text style={styles.shopTitle}>{strings.workingHours}</Text>
+            <Text style={styles.paragraph}>с 10:00 до 22:00 (без обеда).</Text> */}
           </View>
         </View>
       </ScrollView>
-      <BlurFooter favIcon={favorite[item.id] ? "heart" : "heart-empty"} onPress={() => {
+      <BlurFooter favIcon={favorite[item.id] ? "heart" : "heart-empty"} onLeftPress={() => dispatch(toggleFavorite(item))} onPress={() => {
         dispatch(addToCart(item))
       }} buttonText="В корзину" />
     </React.Fragment>
@@ -215,7 +221,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   about: {
-    marginTop: 50,
+    marginTop: 20,
   },
   title: {
     fontSize: 19,

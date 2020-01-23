@@ -21,8 +21,9 @@ const TextInputField = ({
   notEntry,
   textValue,
   noBorder,
-  textWeight,
+  textWeight = '400',
   value,
+  fontSize = 14,
   onChangeText = () => { },
 }) => {
   let [borderColor, setBorderColor] = useState(colors.lightGray);
@@ -59,13 +60,14 @@ const TextInputField = ({
             }}
             value={value || textValue}
             placeholder={placeholder}
-            style={[styles.inputField]}
+            style={[styles.inputField, { fontSize, fontWeight: textWeight }]}
             secureTextEntry={secureTextEntry}
           />
         ) : (
             <Text
               style={{
                 fontWeight: textWeight != '' ? textWeight : '400',
+                fontSize
               }}>
               {textValue}
             </Text>

@@ -8,7 +8,7 @@ import { userLoaded, cartLoaded, favoritesLoaded } from '../redux/actions'
 const Loader = ({ user, dispatch, navigation }) => {
     let bootstrap = async () => {
         let token = await AsyncStorage.getItem('@token');
-        let cart = await AsyncStorage.getItem('@cart') || "[]"
+        let cart = await AsyncStorage.getItem('@cart') || JSON.stringify({ items: [] })
         let favorites = await AsyncStorage.getItem('@favorites') || "{}"
         dispatch(cartLoaded(JSON.parse(cart)));
         dispatch(favoritesLoaded(JSON.parse(favorites)));

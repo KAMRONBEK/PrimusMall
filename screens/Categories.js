@@ -4,15 +4,15 @@ import colors from '../constants/colors';
 import api from '../api/api';
 import { reducer, SET } from '../utils/state';
 import CategoryItem from '../components/CategoryItem';
-import Header from '../components/Header';
+import { connect } from 'react-redux';
 
-const Categories = ({ navigation }) => {
+const Categories = ({ navigation, selected, items }) => {
   const [state, dispatch] = useReducer(reducer, { categories: [] });
   useEffect(() => {
-    api.main.getCategories().then(({ data }) => {
+    api.main.getCategoryChilds(selected).then(({ data }) => {
       dispatch({ type: SET, name: 'categories', value: data.data });
     });
-  }, []);
+  }, [selected]);
   return (
     <View style={[styles.container, { flex: 1 }]}>
       <FlatList
@@ -28,10 +28,16 @@ const Categories = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.superLightGray,
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
   },
 });
 
-export default Categories;
+const mapStateToProps = ({ category: { selected, items } }) => ({
+  selected, items
+})
+
+
+
+export default connect(mapStateToProps)(Categories);
