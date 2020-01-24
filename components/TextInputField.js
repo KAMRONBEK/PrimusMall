@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import {
   TextInput,
@@ -13,6 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Icon from '../constants/icons';
 
 const TextInputField = ({
+  width,
   placeholder,
   iconName,
   legend,
@@ -24,12 +25,18 @@ const TextInputField = ({
   textWeight = '400',
   value,
   fontSize = 14,
-  onChangeText = () => { },
+  onChangeText = () => {},
 }) => {
   let [borderColor, setBorderColor] = useState(colors.lightGray);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          width: width != null ? width : null,
+        },
+      ]}>
       <Text style={styles.legend}>{legend}</Text>
       <View
         style={[
@@ -43,7 +50,7 @@ const TextInputField = ({
           <Icon
             name={iconName}
             size={15}
-            style={{ marginRight: 10, marginLeft: -5 }}
+            style={{marginRight: 10, marginLeft: -5}}
           />
         </View>
         {!notEntry ? (
@@ -60,23 +67,23 @@ const TextInputField = ({
             }}
             value={value || textValue}
             placeholder={placeholder}
-            style={[styles.inputField, { fontSize, fontWeight: textWeight }]}
+            style={[styles.inputField, {fontSize, fontWeight: textWeight}]}
             secureTextEntry={secureTextEntry}
           />
         ) : (
-            <Text
-              style={{
-                fontWeight: textWeight != '' ? textWeight : '400',
-                fontSize
-              }}>
-              {textValue}
-            </Text>
-          )}
+          <Text
+            style={{
+              fontWeight: textWeight != '' ? textWeight : '400',
+              fontSize,
+            }}>
+            {textValue}
+          </Text>
+        )}
         <TouchableOpacity onPress={() => onChangeText(null)}>
           <MaterialCommunityIcons
             name={secondaryIconName}
             size={18}
-            style={{ opacity: 0.5 }}
+            style={{opacity: 0.5}}
           />
         </TouchableOpacity>
       </View>
