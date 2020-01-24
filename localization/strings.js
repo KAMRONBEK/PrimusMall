@@ -83,4 +83,5 @@ export default {
   byDescendingPrice: 'По убыванию цену',
   byHighRating: 'По высокий рейтинг',
   byLowRating: 'По низкий рейтинг',
+  searchItem: 'Поиск предмета',
 };
