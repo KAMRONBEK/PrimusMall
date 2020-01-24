@@ -74,8 +74,10 @@ const SingleProductInBasket = ({ item, dispatch, index }) => {
               />
             </View>
           </View>
+        </View>
+        <View style={styles.flex}>
           <TouchableWithoutFeedback onPress={() => {
-            dispatch(removeFromCart(item.id))
+            dispatch(removeFromCart(index))
           }}>
             <View style={styles.trash}>
               <EvilIcons name="trash" color={colors.red} size={35} />
@@ -148,6 +150,7 @@ const SingleProductInBasket = ({ item, dispatch, index }) => {
 };
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   container: {
     marginBottom: 10,
   },
@@ -186,7 +189,9 @@ const styles = StyleSheet.create({
     // marginTop: 4,
     // paddingRight: 20,
     // paddingLeft: 20,
-    marginLeft: -15
+    // marginLeft: -15
+    // marginVertical: 15,
+    // marginHorizontal: 15
   },
   bottom: {
     paddingRight: 20,

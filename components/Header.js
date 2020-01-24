@@ -26,7 +26,8 @@ const Header = ({
 }) => {
   useEffect(() => {
     requests.main.getCategories().then(res => {
-      dispatch(categoriesLoaded(res.data.data))
+      dispatch(categoriesLoaded(res.data.data));
+      dispatch(setCategory(res.data.data && res.data.data.length > 0 ? res.data.data[0].id : 0))
     })
   }, [])
   let renderPicker = () => {
@@ -34,7 +35,6 @@ const Header = ({
       <Picker
         style={{ marginTop: -10, fontSize: 18, fontWeight: 'bold' }}
         itemStyle={{ fontSize: 18, fontWeight: 'bold' }}
-
         selectedValue={selectedItem}
         onValueChange={(val) => {
           dispatch(setCategory(val))

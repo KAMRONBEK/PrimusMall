@@ -77,4 +77,5 @@ export default {
   minutes: 'Минута',
   time: 'Время',
   noItems: 'Нет продуктов',
+  pickSize: 'Выбрать размер'
 };

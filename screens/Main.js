@@ -13,6 +13,8 @@ import ProductCart from '../components/ProductCart';
 import Slider from '../components/Slider';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
+import { normalizeFilters } from '../utils/object';
+import { reducer, MERGE_LIST } from '../utils/state';
 
 // const SliderImageList = [
 //   'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
@@ -25,30 +27,33 @@ import strings from '../localization/strings';
 let SET = 'SET';
 
 export default function Main({ navigation }) {
-  let reducer = (state, { type, key, value }) => {
-    switch (type) {
-      case SET:
-        return { ...state, [key]: value };
-      default:
-        return state;
-    }
-  };
-  const [state, setState] = useReducer(reducer, { loading: true, banner: [] });
+  // let reducer = (state, { type, key, value }) => {
+  //   switch (type) {
+  //     case SET:
+  //       return { ...state, [key]: value };
+  //     default:
+  //       return state;
+  //   }
+  // };
+  const [state, setState] = useReducer(reducer, { loading: true, banner: [], products: [] });
   const { navigate } = navigation;
-  let updateState = (key, value) => {
-    setState({ type: SET, value, key });
+  let updateState = (name, value) => {
+    setState({ type: SET, value, name });
   };
-  let filters = { sort: 'new', perpage: 20, page: 1 }
-  useEffect(() => {
+  let filters = { sort: 'new', perpage: 20, page: 1 };
+  let populateProducts = () => {
     api.main
-      .getProducts()
+      .filterProducts(normalizeFilters(filters))
       .then(res => {
-        updateState('products', res.data.data);
+        setState({ type: MERGE_LIST, name: 'products', value: res.data.data });
       })
       .catch(({ response: res }) => {
         console.warn(res);
       })
       .finally(() => {
+        if (filters.page !== 1) {
+          return
+        }
         api.main.getBanner().then(res => {
           updateState('banner', res.data.data)
         }).catch(res => {
@@ -57,6 +62,9 @@ export default function Main({ navigation }) {
           updateState('loading', false);
         })
       });
+  }
+  useEffect(() => {
+    populateProducts();
   }, []);
   if (state.loading) {
     return (
@@ -66,7 +74,10 @@ export default function Main({ navigation }) {
     );
   }
 
-  let onEndReach = {}
+  let onEndReach = () => {
+    filters.page = filters.page + 1;
+    populateProducts();
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>

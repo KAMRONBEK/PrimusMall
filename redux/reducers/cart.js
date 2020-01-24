@@ -14,7 +14,7 @@ export default (state = initialState, { type, payload }) => {
             return newState
         case REMOVE_FROM_CART:
             let items = [...state.items];
-            items = items.filter((value, index) => value.id !== payload)
+            items = items.filter((value, index) => index !== payload)
             newState = { ...state, items };
             AsyncStorage.setItem("@cart", JSON.stringify(newState))
             return newState;

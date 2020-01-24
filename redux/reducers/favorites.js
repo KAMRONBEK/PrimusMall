@@ -1,5 +1,5 @@
 import { TOGGLE_ITEM, FAVORITES_LOADED } from "../types"
-import { removeKeyFromObject } from "../../utils/state"
+import { removeKeyFromObject } from "../../utils/object"
 import AsyncStorage from "@react-native-community/async-storage"
 
 const initialState = {}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View, TouchableWithoutFeedback, LayoutAnimation } from 'react-native';
 import BlurFooter from '../components/BlurFooter';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
@@ -8,10 +8,11 @@ import requests from '../api/api'
 import { connect } from 'react-redux';
 import { addToCart, toggleFavorite } from '../redux/actions';
 
-
 const ProductPage = ({ navigation, dispatch, favorite }) => {
   let data = navigation.getParam('item')
-  const [item, setItem] = useState(data)
+  const [item, setItem] = useState(data);
+  const [pickingSize, setPickingSize] = useState(false);
+  const [offerIndex, setOfferIndex] = useState(-1)
   let store = item.store || {};
   useEffect(() => {
     requests.main.getProduct(data.id).then((res) => {
@@ -28,7 +29,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               backgroundColor: colors.superLightGray,
             },
           ]}>
-          {item.images && <View
+          {item.images && item.preview_image && <View
             style={[
               {
                 backgroundColor: colors.white,
@@ -40,7 +41,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               layout={'stack'}
               sliderWidth={Dimensions.get('window').width - 60}
               itemWidth={Dimensions.get('window').width - 60}
-              data={item.images}
+              data={[{ image: item.preview_image }, ...item.images]}
               renderItem={({ item: element }) => <Image
                 source={{
                   uri:
@@ -95,18 +96,30 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
                 сум
               </Text>
             </View>
-            <Text
-              style={[
-                styles.selectSize,
-                {
-                  color: colors.blue,
-                },
-              ]}>
-              Выбрать размер
-            </Text>
-            <View>
-
-            </View>
+            {item.offer && item.offer.length > 0 ? <>
+              <TouchableWithoutFeedback onPress={() => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInOut)
+                setPickingSize(!pickingSize)
+              }}>
+                <Text
+                  style={[
+                    styles.selectSize,
+                    {
+                      color: colors.blue,
+                    },
+                  ]}>
+                  {strings.pickSize}
+                </Text>
+              </TouchableWithoutFeedback>
+              {pickingSize && <View style={styles.offerContainer}>
+                {item.offer.map((e, i) => {
+                  return <TouchableWithoutFeedback onPress={() => {
+                    setOfferIndex(i === offerIndex ? -1 : i)
+                  }}>
+                    <Text style={[styles.singleOffer, i === offerIndex && styles.activeOffer]}>{e.name}</Text>
+                  </TouchableWithoutFeedback>
+                })}
+              </View>}</> : null}
           </View>
           <View style={styles.about}>
             <Text style={[styles.name, { paddingBottom: 20 }]}>{strings.aboutProduct}</Text>
@@ -158,14 +171,14 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               {store.address}
             </Text>
             <Text style={styles.shopTitle}>{strings.phone}</Text>
-            <Text style={styles.paragraph}>{store.contacts}</Text>
+            <Text style={styles.paragraph}>{store.pmall_phone}</Text>
             {/* <Text style={styles.shopTitle}>{strings.workingHours}</Text>
             <Text style={styles.paragraph}>с 10:00 до 22:00 (без обеда).</Text> */}
           </View>
         </View>
       </ScrollView>
       <BlurFooter favIcon={favorite[item.id] ? "heart" : "heart-empty"} onLeftPress={() => dispatch(toggleFavorite(item))} onPress={() => {
-        dispatch(addToCart(item))
+        dispatch(addToCart({ ...item, offerIndex }))
       }} buttonText="В корзину" />
     </React.Fragment>
   );
@@ -261,6 +274,19 @@ const styles = StyleSheet.create({
     fontWeight: '200',
     opacity: 0.6,
   },
+  offerContainer: {
+    flexDirection: 'row',
+  },
+  singleOffer: {
+    padding: 10,
+    color: colors.darkGray,
+    fontSize: 16,
+  },
+  activeOffer: {
+    padding: 10,
+    color: colors.red,
+    fontSize: 16,
+  }
 });
 
 const mapStateToProps = ({ favorite }) => ({

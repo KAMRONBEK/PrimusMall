@@ -57,7 +57,8 @@ let requests = {
     getStoreProducts: id => axios.get(`${url}/store/${id}/products`).then(res => res),
     getProduct: id => axios.get(`${url}/product/${id}`).then(res => res),
     getBanner: () => axios.get(`${url}/banners/main`),
-    getShippingTypes: () => axios.get(`${url}/shippingtypelist`)
+    getShippingTypes: () => axios.get(`${url}/shippingtypelist`),
+    filterStores: (filters) => axios.get(`${url}/stores${filters}`).then(res => res),
   },
   user: {
     getUser: token => axios.get(`${url}/user/get`, { headers: { Authorization: `Bearer ${token}` } }),

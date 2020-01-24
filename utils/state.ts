@@ -1,26 +1,20 @@
 export const SET = 'SET';
 export const SET_MULTIPLE = 'SET_MULTIPLE';
+export const MERGE_LIST = 'MERGE_LIST';
 
-export const reducer = (state, {type, ...payload}) => {
+export const reducer = (state, {type, name, value, values, names}) => {
   switch (type) {
     case SET:
-      let {name, value} = payload;
       return {...state, [name]: value};
     case SET_MULTIPLE:
       let temp = state;
-      let {values, names} = payload;
       names.forEach((key, i) => {
         temp[key] = values[i];
       });
       return {...state, ...temp};
+    case MERGE_LIST:
+      return {...state, [name]: [...state[name], ...value]};
     default:
       return state;
   }
-};
-
-export let removeKeyFromObject = (obj, keyToFind) => {
-  return Object.keys(obj).reduce((prev, current, index) => {
-    if (keyToFind !== current) return {...prev, [current]: obj[current]};
-    return prev;
-  }, {});
 };

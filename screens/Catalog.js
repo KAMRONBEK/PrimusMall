@@ -15,6 +15,7 @@ import strings from '../localization/strings';
 import colors from '../constants/colors';
 import requests from '../api/api';
 import ProductCart from '../components/ProductCart'
+import { normalizeFilters } from '../utils/object';
 
 const Catalog = ({ navigation }) => {
   const { navigate } = navigation;
@@ -26,18 +27,18 @@ const Catalog = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [childs, setChildren] = useState([]);
-  let filters = {};
-  let normalizeFilters = (data) => {
-    return Object.keys(data).reduce((prev, key) => {
-      return `${prev + key}=${filters[key]}`
-    }, "?")
-  }
+  let defaultFilters = { perpage: 20, page: 1 }
+  let filters = { ...defaultFilters };
   let populateProducts = () => {
     setLoading(true)
     requests.main.filterProducts(normalizeFilters(filters))
-      .then(res => { setProducts(res.data.data) })
+      .then(res => { setProducts([...products, ...res.data.data]) })
       .catch(({ response }) => console.warn(response))
       .finally(() => setLoading(false));
+  }
+  let onEndReach = () => {
+    filters.page++;
+    populateProducts();
   }
   useEffect(() => {
     filters['category'] = item.id;
@@ -60,7 +61,13 @@ const Catalog = ({ navigation }) => {
             {childs.map((e, i) => {
               return (
                 <TouchableWithoutFeedback onPress={() => {
-                  filters['category'] = e.id;
+                  filters = { ...defaultFilters, category: e.id };
+                  if (i === selectedIndex) {
+                    filters.category = item.id
+                    setselectedIndex(-1);
+                    populateProducts();
+                    return;
+                  }
                   setselectedIndex(i);
                   populateProducts();
                 }}>
@@ -77,7 +84,7 @@ const Catalog = ({ navigation }) => {
           </View>
         </ScrollView>
         <View style={styles.selectorWrap}>
-          <TouchableWithoutFeedback onPress={() => navigate('Filter', { item })}>
+          <TouchableWithoutFeedback onPress={() => navigate('Filter', { item: selectedIndex !== -1 ? childs[selectedIndex] : item.id })}>
             <View style={styles.selector}>
               <Icon name="controls" size={18} />
               <Text style={styles.ml10}>{strings.filter}</Text>
@@ -99,6 +106,8 @@ const Catalog = ({ navigation }) => {
           <FlatList
             keyExtractor={e => e.id}
             data={products}
+            onEndReachedThreshold={.5}
+            onEndReached={onEndReach}
             numColumns={2}
             renderItem={(itemProps) => <ProductCart {...itemProps} />} /> :
           <View style={styles.centeredContainer}>

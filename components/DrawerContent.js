@@ -67,7 +67,7 @@ const DrawerContent = ({ navigation, user: parent, dispatch }) => {
             NavigationServices.navigate('Shop');
           }}
         />
-        <DrawerMenuItem
+        {/* <DrawerMenuItem
           text={strings.forMen}
           iconName="shoe_men"
           small
@@ -91,7 +91,7 @@ const DrawerContent = ({ navigation, user: parent, dispatch }) => {
             NavigationServices.toggleDrawer();
             NavigationServices.navigate('Shop');
           }}
-        />
+        /> */}
         <DrawerMenuItem
           text={strings.favorite}
           iconName="heart-empty"
