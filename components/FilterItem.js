@@ -16,10 +16,11 @@ const FilterItem = ({
   color,
   smallIcon,
   text,
-  subFilterList,
+  subFilterList = null,
   setData,
 }) => {
   let isLink = !!subFilterList;
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {

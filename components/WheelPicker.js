@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
     height: Platform.OS === 'android' ? 30 : 30,
     borderColor: colors.red,
     alignItems: 'center',
+    // marginVertical: 40,
   },
   picker: {
     width: 75,
