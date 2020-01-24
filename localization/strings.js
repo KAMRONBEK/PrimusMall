@@ -77,6 +77,7 @@ export default {
   minutes: 'Минута',
   time: 'Время',
   noItems: 'Нет продуктов',
+  pickSize: 'Выбрать размер',
   byDate: 'По новинкам',
   byAscendingPrice: 'По возрастанию цену',
   byDescendingPrice: 'По убыванию цену',

@@ -43,7 +43,7 @@ const Basket = ({ navigation, style, cart }) => {
         price={
           cart.items &&
           cart.items.reduce(
-            (prev, current) => prev + current.price.price_value,
+            (prev, current) => prev + current.price.price_value * current.count,
             0,
           )
         }

@@ -3,14 +3,23 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import api from '../api/api';
 import ShopItem from '../components/ShopItem';
 import colors from '../constants/colors';
+import { normalizeFilters } from '../utils/object';
 
-const Shop = ({ params }) => {
+const Shop = ({ }) => {
   const [shops, setShops] = useState([]);
-  useEffect(() => {
-    api.main.getStores().then(res => {
-      setShops(res.data.data);
+  let filters = { perpage: 20, page: 1 }
+  let populateShops = () => {
+    api.main.filterStores(normalizeFilters(filters)).then(res => {
+      setShops([...shops, ...res.data.data]);
     });
+  }
+  useEffect(() => {
+    populateShops();
   }, []);
+  let onEndReach = () => {
+    filters.page++;
+    populateShops();
+  }
   return (
     <View style={styles.container}>
       <FlatList
@@ -18,6 +27,8 @@ const Shop = ({ params }) => {
         numColumns={2}
         data={shops}
         renderItem={({ item }) => <ShopItem {...{ item }} />}
+        onEndReachedThreshold={.5}
+        onEndReached={onEndReach}
       />
     </View>
   );

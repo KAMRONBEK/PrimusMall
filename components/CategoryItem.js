@@ -16,7 +16,7 @@ import colors from '../constants/colors';
 
 const CategoryItem = ({ item, navigation }) => {
   const [state, dispatch] = useReducer(reducer, { childs: [], expanded: false });
-  let prentPress = () => {
+  let parentPress = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     dispatch({ type: SET, name: 'expanded', value: !state.expanded });
     if (state.childs && state.childs.length > 0) {
@@ -36,7 +36,7 @@ const CategoryItem = ({ item, navigation }) => {
   };
   return (
     <View style={styles.itemContainer}>
-      <TouchableOpacity style={styles.container} onPress={prentPress}>
+      <TouchableOpacity style={styles.container} onPress={parentPress}>
         <Text style={styles.name}>{item.name}</Text>
         <Icons
           style={{ alignSelf: 'center' }}
