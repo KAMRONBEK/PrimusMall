@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
   ActivityIndicator,
-  FlatList
+  FlatList,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Header from '../components/Header';
@@ -14,37 +14,40 @@ import Icon from '../constants/icons';
 import strings from '../localization/strings';
 import colors from '../constants/colors';
 import requests from '../api/api';
-import ProductCart from '../components/ProductCart'
+import ProductCart from '../components/ProductCart';
 
-const Catalog = ({ navigation }) => {
-  const { navigate } = navigation;
+const Catalog = ({navigation}) => {
+  const {navigate} = navigation;
   let index = navigation.getParam('index');
   let item = navigation.getParam('item');
   let items = navigation.getParam('childs');
-  let { name: title } = item.id;
+  let {name: title} = item.id;
   const [selectedIndex, setselectedIndex] = useState(-1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [childs, setChildren] = useState([]);
   let filters = {};
-  let normalizeFilters = (data) => {
+  let normalizeFilters = data => {
     return Object.keys(data).reduce((prev, key) => {
-      return `${prev + key}=${filters[key]}`
-    }, "?")
-  }
+      return `${prev + key}=${filters[key]}`;
+    }, '?');
+  };
   let populateProducts = () => {
-    setLoading(true)
-    requests.main.filterProducts(normalizeFilters(filters))
-      .then(res => { setProducts(res.data.data) })
-      .catch(({ response }) => console.warn(response))
+    setLoading(true);
+    requests.main
+      .filterProducts(normalizeFilters(filters))
+      .then(res => {
+        setProducts(res.data.data);
+      })
+      .catch(({response}) => console.warn(response))
       .finally(() => setLoading(false));
-  }
+  };
   useEffect(() => {
     filters['category'] = item.id;
     populateProducts();
     requests.main.getCategoryChilds(items[index].id).then(res => {
-      setChildren(res.data.data)
-    })
+      setChildren(res.data.data);
+    });
   }, []);
   return (
     <View style={styles.container}>
@@ -59,15 +62,23 @@ const Catalog = ({ navigation }) => {
           <View style={styles.top}>
             {childs.map((e, i) => {
               return (
-                <TouchableWithoutFeedback onPress={() => {
-                  filters['category'] = e.id;
-                  setselectedIndex(i);
-                  populateProducts();
-                }}>
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    filters['category'] = e.id;
+                    setselectedIndex(i);
+                    populateProducts();
+                  }}>
                   <View
                     key={e.id}
-                    style={[styles.category, i === selectedIndex && styles.active]}>
-                    <Text style={[styles.text, i === selectedIndex && styles.activeText]}>
+                    style={[
+                      styles.category,
+                      i === selectedIndex && styles.active,
+                    ]}>
+                    <Text
+                      style={[
+                        styles.text,
+                        i === selectedIndex && styles.activeText,
+                      ]}>
                       {e.name}
                     </Text>
                   </View>
@@ -77,13 +88,13 @@ const Catalog = ({ navigation }) => {
           </View>
         </ScrollView>
         <View style={styles.selectorWrap}>
-          <TouchableWithoutFeedback onPress={() => navigate('Filter', { item })}>
+          <TouchableWithoutFeedback onPress={() => navigate('Filter', {item})}>
             <View style={styles.selector}>
               <Icon name="controls" size={18} />
               <Text style={styles.ml10}>{strings.filter}</Text>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => navigate('Sort')}>
             <View style={styles.selector}>
               <View style={styles.icons}>
                 <Ionicons name="ios-arrow-round-down" size={22} />
@@ -95,23 +106,35 @@ const Catalog = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.container}>
-        {!loading && products.length > 0 ?
+        {!loading && products.length > 0 ? (
           <FlatList
             keyExtractor={e => e.id}
             data={products}
             numColumns={2}
-            renderItem={(itemProps) => <ProductCart {...itemProps} />} /> :
+            renderItem={itemProps => <ProductCart {...itemProps} />}
+          />
+        ) : (
           <View style={styles.centeredContainer}>
-            {loading ? <ActivityIndicator size={'large'} color={colors.orange} /> : <Text style={styles.bigText}>{strings.noItems}</Text>}
-          </View>}
+            {loading ? (
+              <ActivityIndicator size={'large'} color={colors.orange} />
+            ) : (
+              <Text style={styles.bigText}>{strings.noItems}</Text>
+            )}
+          </View>
+        )}
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  bigText: { fontSize: 19, fontWeight: 'bold', color: colors.black, textAlign: 'center' },
-  container: { backgroundColor: colors.superLightGray, flex: 1 },
+  bigText: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: colors.black,
+    textAlign: 'center',
+  },
+  container: {backgroundColor: colors.superLightGray, flex: 1},
   ml10: {
     marginLeft: 10,
   },
@@ -143,7 +166,7 @@ const styles = StyleSheet.create({
   selectorWrap: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   selector: {
     flexDirection: 'row',
@@ -152,9 +175,12 @@ const styles = StyleSheet.create({
   },
   icons: {
     flexDirection: 'row',
-  }, centeredContainer: {
-    flex: 1, justifyContent: 'center', alignItems: 'center'
-  }
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default Catalog;
