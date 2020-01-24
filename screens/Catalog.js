@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -17,32 +17,41 @@ import requests from '../api/api';
 import ProductCart from '../components/ProductCart'
 import { normalizeFilters } from '../utils/object';
 
-const Catalog = ({navigation}) => {
-  const {navigate} = navigation;
+const Catalog = ({ navigation }) => {
+
+  const { navigate } = navigation;
   let index = navigation.getParam('index');
   let item = navigation.getParam('item');
   let items = navigation.getParam('childs');
-  let {name: title} = item.id;
+  let { name: title } = item.id;
+
   const [selectedIndex, setselectedIndex] = useState(-1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [childs, setChildren] = useState([]);
-  let defaultFilters = { perpage: 20, page: 1 }
-  let filters = { ...defaultFilters };
-  let populateProducts = () => {
-    setLoading(true)
+
+  let defaultFilters = { perpage: 20, page: 1, category: item.id }
+  const [filters, setFilters] = useState(defaultFilters)
+
+  let populateProducts = (endReach) => {
+    if (!endReach)
+      setLoading(true)
     requests.main.filterProducts(normalizeFilters(filters))
-      .then(res => { setProducts([...products, ...res.data.data]) })
+      .then(res => {
+        console.warn(filters);
+
+        if (res.data.data && res.data.data.length > 0)
+          setProducts([...products, ...res.data.data])
+      })
       .catch(({ response }) => console.warn(response))
       .finally(() => setLoading(false));
   }
   let onEndReach = () => {
-    filters.page++;
-    populateProducts();
+    setFilters({ ...filters, page: filters.page + 1 })
+    populateProducts(true);
   }
 
   useEffect(() => {
-    filters['category'] = item.id;
     populateProducts();
     requests.main.getCategoryChilds(items[index].id).then(res => {
       setChildren(res.data.data);
@@ -62,7 +71,7 @@ const Catalog = ({navigation}) => {
             {childs.map((e, i) => {
               return (
                 <TouchableWithoutFeedback onPress={() => {
-                  filters = { ...defaultFilters, category: e.id };
+                  setFilters({ ...defaultFilters, category: e.id })
                   if (i === selectedIndex) {
                     filters.category = item.id
                     setselectedIndex(-1);
@@ -120,14 +129,14 @@ const Catalog = ({navigation}) => {
             renderItem={itemProps => <ProductCart {...itemProps} />}
           />
         ) : (
-          <View style={styles.centeredContainer}>
-            {loading ? (
-              <ActivityIndicator size={'large'} color={colors.orange} />
-            ) : (
-              <Text style={styles.bigText}>{strings.noItems}</Text>
-            )}
-          </View>
-        )}
+            <View style={styles.centeredContainer}>
+              {loading ? (
+                <ActivityIndicator size={'large'} color={colors.orange} />
+              ) : (
+                  <Text style={styles.bigText}>{strings.noItems}</Text>
+                )}
+            </View>
+          )}
       </View>
     </View>
   );
@@ -140,7 +149,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: 'center',
   },
-  container: {backgroundColor: colors.superLightGray, flex: 1},
+  container: { backgroundColor: colors.superLightGray, flex: 1 },
   ml10: {
     marginLeft: 10,
   },

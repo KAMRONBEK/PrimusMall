@@ -35,7 +35,7 @@ let sortList = [
   },
 ];
 
-let Sort = ({navigation}) => {
+let Sort = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback
@@ -57,7 +57,7 @@ let Sort = ({navigation}) => {
               navigation.goBack();
             }}>
             <View style={styles.headerLeft}>
-              <Icon name="arrow-back" size={20} style={{paddingLeft: 20}} />
+              <Icon name="arrow-back" size={20} style={{ paddingLeft: 20 }} />
             </View>
           </TouchableWithoutFeedback>
           <View style={styles.headerMiddle}>
@@ -71,7 +71,7 @@ let Sort = ({navigation}) => {
               <MaterialCommunityIcons
                 name="close"
                 size={20}
-                style={{paddingRight: 20}}
+                style={{ paddingRight: 20 }}
               />
             </View>
           </TouchableWithoutFeedback>
@@ -79,15 +79,15 @@ let Sort = ({navigation}) => {
         <FlatList
           keyExtractor={e => e.text}
           data={sortList}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <FilterItem
               iconName={item.iconName}
               text={item.text}
               color={item.color}
               smallIcon={item.smallIcon}
               subFilterList={[1]}
-              setData={({navigation}) => {
-                navigation.goBack();
+              setData={({ }) => {
+                navigation.navigate("Catalog");
               }}
             />
           )}

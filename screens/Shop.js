@@ -7,7 +7,8 @@ import { normalizeFilters } from '../utils/object';
 
 const Shop = ({ }) => {
   const [shops, setShops] = useState([]);
-  let filters = { perpage: 20, page: 1 }
+  let defaultFilters = { perpage: 20, page: 1 }
+  const [filters, setFilters] = useState(defaultFilters)
   let populateShops = () => {
     api.main.filterStores(normalizeFilters(filters)).then(res => {
       setShops([...shops, ...res.data.data]);
@@ -15,10 +16,9 @@ const Shop = ({ }) => {
   }
   useEffect(() => {
     populateShops();
-  }, []);
+  }, [filters]);
   let onEndReach = () => {
-    filters.page++;
-    populateShops();
+    setFilters({ ...filters, page: filters.page + 1 })
   }
   return (
     <View style={styles.container}>
@@ -37,7 +37,7 @@ const Shop = ({ }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.superLightGray
+    backgroundColor: colors.white
   },
 });
 
