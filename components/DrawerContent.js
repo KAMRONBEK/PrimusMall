@@ -114,7 +114,8 @@ const DrawerContent = ({ navigation, user: parent, dispatch }) => {
           iconName="logout"
           custom
           onPress={() => {
-            NavigationServices.toggleDrawer();
+            navigation.toggleDrawer();
+            navigation.navigate('Login')
             dispatch(userLoggedOut())
           }}
           text={strings.logout}

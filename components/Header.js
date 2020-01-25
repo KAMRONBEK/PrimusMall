@@ -1,26 +1,17 @@
 'use strict';
 
-import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-  LayoutAnimation,
-  Picker,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { LayoutAnimation, Picker, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {withNavigation} from 'react-navigation';
+import { withNavigation } from 'react-navigation';
+import { connect } from 'react-redux';
+import requests from '../api/api';
 import colors from '../constants/colors';
 import Icon from '../constants/icons';
-import NavigationService from '../services/NavigationServices';
-import {connect} from 'react-redux';
-import requests from '../api/api';
-import {setCategory, categoriesLoaded} from '../redux/actions/category';
-import {TextInput} from 'react-native-gesture-handler';
-import TextInputField from './TextInputField';
 import strings from '../localization/strings';
+import { categoriesLoaded, setCategory } from '../redux/actions/category';
+import { setText, setExpanded } from '../redux/actions/search';
 
 const Header = ({
   hasDrawer,
@@ -33,6 +24,7 @@ const Header = ({
   selectedItem,
   items,
   dispatch,
+  search
 }) => {
   useEffect(() => {
     requests.main.getCategories().then(res => {
@@ -45,7 +37,7 @@ const Header = ({
     });
   }, []);
 
-  let [searchOn, setSearchOn] = useState(false);
+  let { text, expanded } = search;
 
   let searchBar = () => {
     return (
@@ -54,6 +46,12 @@ const Header = ({
           <TextInput
             style={styles.searchInput}
             placeholder={strings.searchItem}
+            value={text}
+            onChangeText={(val) => dispatch(setText(val))}
+            onSubmitEditing={() => {
+              navigation.navigate('Catalog')
+            }}
+            returnKeyType="search"
           />
         </View>
       </View>
@@ -62,10 +60,10 @@ const Header = ({
 
   let renderPicker = () => {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Picker
-          style={{marginTop: -10, fontSize: 18, fontWeight: 'bold'}}
-          itemStyle={{fontSize: 18, fontWeight: 'bold'}}
+          style={{ marginTop: -10, fontSize: 18, fontWeight: 'bold' }}
+          itemStyle={{ fontSize: 18, fontWeight: 'bold' }}
           selectedValue={selectedItem}
           onValueChange={val => {
             dispatch(setCategory(val));
@@ -74,7 +72,7 @@ const Header = ({
             items.map((el, i) => {
               return (
                 <Picker.Item
-                  style={{fontSize: 18, fontWeight: 'bold'}}
+                  style={{ fontSize: 18, fontWeight: 'bold' }}
                   key={el.id}
                   label={el.name}
                   value={el.id}
@@ -95,20 +93,20 @@ const Header = ({
             </View>
           </TouchableWithoutFeedback>
         ) : (
-          backwardArrow && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                if (navigation) {
-                  navigation.goBack();
-                  return;
-                }
-              }}>
-              <View>
-                <Icon name="arrow-back" size={22} />
-              </View>
-            </TouchableWithoutFeedback>
-          )
-        )}
+            backwardArrow && (
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  if (navigation) {
+                    navigation.goBack();
+                    return;
+                  }
+                }}>
+                <View>
+                  <Icon name="arrow-back" size={22} />
+                </View>
+              </TouchableWithoutFeedback>
+            )
+          )}
       </View>
     );
   };
@@ -128,8 +126,8 @@ const Header = ({
             {simpleTitle}
           </Text>
         ) : (
-          <React.Fragment />
-        )}
+              <React.Fragment />
+            )}
       </View>
     );
   };
@@ -143,7 +141,7 @@ const Header = ({
                 LayoutAnimation.configureNext(
                   LayoutAnimation.Presets.easeInEaseOut,
                 );
-                setSearchOn(!searchOn);
+                dispatch(setExpanded(!expanded))
               }}>
               <AntDesign name="search1" size={25} />
             </TouchableWithoutFeedback>
@@ -188,8 +186,8 @@ const Header = ({
         },
       ]}>
       {renderLeft()}
-      {!searchOn && renderMiddle()}
-      {searchOn && searchBar()}
+      {!expanded && renderMiddle()}
+      {expanded && searchBar()}
       {renderRight()}
     </View>
   );
@@ -240,20 +238,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   searchBar: {
-    width: 210,
+    width: 170,
     borderBottomColor: colors.red,
     borderBottomWidth: 1,
     height: 40,
+    overflow: 'hidden'
   },
   searchInput: {
     width: 170,
   },
 });
 
-const mapStateToProps = ({cart, category}) => ({
+const mapStateToProps = ({ cart, category, search }) => ({
   cart,
   selectedItem: category.selected,
   items: category.items,
+  search
 });
 
 export default connect(mapStateToProps)(withNavigation(Header));

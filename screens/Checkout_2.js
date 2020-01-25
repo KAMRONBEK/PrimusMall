@@ -5,9 +5,10 @@ import colors from '../constants/colors';
 import Pill from '../components/Pill';
 import { connect } from 'react-redux';
 import requests from '../api/api'
+import { setOrder } from '../redux/actions/order';
 
 
-const Checkout_2 = ({ navigation, dispatch }) => {
+const Checkout_2 = ({ navigation, dispatch, order }) => {
 	const [state, setState] = useState([])
 	const [loading, setLoading] = useState(true)
 	useEffect(() => {
@@ -28,7 +29,11 @@ const Checkout_2 = ({ navigation, dispatch }) => {
 						iconName={icons[e.code]}
 						title={e.name}
 						deliveryPeriod={e.price_value}
-						onPress={() => navigate('Checkout_3', {})}
+						onPress={() => {
+							console.warn(order);
+							dispatch(setOrder({ shipping_type_id: e.id }))
+							navigate('Checkout_3', {})
+						}}
 					/>
 				})}
 			</View>}
@@ -50,4 +55,10 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect()(Checkout_2);
+const mapStateToProps = ({ order }) => ({
+	order
+})
+
+
+
+export default connect(mapStateToProps)(Checkout_2);

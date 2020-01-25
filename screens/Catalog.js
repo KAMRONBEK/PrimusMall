@@ -16,21 +16,24 @@ import colors from '../constants/colors';
 import requests from '../api/api';
 import ProductCart from '../components/ProductCart'
 import { normalizeFilters } from '../utils/object';
+import { sortList } from './Sort';
+import { connect } from 'react-redux';
 
-const Catalog = ({ navigation }) => {
+const Catalog = ({ navigation, search }) => {
 
   const { navigate } = navigation;
-  let index = navigation.getParam('index');
-  let item = navigation.getParam('item');
-  let items = navigation.getParam('childs');
-  let { name: title } = item.id;
+  let index = navigation.getParam('index') || -1;
+  let item = navigation.getParam('item') || {};
+  let items = navigation.getParam('childs') || [];
+  let { name: title } = item;
+  let sortIndex = navigation.getParam('sortIndex') || 0;
 
   const [selectedIndex, setselectedIndex] = useState(-1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [childs, setChildren] = useState([]);
 
-  let defaultFilters = { perpage: 20, page: 1, category: item.id }
+  let defaultFilters = { perpage: 20, page: 1, category: item.id ? item.id : "", sort: sortList[sortIndex].value, search }
   const [filters, setFilters] = useState(defaultFilters)
 
   let populateProducts = (endReach) => {
@@ -38,25 +41,37 @@ const Catalog = ({ navigation }) => {
       setLoading(true)
     requests.main.filterProducts(normalizeFilters(filters))
       .then(res => {
-        console.warn(filters);
-
         if (res.data.data && res.data.data.length > 0)
-          setProducts([...products, ...res.data.data])
+          if (endReach)
+            setProducts([...products, ...res.data.data])
+          else setProducts(res.data.data)
       })
       .catch(({ response }) => console.warn(response))
       .finally(() => setLoading(false));
   }
   let onEndReach = () => {
     setFilters({ ...filters, page: filters.page + 1 })
-    populateProducts(true);
   }
 
   useEffect(() => {
-    populateProducts();
-    requests.main.getCategoryChilds(items[index].id).then(res => {
-      setChildren(res.data.data);
-    });
-  }, []);
+    if (index !== -1)
+      requests.main.getCategoryChilds(items[index].id).then(res => {
+        setChildren(res.data.data);
+      });
+  }, [])
+  useEffect(() => {
+    populateProducts(true);
+  }, [filters]);
+  useEffect(() => {
+    setLoading(true)
+    setProducts([])
+    setFilters({ ...filters, sort: sortList[sortIndex].value })
+  }, [sortIndex])
+  useEffect(() => {
+    setLoading(true)
+    setProducts([])
+    setFilters({ ...defaultFilters, search })
+  }, [search])
   return (
     <View style={styles.container}>
       <View>
@@ -66,11 +81,12 @@ const Catalog = ({ navigation }) => {
           rightRender
           navigation={navigation}
         />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {index !== -1 && <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.top}>
             {childs.map((e, i) => {
               return (
-                <TouchableWithoutFeedback onPress={() => {
+                <TouchableWithoutFeedback key={e.id} onPress={() => {
+                  setLoading(true)
                   setFilters({ ...defaultFilters, category: e.id })
                   if (i === selectedIndex) {
                     filters.category = item.id
@@ -100,6 +116,7 @@ const Catalog = ({ navigation }) => {
             })}
           </View>
         </ScrollView>
+        }
         <View style={styles.selectorWrap}>
           <TouchableWithoutFeedback onPress={() => navigate('Filter', { item: selectedIndex !== -1 ? childs[selectedIndex] : item.id })}>
             <View style={styles.selector}>
@@ -110,10 +127,9 @@ const Catalog = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={() => navigate('Sort')}>
             <View style={styles.selector}>
               <View style={styles.icons}>
-                <Ionicons name="ios-arrow-round-down" size={22} />
-                <Ionicons name="ios-arrow-round-up" size={22} />
+                <Icon name={sortList[sortIndex].iconName} size={18} />
               </View>
-              <Text style={styles.ml10}>{strings.byPopularity}</Text>
+              <Text style={styles.ml10}>{sortList[sortIndex].text}</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -198,4 +214,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Catalog;
+const mapStateToProps = ({ search: { text } }) => ({
+  search: text
+})
+
+
+export default connect(mapStateToProps)(Catalog);

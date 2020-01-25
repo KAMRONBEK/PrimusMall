@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import { Text, View, StyleSheet, TouchableWithoutFeedback, Image } from 'react-native';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
 import Icon from '../constants/icons';
@@ -13,6 +13,7 @@ const Pill = ({
   currency,
   headerCenter,
   onPress,
+  image
 }) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -29,16 +30,16 @@ const Pill = ({
             style={
               headerCenter
                 ? {
-                    flex: 2,
-                    alignItems: 'flex-end',
-                    paddingRight: 20,
-                  }
+                  flex: 2,
+                  alignItems: 'flex-start',
+                  paddingRight: 20,
+                }
                 : {
-                    flex: 1,
-                    alignItems: 'center',
-                  }
+                  flex: 1,
+                  alignItems: 'center',
+                }
             }>
-            <Icon name={iconName} size={25} />
+            {image !== null ? <Image style={{ width: 80, height: 25 }} source={image} /> : <Icon name={iconName} size={25} />}
           </View>
           <Text
             style={[
@@ -75,8 +76,8 @@ const Pill = ({
                 </Text>
               </React.Fragment>
             ) : (
-              <View />
-            )}
+                <View />
+              )}
           </View>
           {shippingPrice ? (
             <View style={styles.bottomItem}>
@@ -100,8 +101,8 @@ const Pill = ({
               </Text>
             </View>
           ) : (
-            <View />
-          )}
+              <View />
+            )}
         </View>
       </View>
     </TouchableWithoutFeedback>

@@ -18,6 +18,7 @@ const FilterItem = ({
   text,
   subFilterList = null,
   setData,
+  index
 }) => {
   let isLink = !!subFilterList;
 
@@ -25,7 +26,7 @@ const FilterItem = ({
     <TouchableWithoutFeedback
       onPress={() => {
         if (isLink) {
-          setData(subFilterList, text, true);
+          setData(subFilterList, text, true,index);
         }
       }}>
       <View

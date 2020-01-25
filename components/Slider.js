@@ -30,7 +30,7 @@ const Slider = ({
   let [indicatorWidth, setIndicatorWidth] = useState(-1);
   let [indicatorOffset, setIndicatorOffset] = useState(-1);
   let calculatedWidth = type === 'card' ? width - 30 : width;
-  let indicatorRadius = type === 'card' ? 6 : 8;
+  let indicatorRadius = type === 'card' ? 2 : 4;
   let banner = React.createRef();
   let value = new Animated.Value(0);
   let interval = animated
@@ -158,7 +158,7 @@ const Slider = ({
                     style={{
                       ...StyleSheet.absoluteFillObject,
                       backgroundColor: Colors.black,
-                      opacity: 0.3,
+                      opacity: 0,
                     }}
                   />
                 )}
@@ -190,8 +190,8 @@ const Slider = ({
             position: 'absolute',
           }}>
           <AnimatedSvg
-            width={32}
-            height={32}
+            width={16}
+            height={16}
             style={{
               margin: 5,
               marginLeft: indicatorOffset + 5,

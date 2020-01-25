@@ -58,11 +58,13 @@ let requests = {
     getProduct: id => axios.get(`${url}/product/${id}`).then(res => res),
     getBanner: () => axios.get(`${url}/banners/main`),
     getShippingTypes: () => axios.get(`${url}/shippingtypelist`),
+    getPaymentMethods: () => axios.get(`${url}/paymentmethodlist`),
     filterStores: (filters) => axios.get(`${url}/stores${filters}`).then(res => res),
   },
   user: {
     getUser: token => axios.get(`${url}/user/get`, { headers: { Authorization: `Bearer ${token}` } }),
-    updateUser: (credentials, token) => axios.post(`${url}/user/update`, formData(credentials), { headers: { Authorization: `Bearer ${token}` } })
+    updateUser: (credentials, token) => axios.post(`${url}/user/update`, formData(credentials), { headers: { Authorization: `Bearer ${token}` } }),
+    createOrder: (data, token) => axios.post(`${url}/user/orders/create`, data, { headers: { Authorization: `Bearer ${token}` } })
   }
 };
 

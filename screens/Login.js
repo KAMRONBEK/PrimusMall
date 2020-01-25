@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import TextInputField from '../components/TextInputField';
 import {
   View,
@@ -12,16 +12,16 @@ import RoundButton from '../components/RoundButton';
 import colors from '../constants/colors';
 import BlackButton from '../components/BlackButton';
 import api from '../api/api';
-import {userLoaded} from '../redux/actions/user';
-import {connect} from 'react-redux';
+import { userLoaded } from '../redux/actions/user';
+import { connect } from 'react-redux';
 import manager from '../oauth/OAuthManager';
-import {userLoggedIn} from '../redux/actions/user';
+import { userLoggedIn } from '../redux/actions/user';
 
-const Login = ({navigation, dispatch}) => {
-  const [state, setState] = useState({username: '+998'});
+const Login = ({ navigation, dispatch }) => {
+  const [state, setState] = useState({ username: '+998' });
   const [loading, setloading] = useState(false);
   const [error, setError] = useState('');
-  const {navigate} = navigation;
+  const { navigate } = navigation;
   let login = () => {
     setloading(true);
     api.auth
@@ -30,7 +30,7 @@ const Login = ({navigation, dispatch}) => {
         dispatch(userLoggedIn(res.data));
         navigate('Main');
       })
-      .catch(({response: res}) => {
+      .catch(({ response: res }) => {
         setError(res.data.error);
       })
       .finally(e => {
@@ -38,7 +38,7 @@ const Login = ({navigation, dispatch}) => {
       });
   };
   let updateState = (key, value) => {
-    setState({...state, [key]: value});
+    setState({ ...state, [key]: value });
   };
   return (
     <View style={styles.container}>
@@ -48,12 +48,12 @@ const Login = ({navigation, dispatch}) => {
           <Text style={styles.errorText}>{error}</Text>
         </View>
         <TextInputField
-          placeholder={'Phone number'}
-          iconName={'phone'}
+          placeholder={'Email'}
+          iconName={'e-mail'}
+          legend={'Email'}
           secondaryIconName={'close'}
-          legend={'Номер телефона'}
-          value={state.username}
-          onChangeText={data => updateState('username', data)}
+          onChangeText={e => updateState('email', e)}
+          value={state.email}
         />
         <TextInputField
           placeholder={'Password'}
@@ -90,7 +90,7 @@ const Login = ({navigation, dispatch}) => {
           <TouchableWithoutFeedback
             onPress={() => {
               manager
-                .authorize('google', {scopes: 'email'})
+                .authorize('google', { scopes: 'email' })
                 .then(response => {
                   console.warn(response);
                 })
@@ -108,7 +108,7 @@ const Login = ({navigation, dispatch}) => {
           <TouchableWithoutFeedback
             onPress={() => {
               manager
-                .authorize('facebook', {scopes: 'profile,email'})
+                .authorize('facebook', { scopes: 'profile,email' })
                 .then(response => {
                   console.warn(response);
                 })

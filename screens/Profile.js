@@ -144,7 +144,7 @@ const Profile = ({ user, }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.orderWrap}>
-          <Text style={styles.order}>{strings.order}</Text>
+          <Text style={styles.order}>{strings.orders}</Text>
           <FlatList
             keyExtractor={(e, index) => index.toString()}
             data={[]}

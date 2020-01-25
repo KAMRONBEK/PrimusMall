@@ -12,26 +12,31 @@ import colors from '../constants/colors';
 import Icon from '../constants/icons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-let sortList = [
+export const sortList = [
+  {
+    iconName: 'tag_m',
+    text: strings.byPopularity,
+    value: 'popularity|desc'
+  },
   {
     iconName: 'percent',
     text: strings.byAscendingPrice,
+    value: 'price|asc'
   },
   {
     iconName: 'controls',
     text: strings.byDescendingPrice,
-  },
-  {
-    iconName: 'tag_m',
-    text: strings.byPopularity,
+    value: 'price|desc'
   },
   {
     iconName: 'raindrop',
     text: strings.byLowRating,
+    value: 'rating|desc'
   },
   {
     iconName: 'letter_b',
     text: strings.byHighRating,
+    value: 'rating|asc'
   },
 ];
 
@@ -79,16 +84,17 @@ let Sort = ({ navigation }) => {
         <FlatList
           keyExtractor={e => e.text}
           data={sortList}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <FilterItem
               iconName={item.iconName}
               text={item.text}
               color={item.color}
               smallIcon={item.smallIcon}
               subFilterList={[1]}
-              setData={({ }) => {
-                navigation.navigate("Catalog");
+              setData={(a, b, c, sortIndex) => {
+                navigation.navigate("Catalog", { sortIndex });
               }}
+              index={index}
             />
           )}
         />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, View, TouchableWithoutFeedback, LayoutAnimation } from 'react-native';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View, TouchableWithoutFeedback, LayoutAnimation, Platform } from 'react-native';
 import BlurFooter from '../components/BlurFooter';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
@@ -7,6 +7,7 @@ import Carousel from 'react-native-snap-carousel';
 import requests from '../api/api'
 import { connect } from 'react-redux';
 import { addToCart, toggleFavorite } from '../redux/actions';
+import { warnUser } from '../utils/warn';
 
 const ProductPage = ({ navigation, dispatch, favorite }) => {
   let data = navigation.getParam('item')
@@ -114,6 +115,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               {pickingSize && <View style={styles.offerContainer}>
                 {item.offer.map((e, i) => {
                   return <TouchableWithoutFeedback onPress={() => {
+                    console.warn(e);
                     setOfferIndex(i === offerIndex ? -1 : i)
                   }}>
                     <Text style={[styles.singleOffer, i === offerIndex && styles.activeOffer]}>{e.name}</Text>
@@ -178,7 +180,12 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
         </View>
       </ScrollView>
       <BlurFooter favIcon={favorite[item.id] ? "heart" : "heart-empty"} onLeftPress={() => dispatch(toggleFavorite(item))} onPress={() => {
-        dispatch(addToCart({ ...item, offerIndex }))
+        if (offerIndex === -1) {
+          warnUser(strings.pickSizeFirst)
+          return;
+        }
+        console.warn(item[offerIndex]);
+        dispatch(addToCart({ ...item, offerIndex }));
       }} buttonText="В корзину" />
     </React.Fragment>
   );
