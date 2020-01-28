@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import {
   TextInput,
@@ -18,17 +18,17 @@ const TextInputField = ({
   iconName,
   legend,
   secondaryIconName,
-  secureTextEntry,
+  secureTextEntry: secure,
   notEntry,
   textValue,
   noBorder,
   textWeight = '400',
   value,
   fontSize = 14,
-  onChangeText = () => {},
+  onChangeText = () => { },
 }) => {
   let [borderColor, setBorderColor] = useState(colors.lightGray);
-
+  const [secureTextEntry, setSecureTextEntry] = useState(secure)
   return (
     <View
       style={[
@@ -50,7 +50,7 @@ const TextInputField = ({
           <Icon
             name={iconName}
             size={15}
-            style={{marginRight: 10, marginLeft: -5}}
+            style={{ marginRight: 10, marginLeft: -5 }}
           />
         </View>
         {!notEntry ? (
@@ -67,23 +67,29 @@ const TextInputField = ({
             }}
             value={value || textValue}
             placeholder={placeholder}
-            style={[styles.inputField, {fontSize, fontWeight: textWeight}]}
+            style={[styles.inputField, { fontSize, fontWeight: textWeight }]}
             secureTextEntry={secureTextEntry}
           />
         ) : (
-          <Text
-            style={{
-              fontWeight: textWeight != '' ? textWeight : '400',
-              fontSize,
-            }}>
-            {textValue}
-          </Text>
-        )}
-        <TouchableOpacity onPress={() => onChangeText(null)}>
+            <Text
+              style={{
+                fontWeight: textWeight != '' ? textWeight : '400',
+                fontSize,
+              }}>
+              {textValue}
+            </Text>
+          )}
+        <TouchableOpacity onPress={() => {
+          if (secure) {
+            setSecureTextEntry(!secureTextEntry)
+            return;
+          }
+          onChangeText(null)
+        }}>
           <MaterialCommunityIcons
             name={secondaryIconName}
             size={18}
-            style={{opacity: 0.5}}
+            style={{ opacity: 0.5 }}
           />
         </TouchableOpacity>
       </View>

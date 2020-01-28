@@ -51,7 +51,7 @@ const SingleProductInBasket = ({ item, dispatch, index }) => {
             <Text style={styles.text}>
               {strings.size}
               {': '}
-              {item.offer[item.offerIndex].name}
+              {item.offerIndex && item.offer[item.offerIndex].name}
             </Text>
             {/* <View
               style={[

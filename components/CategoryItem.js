@@ -54,7 +54,7 @@ const CategoryItem = ({ item, navigation }) => {
           {state.childs ? (
             state.childs.map((e, i) => {
               return (
-                <TouchableOpacity onPress={() => childPress(i)}>
+                <TouchableOpacity key={e.id} onPress={() => childPress(i)}>
                   <Text key={e.id} style={[styles.name, { fontSize: 16 }]}>
                     {e.name}
                   </Text>

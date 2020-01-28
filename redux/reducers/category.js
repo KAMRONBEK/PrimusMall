@@ -6,6 +6,8 @@ const initialState = {
 }
 
 export default (state = initialState, { type, payload }) => {
+    console.warn({ type, payload });
+
     switch (type) {
 
         case CATEGORIES_LOADED:

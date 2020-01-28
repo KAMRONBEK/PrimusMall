@@ -33,7 +33,7 @@ const Catalog = ({ navigation, search }) => {
   const [loading, setLoading] = useState(true);
   const [childs, setChildren] = useState([]);
 
-  let defaultFilters = { perpage: 20, page: 1, category: item.id ? item.id : "", sort: sortList[sortIndex].value, search }
+  let defaultFilters = { perpage: 20, page: 1, category: item.id ? item.id : "", sort: sortList[sortIndex].value, search, filters: {} }
   const [filters, setFilters] = useState(defaultFilters)
 
   let populateProducts = (endReach) => {

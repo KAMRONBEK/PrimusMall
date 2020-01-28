@@ -12,22 +12,27 @@ import colors from '../constants/colors';
 import ColorDemo from '../components/ColorDemo';
 
 const FilterItem = ({
-  iconName,
-  color,
-  smallIcon,
   text,
   subFilterList = null,
   setData,
-  index
+  index,
+  filters,
+  setFilters,
+  id,
+  setFilters
 }) => {
   let isLink = !!subFilterList;
-
+  let toggleCheckbox = (val) => {
+    setFilters(filters)
+  }
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         if (isLink) {
-          setData(subFilterList, text, true,index);
+          setData(subFilterList, text, true, index);
+          return;
         }
+        toggleCheckbox()
       }}>
       <View
         style={[
@@ -38,11 +43,6 @@ const FilterItem = ({
         ]}>
         <React.Fragment>
           <View style={styles.left}>
-            {iconName ? (
-              <Icon name={iconName} size={smallIcon ? 12 : 18} />
-            ) : (
-              <ColorDemo color={color} />
-            )}
           </View>
           <View style={styles.middle}>
             <Text style={styles.title}>{text}</Text>
@@ -53,13 +53,15 @@ const FilterItem = ({
                 <FontAwesome name="angle-right" size={20} />
               </View>
             ) : (
-              <CheckBox
-                title="Click Here"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor="red"
-              />
-            )}
+                <CheckBox
+                  title="Click Here"
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="red"
+                  value={filters[id]}
+                  onPress={toggleCheckbox}
+                />
+              )}
           </View>
         </React.Fragment>
       </View>
@@ -75,19 +77,18 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   left: {
-    marginLeft: 40,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   middle: {
-    paddingLeft: 20,
+    paddingLeft: 10,
     flex: 5,
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
   title: {
-    fontSize: 20,
+    fontSize: 16,
   },
   right: {
     flex: 1,

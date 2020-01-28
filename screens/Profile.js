@@ -95,7 +95,7 @@ const Profile = ({ user, }) => {
         <View style={styles.infoWrap}>
           <TextInputField
             notEntry={data.editing}
-            textValue={data.username}
+            textValue={data.phone}
             legend="Номер телефона"
             iconName="phone"
             textWeight="bold"
@@ -177,7 +177,7 @@ const mapStateToProps = ({ user }) => ({
 export default connect(mapStateToProps)(Profile)
 
 const styles = StyleSheet.create({
-  bigText: { fontSize: 19, fontWeight: 'bold', color: colors.black,textAlign:'center' },
+  bigText: { fontSize: 19, fontWeight: 'bold', color: colors.black, textAlign: 'center' },
   container: {
     padding: 30,
     flex: 1,

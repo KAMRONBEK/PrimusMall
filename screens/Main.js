@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -14,7 +14,8 @@ import Slider from '../components/Slider';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
 import { normalizeFilters } from '../utils/object';
-import { reducer, MERGE_LIST } from '../utils/state';
+import { reducer, MERGE_LIST, SET_MULTIPLE } from '../utils/state';
+import { connect } from 'react-redux';
 
 // const SliderImageList = [
 //   'https://www.wallpaperflare.com/static/981/34/558/air-force-nike-sneakers-unpaired-wallpaper.jpg',
@@ -26,7 +27,7 @@ import { reducer, MERGE_LIST } from '../utils/state';
 
 let SET = 'SET';
 
-export default function Main({ navigation }) {
+function Main({ navigation, category }) {
   // let reducer = (state, { type, key, value }) => {
   //   switch (type) {
   //     case SET:
@@ -40,7 +41,13 @@ export default function Main({ navigation }) {
   let updateState = (name, value) => {
     setState({ type: SET, value, name });
   };
-  let filters = { sort: 'new', perpage: 20, page: 1 };
+  let defaultFilters = { sort: 'new', perpage: 20, page: 1, category: category.selected !== 0 ? category.items[category.selected] : "" };
+  useEffect(() => {
+    setState({ type: SET_MULTIPLE, values: [true, []], names: ['loading', 'products'] });
+    setFilters({ ...defaultFilters, category: category.selected ? category.selected : null });
+  }, [category])
+
+  const [filters, setFilters] = useState(defaultFilters)
   let populateProducts = () => {
     api.main
       .filterProducts(normalizeFilters(filters))
@@ -51,32 +58,31 @@ export default function Main({ navigation }) {
         console.warn(res);
       })
       .finally(() => {
-        if (filters.page !== 1) {
-          return
-        }
-        api.main.getBanner().then(res => {
-          updateState('banner', res.data.data)
-        }).catch(res => {
-          console.warn(res.response)
-        }).finally(() => {
-          updateState('loading', false);
-        })
+        updateState('loading', false);
       });
+  }
+  let getBanner = () => {
+    if (filters.page !== 1) {
+      return
+    }
+    api.main.getBanner().then(res => {
+      updateState('banner', res.data.data)
+    }).catch(res => {
+      console.warn(res.response)
+    }).finally(() => { });
   }
   useEffect(() => {
     populateProducts();
+    getBanner();
   }, []);
-  if (state.loading) {
-    return (
-      <View style={styles.centerdContainer}>
-        <ActivityIndicator size={'large'} />
-      </View>
-    );
-  }
+
+  useEffect(() => {
+    populateProducts();
+  }, [filters])
 
   let onEndReach = () => {
-    filters.page = filters.page + 1;
-    populateProducts();
+    setFilters({ ...filters, page: filters.page + 1 })
+    // populateProducts();
   }
 
   return (
@@ -93,24 +99,30 @@ export default function Main({ navigation }) {
         <Text style={styles.title}>{strings.newItems}</Text>
       </View>
       <View style={{ flex: 1.2 }}>
-        <FlatList
-          keyExtractor={(e, index) => index.toString()}
-          showsHorizontalScrollIndicator={false}
-          data={state.products}
-          horizontal={true}
-          renderItem={({ item }) => <ProductCart item={item} />}
-          contentContainerStyle={styles.flatList}
-          onEndReachedThreshold={.5}
-          onEndReached={onEndReach}
-          style={{
-            backgroundColor: colors.superLightGray,
-          }}
-        />
+        {state.loading ? <View style={styles.centerdContainer}>
+          <ActivityIndicator size={'large'} />
+        </View> : <FlatList
+            keyExtractor={(e, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
+            data={state.products}
+            horizontal={true}
+            renderItem={({ item }) => <ProductCart item={item} />}
+            contentContainerStyle={styles.flatList}
+            onEndReachedThreshold={.5}
+            onEndReached={onEndReach}
+            style={{
+              backgroundColor: colors.superLightGray,
+            }}
+          />}
       </View>
 
     </SafeAreaView>
   );
 }
+
+const mapStateToProps = ({ category }) => ({ category })
+
+export default connect(mapStateToProps)(Main)
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: colors.superLightGray, flex: 1 },

@@ -27,14 +27,16 @@ const Header = ({
   search
 }) => {
   useEffect(() => {
-    requests.main.getCategories().then(res => {
-      dispatch(categoriesLoaded(res.data.data));
-      dispatch(
-        setCategory(
-          res.data.data && res.data.data.length > 0 ? res.data.data[0].id : 0,
-        ),
-      );
-    });
+    if (!items || items.length <= 0) {
+      requests.main.getCategories().then(res => {
+        dispatch(categoriesLoaded(res.data.data));
+        dispatch(
+          setCategory(
+            res.data.data && res.data.data.length > 0 ? res.data.data[0].id : 0,
+          ),
+        );
+      });
+    }
   }, []);
 
   let { text, expanded } = search;
