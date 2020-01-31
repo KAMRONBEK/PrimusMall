@@ -140,7 +140,8 @@ const Catalog = ({navigation, search}) => {
           <TouchableWithoutFeedback
             onPress={() =>
               navigate('Filter', {
-                item: selectedIndex !== -1 ? childs[selectedIndex] : item.id,
+                item: selectedIndex !== -1 ? childs[selectedIndex] : item,
+                filters: filters.filters,
               })
             }>
             <View style={styles.selector}>

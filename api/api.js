@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { userLoaded } from '../redux/actions';
+import {userLoaded} from '../redux/actions';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export const url = 'https://pmall.uz/api';
@@ -21,7 +21,7 @@ export const configureAxios = store => {
             Authorization: `Bearer ${res.data.data}`,
           };
           AsyncStorage.setItem('@token', res.data.data);
-          store.dispatch(userLoaded({ token: res.data.data }));
+          store.dispatch(userLoaded({token: res.data.data}));
           return axios(error.response.config);
         })
         .catch(response => {
@@ -72,19 +72,19 @@ let requests = {
   user: {
     getUser: token =>
       axios.get(`${url}/user/get`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {Authorization: `Bearer ${token}`},
       }),
     updateUser: (credentials, token) =>
       axios.post(`${url}/user/update`, formData(credentials), {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {Authorization: `Bearer ${token}`},
       }),
     createOrder: (data, token) =>
       axios.post(`${url}/user/orders/create`, data, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {Authorization: `Bearer ${token}`},
       }),
     getOrders: token =>
       axios.get(`${url}/user/orders`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {Authorization: `Bearer ${token}`},
       }),
   },
 };

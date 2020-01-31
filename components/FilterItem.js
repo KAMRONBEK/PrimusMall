@@ -17,7 +17,7 @@ const FilterItem = ({
   setData,
   index,
   filters,
-  setFilters,
+  setFilters = () => {},
   id,
 }) => {
   let isLink = !!subFilterList;

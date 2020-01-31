@@ -101,15 +101,17 @@ const Profile = ({user, dispatch}) => {
                   }
                 />
               </View>
-              <View
-                style={[
-                  styles.plusIcon,
-                  {
-                    backgroundColor: colors.superLightGray,
-                  },
-                ]}>
-                <Feather name="plus" />
-              </View>
+              {!data.editing && (
+                <View
+                  style={[
+                    styles.plusIcon,
+                    {
+                      backgroundColor: colors.superLightGray,
+                    },
+                  ]}>
+                  <Feather name="plus" />
+                </View>
+              )}
             </View>
           </TouchableWithoutFeedback>
         </View>
