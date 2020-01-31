@@ -1,25 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, View, TouchableWithoutFeedback, LayoutAnimation, Platform } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  LayoutAnimation,
+  Platform,
+} from 'react-native';
 import BlurFooter from '../components/BlurFooter';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
 import Carousel from 'react-native-snap-carousel';
-import requests from '../api/api'
-import { connect } from 'react-redux';
-import { addToCart, toggleFavorite } from '../redux/actions';
-import { warnUser } from '../utils/warn';
+import requests from '../api/api';
+import {connect} from 'react-redux';
+import {addToCart, toggleFavorite} from '../redux/actions';
+import {warnUser} from '../utils/warn';
 
-const ProductPage = ({ navigation, dispatch, favorite }) => {
-  let data = navigation.getParam('item')
+const ProductPage = ({navigation, dispatch, favorite}) => {
+  let data = navigation.getParam('item');
   const [item, setItem] = useState(data);
   const [pickingSize, setPickingSize] = useState(false);
-  const [offerIndex, setOfferIndex] = useState(-1)
+  const [offerIndex, setOfferIndex] = useState(-1);
   let store = item.store || {};
   useEffect(() => {
-    requests.main.getProduct(data.id).then((res) => {
-      setItem(res.data.data)
-    }).catch(({ response }) => console.warn(response));
-  }, [])
+    requests.main
+      .getProduct(data.id)
+      .then(res => {
+        setItem(res.data.data);
+      })
+      .catch(({response}) => console.warn(response));
+  }, [data.id]);
   return (
     <React.Fragment>
       <ScrollView>
@@ -30,36 +43,40 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               backgroundColor: colors.superLightGray,
             },
           ]}>
-          {item.images && item.preview_image && <View
-            style={[
-              {
-                backgroundColor: colors.white,
-              },
-            ]}>
-            <Carousel
-              loop={true}
-              containerCustomStyle={{ overflow: 'visible' }}
-              layout={'stack'}
-              sliderWidth={Dimensions.get('window').width - 60}
-              itemWidth={Dimensions.get('window').width - 60}
-              data={[{ image: item.preview_image }, ...item.images]}
-              renderItem={({ item: element }) => <Image
-                source={{
-                  uri:
-                    element.image,
-                }}
-                resizeMode={'cover'}
-                style={{
-                  height: 300,
-                  width: Dimensions.get('window').width - 60,
-                }}
-              />}
-              layoutCardOffset={`18`} />
-            <View style={styles.newTag}>
-              <View style={styles.whiteDot} />
-              <Text style={styles.tagText}>New!</Text>
+          {item.images && item.preview_image && (
+            <View
+              style={[
+                {
+                  backgroundColor: colors.white,
+                },
+              ]}>
+              <Carousel
+                loop={true}
+                containerCustomStyle={{overflow: 'visible'}}
+                layout={'stack'}
+                sliderWidth={Dimensions.get('window').width - 60}
+                itemWidth={Dimensions.get('window').width - 60}
+                data={[{image: item.preview_image}, ...item.images]}
+                renderItem={({item: element}) => (
+                  <Image
+                    source={{
+                      uri: element.image,
+                    }}
+                    resizeMode={'cover'}
+                    style={{
+                      height: 300,
+                      width: Dimensions.get('window').width - 60,
+                    }}
+                  />
+                )}
+                layoutCardOffset={'18'}
+              />
+              <View style={styles.newTag}>
+                <View style={styles.whiteDot} />
+                <Text style={styles.tagText}>New!</Text>
+              </View>
             </View>
-          </View>}
+          )}
           <View style={styles.info}>
             <Text style={styles.name}>{item.name}</Text>
             <Text
@@ -76,7 +93,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               }}>
               Артикул: {item.code}
             </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+            <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
               <Text
                 style={[
                   styles.price,
@@ -97,34 +114,53 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
                 сум
               </Text>
             </View>
-            {item.offer && item.offer.length > 0 ? <>
-              <TouchableWithoutFeedback onPress={() => {
-                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInOut)
-                setPickingSize(!pickingSize)
-              }}>
-                <Text
-                  style={[
-                    styles.selectSize,
-                    {
-                      color: colors.blue,
-                    },
-                  ]}>
-                  {strings.pickSize}
-                </Text>
-              </TouchableWithoutFeedback>
-              {pickingSize && <View style={styles.offerContainer}>
-                {item.offer.map((e, i) => {
-                  return <TouchableWithoutFeedback onPress={() => {
-                    console.warn(e);
-                    setOfferIndex(i === offerIndex ? -1 : i)
+            {item.offer && item.offer.length > 0 ? (
+              <>
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    LayoutAnimation.configureNext(
+                      LayoutAnimation.Presets.easeInOut,
+                    );
+                    setPickingSize(!pickingSize);
                   }}>
-                    <Text style={[styles.singleOffer, i === offerIndex && styles.activeOffer]}>{e.name}</Text>
-                  </TouchableWithoutFeedback>
-                })}
-              </View>}</> : null}
+                  <Text
+                    style={[
+                      styles.selectSize,
+                      {
+                        color: colors.blue,
+                      },
+                    ]}>
+                    {strings.pickSize}
+                  </Text>
+                </TouchableWithoutFeedback>
+                {pickingSize && (
+                  <View style={styles.offerContainer}>
+                    {item.offer.map((e, i) => {
+                      return (
+                        <TouchableWithoutFeedback
+                          onPress={() => {
+                            console.warn(e);
+                            setOfferIndex(i === offerIndex ? -1 : i);
+                          }}>
+                          <Text
+                            style={[
+                              styles.singleOffer,
+                              i === offerIndex && styles.activeOffer,
+                            ]}>
+                            {e.name}
+                          </Text>
+                        </TouchableWithoutFeedback>
+                      );
+                    })}
+                  </View>
+                )}
+              </>
+            ) : null}
           </View>
           <View style={styles.about}>
-            <Text style={[styles.name, { paddingBottom: 20 }]}>{strings.aboutProduct}</Text>
+            <Text style={[styles.name, {paddingBottom: 20}]}>
+              {strings.aboutProduct}
+            </Text>
             <Text style={styles.title}>{item.description}</Text>
             {/* <Text style={styles.up}>{strings.upperMaterial}</Text>
             <Text style={styles.down}>{strings.fauxLeather}</Text>
@@ -144,21 +180,21 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
           </View>
           <View style={styles.shop}>
             <Text style={styles.title}>{strings.shop}</Text>
-            {store.logo && <View style={styles.nikeWrap}>
-              <Text style={styles.nike}>{store.name}</Text>
-              <Image
-                source={{
-                  uri:
-                    store.logo.path,
-                }}
-                style={{
-                  width: 100,
-                  height: 53,
-                }}
-                resizeMode="cover"
-              />
-            </View>
-            }
+            {store.logo && (
+              <View style={styles.nikeWrap}>
+                <Text style={styles.nike}>{store.name}</Text>
+                <Image
+                  source={{
+                    uri: store.logo.path,
+                  }}
+                  style={{
+                    width: 100,
+                    height: 53,
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+            )}
             <Text
               style={[
                 styles.paragraph,
@@ -169,9 +205,7 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
               {store.content}
             </Text>
             <Text style={styles.shopTitle}>{strings.address}</Text>
-            <Text style={styles.paragraph}>
-              {store.address}
-            </Text>
+            <Text style={styles.paragraph}>{store.address}</Text>
             <Text style={styles.shopTitle}>{strings.phone}</Text>
             <Text style={styles.paragraph}>{store.pmall_phone}</Text>
             {/* <Text style={styles.shopTitle}>{strings.workingHours}</Text>
@@ -179,14 +213,19 @@ const ProductPage = ({ navigation, dispatch, favorite }) => {
           </View>
         </View>
       </ScrollView>
-      <BlurFooter favIcon={favorite[item.id] ? "heart" : "heart-empty"} onLeftPress={() => dispatch(toggleFavorite(item))} onPress={() => {
-        if (offerIndex === -1) {
-          warnUser(strings.pickSizeFirst)
-          return;
-        }
-        console.warn(item[offerIndex]);
-        dispatch(addToCart({ ...item, offerIndex }));
-      }} buttonText="В корзину" />
+      <BlurFooter
+        favIcon={favorite[item.id] ? 'heart' : 'heart-empty'}
+        onLeftPress={() => dispatch(toggleFavorite(item))}
+        onPress={() => {
+          if (offerIndex === -1) {
+            warnUser(strings.pickSizeFirst);
+            return;
+          }
+          console.warn(item[offerIndex]);
+          dispatch(addToCart({...item, offerIndex}));
+        }}
+        buttonText="В корзину"
+      />
     </React.Fragment>
   );
 };
@@ -207,7 +246,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-end',
     position: 'absolute',
-    transform: [{ translateY: -100 }]
+    transform: [{translateY: -100}],
   },
   whiteDot: {
     backgroundColor: 'white',
@@ -293,13 +332,11 @@ const styles = StyleSheet.create({
     padding: 10,
     color: colors.red,
     fontSize: 16,
-  }
+  },
 });
 
-const mapStateToProps = ({ favorite }) => ({
-  favorite
-})
-
-
+const mapStateToProps = ({favorite}) => ({
+  favorite,
+});
 
 export default connect(mapStateToProps)(ProductPage);

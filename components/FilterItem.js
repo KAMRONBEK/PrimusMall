@@ -19,12 +19,11 @@ const FilterItem = ({
   filters,
   setFilters,
   id,
-  setFilters
 }) => {
   let isLink = !!subFilterList;
-  let toggleCheckbox = (val) => {
-    setFilters(filters)
-  }
+  let toggleCheckbox = val => {
+    setFilters(filters);
+  };
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -32,7 +31,7 @@ const FilterItem = ({
           setData(subFilterList, text, true, index);
           return;
         }
-        toggleCheckbox()
+        toggleCheckbox();
       }}>
       <View
         style={[
@@ -42,8 +41,7 @@ const FilterItem = ({
           },
         ]}>
         <React.Fragment>
-          <View style={styles.left}>
-          </View>
+          <View style={styles.left} />
           <View style={styles.middle}>
             <Text style={styles.title}>{text}</Text>
           </View>
@@ -53,15 +51,15 @@ const FilterItem = ({
                 <FontAwesome name="angle-right" size={20} />
               </View>
             ) : (
-                <CheckBox
-                  title="Click Here"
-                  checkedIcon="dot-circle-o"
-                  uncheckedIcon="circle-o"
-                  checkedColor="red"
-                  value={filters[id]}
-                  onPress={toggleCheckbox}
-                />
-              )}
+              <CheckBox
+                title="Click Here"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checkedColor="red"
+                value={filters[id]}
+                onPress={toggleCheckbox}
+              />
+            )}
           </View>
         </React.Fragment>
       </View>

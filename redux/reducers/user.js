@@ -1,7 +1,7 @@
 import { USER_LOADED, USER_LOGGED_IN, USER_LOGGED_OUT } from '../types';
 import AsyncStorage from '@react-native-community/async-storage'
 
-const initialState = { token: '', data: {} };
+const initialState = { token: '', data: {}, orders: [] };
 
 export default user = (state = initialState, { type, payload }) => {
   switch (type) {

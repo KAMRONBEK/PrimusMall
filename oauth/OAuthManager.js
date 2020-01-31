@@ -3,15 +3,15 @@ import OAuthManager from 'react-native-oauth';
 const manager = new OAuthManager('Pmall');
 manager.configure({
   facebook: {
-    client_id: '2338841292888111',
-    client_secret: '235c84be2069a051ea2cfee5ab2aa3ef',
-    // callback_url: 'https://pmall.uz/flynsarmy/sociallogin/Facebook/callback',
+    client_id: '815499772252584',
+    client_secret: '26fda0e65ec1d5c97071afa44e8bdd85',
+    callback_url: 'https://pmall.uz/flynsarmy/sociallogin/Facebook/callback',
   },
   google: {
-    callback_url: `https://pmall.uz/flynsarmy/sociallogin/Google/callback`,
+    callback_url: 'https://pmall.uz/flynsarmy/sociallogin/Google/callback',
     client_id:
-      '900520287266-2vkskr7fa34584db2vqdnovgottg9n4c.apps.googleusercontent.com',
-    client_secret: 'qPPas-tA6DSa5OR47_JbJhaS',
+      '432695160617-8ma9b580hufpbgsafmkdfj2d5u099toi.apps.googleusercontent.com',
+    client_secret: 'BI_RuvkGOwCZ_gY6Av7wJSLl',
   },
 });
 

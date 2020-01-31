@@ -1,5 +1,5 @@
 export default {
-  confirm: "Подтвердить",
+  confirm: 'Подтвердить',
   ru: 'Русский',
   uz: 'Узбекский',
   login: 'Вход',
@@ -86,5 +86,9 @@ export default {
   byHighRating: 'По высокий рейтинг',
   byLowRating: 'По низкий рейтинг',
   searchItem: 'Поиск предмета',
-  pickSizeFirst: "Пожалуйста, выберите размер"
+  pickSizeFirst: 'Пожалуйста, выберите размер',
+  provideValidData: 'Пожалуйста, заполните все поля ',
+  delivery: 'Доставка',
+  success: 'Успешно',
+  orderRecieved: 'Ваш заказ принят',
 };

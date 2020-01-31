@@ -1,23 +1,19 @@
-import { CATEGORIES_LOADED, SET_CATEGORY } from "../types"
+import {CATEGORIES_LOADED, SET_CATEGORY} from '../types';
 
 const initialState = {
-    selected: 0,
-    items: []
-}
+  selected: 0,
+  items: [],
+};
 
-export default (state = initialState, { type, payload }) => {
-    console.warn({ type, payload });
+export default (state = initialState, {type, payload}) => {
+  switch (type) {
+    case CATEGORIES_LOADED:
+      return {...state, items: payload};
 
-    switch (type) {
+    case SET_CATEGORY:
+      return {...state, selected: payload};
 
-        case CATEGORIES_LOADED:
-            return { ...state, items: payload }
-
-        case SET_CATEGORY:
-            return { ...state, selected: payload }
-
-
-        default:
-            return state
-    }
-}
+    default:
+      return state;
+  }
+};

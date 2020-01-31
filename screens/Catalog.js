@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -14,18 +14,20 @@ import Icon from '../constants/icons';
 import strings from '../localization/strings';
 import colors from '../constants/colors';
 import requests from '../api/api';
-import ProductCart from '../components/ProductCart'
-import { normalizeFilters } from '../utils/object';
-import { sortList } from './Sort';
-import { connect } from 'react-redux';
+import ProductCart from '../components/ProductCart';
+import {normalizeFilters} from '../utils/object';
+import {sortList} from './Sort';
+import {connect} from 'react-redux';
 
-const Catalog = ({ navigation, search }) => {
-
-  const { navigate } = navigation;
+const Catalog = ({navigation, search}) => {
+  const {navigate} = navigation;
   let index = navigation.getParam('index') || -1;
   let item = navigation.getParam('item') || {};
   let items = navigation.getParam('childs') || [];
-  let { name: title } = item;
+  let {name: title} = item;
+  if (index !== -1 && items.length > 0) {
+    title = items[index].name;
+  }
   let sortIndex = navigation.getParam('sortIndex') || 0;
 
   const [selectedIndex, setselectedIndex] = useState(-1);
@@ -33,45 +35,58 @@ const Catalog = ({ navigation, search }) => {
   const [loading, setLoading] = useState(true);
   const [childs, setChildren] = useState([]);
 
-  let defaultFilters = { perpage: 20, page: 1, category: item.id ? item.id : "", sort: sortList[sortIndex].value, search, filters: {} }
-  const [filters, setFilters] = useState(defaultFilters)
+  let defaultFilters = {
+    perpage: 20,
+    page: 1,
+    category: index !== -1 && items.length > 0 ? items[index].id : item.id,
+    sort: sortList[sortIndex].value,
+    search,
+    filters: {},
+  };
+  const [filters, setFilters] = useState(defaultFilters);
 
-  let populateProducts = (endReach) => {
-    if (!endReach)
-      setLoading(true)
-    requests.main.filterProducts(normalizeFilters(filters))
+  let populateProducts = endReach => {
+    if (!endReach) {
+      setLoading(true);
+    }
+    requests.main
+      .filterProducts(normalizeFilters(filters))
       .then(res => {
-        if (res.data.data && res.data.data.length > 0)
-          if (endReach)
-            setProducts([...products, ...res.data.data])
-          else setProducts(res.data.data)
+        if (res.data.data && res.data.data.length > 0) {
+          if (endReach) {
+            setProducts([...products, ...res.data.data]);
+          } else {
+            setProducts(res.data.data);
+          }
+        }
       })
-      .catch(({ response }) => console.warn(response))
+      .catch(({response}) => console.warn(response))
       .finally(() => setLoading(false));
-  }
+  };
   let onEndReach = () => {
-    setFilters({ ...filters, page: filters.page + 1 })
-  }
+    setFilters({...filters, page: filters.page + 1});
+  };
 
   useEffect(() => {
-    if (index !== -1)
+    if (index !== -1) {
       requests.main.getCategoryChilds(items[index].id).then(res => {
         setChildren(res.data.data);
       });
-  }, [])
+    }
+  }, []);//eslint-disable-line
   useEffect(() => {
     populateProducts(true);
-  }, [filters]);
+  }, [filters]); //eslint-disable-line
   useEffect(() => {
-    setLoading(true)
-    setProducts([])
-    setFilters({ ...filters, sort: sortList[sortIndex].value })
-  }, [sortIndex])
+    setLoading(true);
+    setProducts([]);
+    setFilters({...filters, sort: sortList[sortIndex].value});
+  }, [sortIndex])//eslint-disable-line
   useEffect(() => {
-    setLoading(true)
-    setProducts([])
-    setFilters({ ...defaultFilters, search })
-  }, [search])
+    setLoading(true);
+    setProducts([]);
+    setFilters({...defaultFilters, search});
+  }, [search])//eslint-disable-line
   return (
     <View style={styles.container}>
       <View>
@@ -81,44 +96,53 @@ const Catalog = ({ navigation, search }) => {
           rightRender
           navigation={navigation}
         />
-        {index !== -1 && <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={styles.top}>
-            {childs.map((e, i) => {
-              return (
-                <TouchableWithoutFeedback key={e.id} onPress={() => {
-                  setLoading(true)
-                  setFilters({ ...defaultFilters, category: e.id })
-                  if (i === selectedIndex) {
-                    filters.category = item.id
-                    setselectedIndex(-1);
-                    populateProducts();
-                    return;
-                  }
-                  setselectedIndex(i);
-                  populateProducts();
-                }}>
-                  <View
+        {index !== -1 && (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.top}>
+              {childs.map((e, i) => {
+                return (
+                  <TouchableWithoutFeedback
                     key={e.id}
-                    style={[
-                      styles.category,
-                      i === selectedIndex && styles.active,
-                    ]}>
-                    <Text
+                    onPress={() => {
+                      setLoading(true);
+                      setProducts([]);
+                      setFilters({...defaultFilters, category: e.id});
+                      if (i === selectedIndex) {
+                        filters.category = item.id;
+                        setselectedIndex(-1);
+                        populateProducts();
+                        return;
+                      }
+                      setselectedIndex(i);
+                      populateProducts();
+                    }}>
+                    <View
+                      key={e.id}
                       style={[
-                        styles.text,
-                        i === selectedIndex && styles.activeText,
+                        styles.category,
+                        i === selectedIndex && styles.active,
                       ]}>
-                      {e.name}
-                    </Text>
-                  </View>
-                </TouchableWithoutFeedback>
-              );
-            })}
-          </View>
-        </ScrollView>
-        }
+                      <Text
+                        style={[
+                          styles.text,
+                          i === selectedIndex && styles.activeText,
+                        ]}>
+                        {e.name}
+                      </Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                );
+              })}
+            </View>
+          </ScrollView>
+        )}
         <View style={styles.selectorWrap}>
-          <TouchableWithoutFeedback onPress={() => navigate('Filter', { item: selectedIndex !== -1 ? childs[selectedIndex] : item.id })}>
+          <TouchableWithoutFeedback
+            onPress={() =>
+              navigate('Filter', {
+                item: selectedIndex !== -1 ? childs[selectedIndex] : item.id,
+              })
+            }>
             <View style={styles.selector}>
               <Icon name="controls" size={18} />
               <Text style={styles.ml10}>{strings.filter}</Text>
@@ -139,20 +163,20 @@ const Catalog = ({ navigation, search }) => {
           <FlatList
             keyExtractor={e => e.id}
             data={products}
-            onEndReachedThreshold={.5}
+            onEndReachedThreshold={0.5}
             onEndReached={onEndReach}
             numColumns={2}
             renderItem={itemProps => <ProductCart {...itemProps} />}
           />
         ) : (
-            <View style={styles.centeredContainer}>
-              {loading ? (
-                <ActivityIndicator size={'large'} color={colors.orange} />
-              ) : (
-                  <Text style={styles.bigText}>{strings.noItems}</Text>
-                )}
-            </View>
-          )}
+          <View style={styles.centeredContainer}>
+            {loading ? (
+              <ActivityIndicator size={'large'} color={colors.orange} />
+            ) : (
+              <Text style={styles.bigText}>{strings.noItems}</Text>
+            )}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -165,7 +189,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: 'center',
   },
-  container: { backgroundColor: colors.superLightGray, flex: 1 },
+  container: {backgroundColor: colors.superLightGray, flex: 1},
   ml10: {
     marginLeft: 10,
   },
@@ -214,9 +238,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ search: { text } }) => ({
-  search: text
-})
-
+const mapStateToProps = ({search: {text}}) => ({
+  search: text,
+});
 
 export default connect(mapStateToProps)(Catalog);
