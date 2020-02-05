@@ -49,8 +49,9 @@ const Catalog = ({navigation, search}) => {
     if (!endReach) {
       setLoading(true);
     }
+    let str = normalizeFilters(filters);
     requests.main
-      .filterProducts(normalizeFilters(filters))
+      .filterProducts(str)
       .then(res => {
         if (res.data.data && res.data.data.length > 0) {
           if (endReach) {
@@ -73,7 +74,7 @@ const Catalog = ({navigation, search}) => {
         setChildren(res.data.data);
       });
     }
-  }, []);//eslint-disable-line
+  }, []); //eslint-disable-line
   useEffect(() => {
     populateProducts(true);
   }, [filters]); //eslint-disable-line
@@ -81,12 +82,12 @@ const Catalog = ({navigation, search}) => {
     setLoading(true);
     setProducts([]);
     setFilters({...filters, sort: sortList[sortIndex].value});
-  }, [sortIndex])//eslint-disable-line
+  }, [sortIndex]); //eslint-disable-line
   useEffect(() => {
     setLoading(true);
     setProducts([]);
     setFilters({...defaultFilters, search});
-  }, [search])//eslint-disable-line
+  }, [search]); //eslint-disable-line
   return (
     <View style={styles.container}>
       <View>

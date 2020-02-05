@@ -1,17 +1,25 @@
 'use strict';
 
-import React, { useEffect, useState } from 'react';
-import { LayoutAnimation, Picker, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  LayoutAnimation,
+  Picker,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { withNavigation } from 'react-navigation';
-import { connect } from 'react-redux';
+import {withNavigation} from 'react-navigation';
+import {connect} from 'react-redux';
 import requests from '../api/api';
 import colors from '../constants/colors';
 import Icon from '../constants/icons';
 import strings from '../localization/strings';
-import { categoriesLoaded, setCategory } from '../redux/actions/category';
-import { setText, setExpanded } from '../redux/actions/search';
+import {categoriesLoaded, setCategory} from '../redux/actions/category';
+import {setText, setExpanded} from '../redux/actions/search';
 
 const Header = ({
   hasDrawer,
@@ -24,7 +32,7 @@ const Header = ({
   selectedItem,
   items,
   dispatch,
-  search
+  search,
 }) => {
   useEffect(() => {
     if (!items || items.length <= 0) {
@@ -37,9 +45,9 @@ const Header = ({
         );
       });
     }
-  }, []);
+  }, [dispatch, items]);
 
-  let { text, expanded } = search;
+  let {text, expanded} = search;
 
   let searchBar = () => {
     return (
@@ -49,9 +57,9 @@ const Header = ({
             style={styles.searchInput}
             placeholder={strings.searchItem}
             value={text}
-            onChangeText={(val) => dispatch(setText(val))}
+            onChangeText={val => dispatch(setText(val))}
             onSubmitEditing={() => {
-              navigation.navigate('Catalog')
+              navigation.navigate('Catalog');
             }}
             returnKeyType="search"
           />
@@ -62,10 +70,10 @@ const Header = ({
 
   let renderPicker = () => {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Picker
-          style={{ marginTop: -10, fontSize: 18, fontWeight: 'bold' }}
-          itemStyle={{ fontSize: 18, fontWeight: 'bold' }}
+          style={{marginTop: -10, fontSize: 18, fontWeight: 'bold'}}
+          itemStyle={{fontSize: 18, fontWeight: 'bold'}}
           selectedValue={selectedItem}
           onValueChange={val => {
             dispatch(setCategory(val));
@@ -74,7 +82,7 @@ const Header = ({
             items.map((el, i) => {
               return (
                 <Picker.Item
-                  style={{ fontSize: 18, fontWeight: 'bold' }}
+                  style={{fontSize: 18, fontWeight: 'bold'}}
                   key={el.id}
                   label={el.name}
                   value={el.id}
@@ -95,20 +103,20 @@ const Header = ({
             </View>
           </TouchableWithoutFeedback>
         ) : (
-            backwardArrow && (
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  if (navigation) {
-                    navigation.goBack();
-                    return;
-                  }
-                }}>
-                <View>
-                  <Icon name="arrow-back" size={22} />
-                </View>
-              </TouchableWithoutFeedback>
-            )
-          )}
+          backwardArrow && (
+            <TouchableWithoutFeedback
+              onPress={() => {
+                if (navigation) {
+                  navigation.goBack();
+                  return;
+                }
+              }}>
+              <View>
+                <Icon name="arrow-back" size={22} />
+              </View>
+            </TouchableWithoutFeedback>
+          )
+        )}
       </View>
     );
   };
@@ -128,8 +136,8 @@ const Header = ({
             {simpleTitle}
           </Text>
         ) : (
-              <React.Fragment />
-            )}
+          <React.Fragment />
+        )}
       </View>
     );
   };
@@ -143,7 +151,7 @@ const Header = ({
                 LayoutAnimation.configureNext(
                   LayoutAnimation.Presets.easeInEaseOut,
                 );
-                dispatch(setExpanded(!expanded))
+                dispatch(setExpanded(!expanded));
               }}>
               <AntDesign name="search1" size={25} />
             </TouchableWithoutFeedback>
@@ -244,18 +252,18 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.red,
     borderBottomWidth: 1,
     height: 40,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   searchInput: {
     width: 170,
   },
 });
 
-const mapStateToProps = ({ cart, category, search }) => ({
+const mapStateToProps = ({cart, category, search}) => ({
   cart,
   selectedItem: category.selected,
   items: category.items,
-  search
+  search,
 });
 
 export default connect(mapStateToProps)(withNavigation(Header));

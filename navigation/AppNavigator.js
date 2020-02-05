@@ -1,8 +1,8 @@
 import React from 'react';
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import { createDrawerNavigator } from 'react-navigation-drawer';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createDrawerNavigator} from 'react-navigation-drawer';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import DrawerContent from '../components/DrawerContent';
 import Header from '../components/Header';
 import colors from '../constants/colors';
@@ -100,7 +100,7 @@ const BasketStack = createStackNavigator(
     Basket: {
       screen: Basket,
       navigationOptions: {
-        header: ({ navigation }) => (
+        header: ({navigation}) => (
           <Header backwardArrow rightRender navigation={navigation} />
         ),
       },
@@ -114,7 +114,7 @@ const BasketStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => (
+      header: ({navigation}) => (
         <Header
           simpleTitle={strings.checkout}
           backwardArrow
@@ -152,17 +152,13 @@ const ShopStack = createStackNavigator({
   Shop: {
     screen: Shop,
     navigationOptions: {
-      header: ({ navigation }) => (
-        <Header hasDrawer rightRender />
-      ),
+      header: ({navigation}) => <Header hasDrawer rightRender />,
     },
   },
   ShopPage: {
     screen: ShopPage,
     navigationOptions: {
-      header: ({ navigation }) => (
-        <Header backwardArrow rightRender />
-      ),
+      header: ({navigation}) => <Header backwardArrow rightRender />,
     },
   },
 });
@@ -173,8 +169,8 @@ const ProfileStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => (
-        <Header hasDrawer dropdown rightRender navigation={navigation} />
+      header: ({navigation}) => (
+        <Header hasDrawer rightRender navigation={navigation} />
       ),
     },
   },
@@ -218,7 +214,7 @@ let CategoriesStack = createStackNavigator(
     Categories: {
       screen: Categories,
       navigationOptions: {
-        header: ({ navigation }) => (
+        header: ({navigation}) => (
           <Header hasDrawer dropdown rightRender navigation={navigation} />
         ),
       },
@@ -249,28 +245,37 @@ let FavoritesStack = createStackNavigator(
   },
   {
     defaultNavigationOptions: {
-      header: ({ navigation }) => (
+      header: ({navigation}) => (
         <Header hasDrawer dropdown rightRender navigation={navigation} />
       ),
     },
   },
 );
 
+let MainStack = createStackNavigator({
+  Main: {
+    screen: Main,
+    navigationOptions: {
+      header: () => <Header hasDrawer rightRender />,
+    },
+  },
+});
+
 const TabNavigator = createMaterialTopTabNavigator(
   {
     Main: {
-      screen: Main,
+      screen: MainStack,
       navigationOptions: {
         tabBarIcon: () => {
           return <Icon name="home" size={25} />;
         },
       },
     },
-    Profile: {
-      screen: ProfileStack,
+    Categories: {
+      screen: CategoriesStack,
       navigationOptions: {
         tabBarIcon: () => {
-          return <Icon name="user-alternative" size={22} />;
+          return <Icon name="list-sort" size={20} />;
         },
       },
     },
@@ -282,11 +287,11 @@ const TabNavigator = createMaterialTopTabNavigator(
         },
       },
     },
-    Categories: {
-      screen: CategoriesStack,
+    Profile: {
+      screen: ProfileStack,
       navigationOptions: {
         tabBarIcon: () => {
-          return <Icon name="list-sort" size={20} />;
+          return <Icon name="user-alternative" size={22} />;
         },
       },
     },
@@ -319,7 +324,7 @@ let ProductStack = createStackNavigator({
   ProductPage: {
     screen: ProductPage,
     navigationOptions: {
-      header: ({ navigation }) => (
+      header: ({navigation}) => (
         <Header backwardArrow rightRender navigation={navigation} />
       ),
     },

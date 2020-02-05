@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Animated,
   Dimensions,
@@ -9,13 +9,13 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import Svg, { Ellipse } from 'react-native-svg';
+import Svg, {Ellipse} from 'react-native-svg';
 import Colors from '../constants/colors';
-import { getObjectProperty } from '../utils/object';
+import {getObjectProperty} from '../utils/object';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
-let { width } = Dimensions.get('window');
+let {width} = Dimensions.get('window');
 
 const Slider = ({
   images,
@@ -24,7 +24,7 @@ const Slider = ({
   imageStyle,
   animated,
   onPress,
-  imagePath
+  imagePath,
 }) => {
   let [indicatorIndex, setIndicatorIndex] = useState(0);
   let [indicatorWidth, setIndicatorWidth] = useState(-1);
@@ -35,25 +35,25 @@ const Slider = ({
   let value = new Animated.Value(0);
   let interval = animated
     ? setInterval(() => {
-      if (!banner || !banner.scrollTo) {
-        return;
-      }
-      let val =
-        indicatorIndex + 1 === images.length
-          ? 0
-          : calculatedWidth * (indicatorIndex + 1);
-      banner.scrollTo({
-        x: val,
-      });
-      setIndicatorIndex(
-        indicatorIndex + 1 === images.length ? 0 : indicatorIndex + 1,
-      );
-    }, 3000)
+        if (!banner || !banner.scrollTo) {
+          return;
+        }
+        let val =
+          indicatorIndex + 1 === images.length
+            ? 0
+            : calculatedWidth * (indicatorIndex + 1);
+        banner.scrollTo({
+          x: val,
+        });
+        setIndicatorIndex(
+          indicatorIndex + 1 === images.length ? 0 : indicatorIndex + 1,
+        );
+      }, 3000)
     : {};
   let getImageStyle = () => {
     let cardStyle = {};
     if (type === 'card') {
-      cardStyle = { width: width - 30, borderRadius: 30, height: 200 };
+      cardStyle = {width: width - 30, borderRadius: 30, height: 200};
     }
     return [
       {
@@ -61,6 +61,7 @@ const Slider = ({
         // height: 180,
         // borderBottomLeftRadius: 30,
         // borderBottomRightRadius: 30,
+        height: width + 20,
       },
       cardStyle,
       imageStyle,
@@ -96,7 +97,7 @@ const Slider = ({
   let renderIndicators = images => {
     return images.map((e, key) => (
       <View
-        {...{ key }}
+        {...{key}}
         style={{
           borderRadius: indicatorRadius,
           width: indicatorRadius * 2,
@@ -112,14 +113,14 @@ const Slider = ({
     return () => clearInterval(interval);
   }, [interval]);
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <ScrollView
         ref={ref => (banner = ref)}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         style={getScrollViewStyle()}
-        onMomentumScrollEnd={({ nativeEvent }) => {
+        onMomentumScrollEnd={({nativeEvent}) => {
           setIndicatorIndex(
             parseInt(nativeEvent.contentOffset.x / calculatedWidth),
           );
@@ -173,8 +174,8 @@ const Slider = ({
           marginTop: type === 'card' ? -40 : -30,
         }}>
         <View
-          style={{ flexDirection: 'row' }}
-          onLayout={({ nativeEvent }) => {
+          style={{flexDirection: 'row'}}
+          onLayout={({nativeEvent}) => {
             if (indicatorWidth === -1) {
               setIndicatorWidth(nativeEvent.layout.width);
             }
@@ -195,7 +196,7 @@ const Slider = ({
             style={{
               margin: 5,
               marginLeft: indicatorOffset + 5,
-              transform: [{ translateX: getIndicatorPosition() }],
+              transform: [{translateX: getIndicatorPosition()}],
               position: 'absolute',
             }}>
             <Ellipse
