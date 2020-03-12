@@ -58,9 +58,6 @@ const Slider = ({
     return [
       {
         width,
-        // height: 180,
-        // borderBottomLeftRadius: 30,
-        // borderBottomRightRadius: 30,
         height: width + 20,
       },
       cardStyle,

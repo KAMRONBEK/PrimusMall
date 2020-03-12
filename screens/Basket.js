@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import strings from '../localization/strings';
 import {warnUser} from '../utils/warn';
 
-const Basket = ({navigation, style, cart}) => {
+const Basket = ({navigation, style, cart, isAuthorized}) => {
   let {navigate} = navigation;
 
   return (
@@ -51,6 +51,10 @@ const Basket = ({navigation, style, cart}) => {
         currency=" сум"
         buttonText="Оформить"
         onPress={() => {
+          if (!isAuthorized) {
+            navigate('Login');
+            return;
+          }
           if (cart && cart.items.length > 0) {
             navigate('Checkout', {});
             return;
@@ -68,8 +72,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({cart}) => ({
+const mapStateToProps = ({cart, user}) => ({
   cart,
+  user,
+  isAuthorized: !!user.token,
 });
 
 export default connect(mapStateToProps)(Basket);

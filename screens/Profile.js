@@ -19,18 +19,22 @@ import {reducer, SET} from '../utils/state';
 import ImagePicker from 'react-native-image-picker';
 import requests from '../api/api';
 import {userLoaded} from '../redux/actions';
+import RoundButton from '../components/RoundButton';
 
-const Profile = ({user, dispatch}) => {
+const Profile = ({user, dispatch, isAuthorized, navigation}) => {
   let {data: initial, token, orders} = user;
   const [data, dispatcher] = useReducer(reducer, {...initial, editing: true});
   useEffect(() => {
+    if (!isAuthorized) {
+      return;
+    }
     requests.user
       .getOrders(token)
       .then(res => {
         dispatch(userLoaded({...user, orders: res.data}));
       })
       .catch();
-  }, []);// eslint-disable-line
+  }, []); // eslint-disable-line
   let updateState = (name, value) => {
     dispatcher({type: SET, name, value});
   };
@@ -69,7 +73,13 @@ const Profile = ({user, dispatch}) => {
   if (!initial || !token) {
     return (
       <View style={styles.centeredContainer}>
-        <Text style={styles.bigText}>{strings.pleaseLogin}</Text>
+        <RoundButton
+          isFilled
+          backgroundColor={colors.red}
+          text={'РЕГИСТРАЦИЯ'}
+          textColor={colors.white}
+          onPress={() => navigation.navigate('Login', {})}
+        />
       </View>
     );
   }
@@ -180,20 +190,6 @@ const Profile = ({user, dispatch}) => {
               data={orders}
               renderItem={Order}
             />
-            {/* <TouchableWithoutFeedback
-              onPress={() => {
-                // console.warn('otahon huyet qimang');
-              }}>
-              <Text
-                style={[
-                  styles.change,
-                  {
-                    color: colors.blue,
-                  },
-                ]}>
-                История заказов
-              </Text>
-            </TouchableWithoutFeedback> */}
           </View>
         ) : null}
       </View>
@@ -203,6 +199,7 @@ const Profile = ({user, dispatch}) => {
 
 const mapStateToProps = ({user}) => ({
   user,
+  isAuthorized: !!user.token,
 });
 
 export default connect(mapStateToProps)(Profile);
@@ -221,7 +218,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   top: {
-    // width: Dimensions.get("window").width - 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

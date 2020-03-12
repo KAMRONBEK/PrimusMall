@@ -2,20 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
+  LayoutAnimation,
   ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableWithoutFeedback,
-  LayoutAnimation,
-  Platform,
+  View,
 } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import {connect} from 'react-redux';
+import requests from '../api/api';
 import BlurFooter from '../components/BlurFooter';
 import colors from '../constants/colors';
 import strings from '../localization/strings';
-import Carousel from 'react-native-snap-carousel';
-import requests from '../api/api';
-import {connect} from 'react-redux';
 import {addToCart, toggleFavorite} from '../redux/actions';
 import {warnUser} from '../utils/warn';
 

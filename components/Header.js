@@ -76,6 +76,7 @@ const Header = ({
           itemStyle={{fontSize: 18, fontWeight: 'bold'}}
           selectedValue={selectedItem}
           onValueChange={val => {
+            console.warn(val);
             dispatch(setCategory(val));
           }}>
           {items &&

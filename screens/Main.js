@@ -51,12 +51,14 @@ function Main({navigation, category}) {
     page: 1,
   };
   const [filters, setFilters] = useState(defaultFilters);
+  const [endReached, setEndReached] = useState(false);
   //eslint-disable-next-line
   let populateProducts = () => {
     api.main
       .filterProducts(normalizeFilters(filters))
       .then(res => {
-        setState({type: MERGE_LIST, name: 'products', value: res.data.data});
+        if (res.data.data && res.data.data.length > 0)
+          setState({type: MERGE_LIST, name: 'products', value: res.data.data});
       })
       .catch(({response: res}) => {
         console.warn(res);
@@ -80,54 +82,52 @@ function Main({navigation, category}) {
       .finally(() => {});
   };
   useEffect(() => {
-    // populateProducts();
+    setFilters({...defaultFilters, page: 1});
     getBanner();
   }, []); //eslint-disable-line
 
   useEffect(() => {
+    console.warn('FILTERING');
     populateProducts();
   }, [filters]); //eslint-disable-line
 
   let onEndReach = () => {
+    console.warn('END REACHED');
+
     setFilters({...filters, page: filters.page + 1});
     // populateProducts();
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Slider images={state.banner} imagePath={'image.path'} animated />
-        <View
-          style={[
-            styles.titleWrap,
-            {
-              backgroundColor: colors.superLightGray,
-            },
-          ]}>
-          <Text style={styles.title}>{strings.newItems}</Text>
-        </View>
-        <View style={{flex: 1.2}}>
-          {state.loading ? (
-            <View style={styles.centerdContainer}>
-              <ActivityIndicator size={'large'} />
+      <FlatList
+        extraData={state.banner}
+        ListHeaderComponent={() => (
+          <>
+            <Slider images={state.banner} imagePath={'image.path'} animated />
+            <View
+              style={[
+                styles.titleWrap,
+                {
+                  backgroundColor: colors.superLightGray,
+                },
+              ]}>
+              <Text style={styles.title}>{strings.newItems}</Text>
             </View>
-          ) : (
-            <FlatList
-              keyExtractor={(e, index) => index.toString()}
-              showsHorizontalScrollIndicator={false}
-              data={state.products}
-              renderItem={({item}) => <ProductCart item={item} />}
-              contentContainerStyle={styles.flatList}
-              onEndReachedThreshold={0.5}
-              onEndReached={onEndReach}
-              numColumns={2}
-              style={{
-                backgroundColor: colors.superLightGray,
-              }}
-            />
-          )}
-        </View>
-      </ScrollView>
+          </>
+        )}
+        keyExtractor={(e, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
+        data={state.products}
+        renderItem={({item}) => <ProductCart item={item} />}
+        onEndReachedThreshold={0.5}
+        onEndReached={onEndReach}
+        bounces={false}
+        numColumns={2}
+        style={{
+          backgroundColor: colors.superLightGray,
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     // paddingBottom: 10,
+    flex: 1,
   },
   centerdContainer: {
     flex: 1,

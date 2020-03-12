@@ -112,7 +112,6 @@ const Login = ({navigation, dispatch, user}) => {
               manager
                 .authorize('google', {scopes: 'profile'})
                 .then(response => {
-                  console.warn();
                   requests.auth
                     .social('Google', response.response.credentials.accessToken)
                     .then(res => {

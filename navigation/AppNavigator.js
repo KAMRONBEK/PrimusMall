@@ -389,7 +389,7 @@ const SwitchNavigator = createSwitchNavigator(
     AuthNavigator,
     DrawerNavigator,
   },
-  {},
+  {initialRouteName: 'DrawerNavigator'},
 );
 
 const MainNavigator = createAppContainer(SwitchNavigator);
