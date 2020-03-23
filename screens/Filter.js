@@ -9,7 +9,120 @@ import { reducer, SET, SET_MULTIPLE } from '../utils/state';
 
 const Filter = ({ navigation }) => {
 
-  // let filterList = [
+  let { id } = navigation.getParam('item') || {};
+  let filters = navigation.getParam('filters');
+  const [state, dispatch] = useReducer(reducer, { data: [], initialData: [], header: "Фильтр", isSubCategory: false })
+  useEffect(() => {
+    api.main.getCategory(id).then(res => {
+      dispatch({ type: SET_MULTIPLE, names: ["data", "initialData"], values: [res.data.data.product_filters, res.data.data.product_filters] })
+    });
+  }, [])
+  return (
+    <View style={styles.container}>
+      <TouchableWithoutFeedback onPress={() => {
+        navigation.goBack();
+      }}>
+        <View style={styles.fade} />
+      </TouchableWithoutFeedback>
+      <View
+        style={[
+          styles.contentWrap,
+          {
+            backgroundColor: colors.white,
+          },
+        ]}>
+        <View style={styles.header}>
+          {state.isSubCategory && (
+            <TouchableWithoutFeedback
+              onPress={() => {
+                dispatch({ type: SET_MULTIPLE, names: ['header', 'data', 'isSubCategory'], values: ["Фильтр", state.initialData, false] })
+              }}>
+              <View style={styles.headerLeft}>
+                <Icon name="arrow-back" size={20} style={{ paddingLeft: 20 }} />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          <View style={styles.headerMiddle}>
+            <Text style={styles.title}>{state.header.toUpperCase()}</Text>
+          </View>
+          {!state.isSubCategory && (
+            <TouchableWithoutFeedback onPress={() => {
+              navigation.goBack();
+            }}>
+              <View style={styles.headerLeft}>
+                <MaterialCommunityIcons
+                  name="close"
+                  size={20}
+                  style={{ paddingRight: 20 }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+        </View>
+        <FlatList
+          keyExtractor={e => e.text}
+          data={state.data}
+          renderItem={({ item }) => (
+            <FilterItem
+              text={state.isSubCategory ? item.value : item.name}
+              color={item.color}
+              setData={(data, title, isSubCategory) => {
+                dispatch({ type: SET_MULTIPLE, names: ['header', 'data', 'isSubCategory'], values: [title, data, isSubCategory] })
+              }}
+              subFilterList={item.values}
+              id={state.isSubCategory ? item.name : item.id}
+              filters={filters}
+            />
+          )}
+        />
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    // backgroundColor: 'transparent',
+    flexDirection: 'column',
+    flex: 1,
+  },
+  fade: {
+    backgroundColor: 'gray',
+    opacity: 0.3,
+    flex: 3,
+  },
+  contentWrap: {
+    flex: 7,
+  },
+  header: {
+    height: 50,
+    elevation: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#ccc',
+  },
+  headerRigh: {
+    flex: 1,
+  },
+  headerMiddle: {
+    flex: 5,
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    paddingLeft: 50,
+  },
+});
+
+
+
+export default Filter;
+
+// let filterList = [
   //   {
   //     iconName: 'percent',
   //     text: 'Со скидкой',
@@ -124,114 +237,3 @@ const Filter = ({ navigation }) => {
   //     ],
   //   },
   // ];
-
-  let { id } = navigation.getParam('item') || {};
-
-  const [state, dispatch] = useReducer(reducer, { data: [], initialData: [], header: "Фильтр", isSubCategory: false })
-  useEffect(() => {
-    api.main.getCategory(id).then(res => {
-      dispatch({ type: SET_MULTIPLE, names: ["data", "initialData"], values: [res.data.data.product_filters, res.data.data.product_filters] })
-    });
-  }, [])
-  return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={() => {
-        navigation.goBack();
-      }}>
-        <View style={styles.fade} />
-      </TouchableWithoutFeedback>
-      <View
-        style={[
-          styles.contentWrap,
-          {
-            backgroundColor: colors.white,
-          },
-        ]}>
-        <View style={styles.header}>
-          {state.isSubCategory && (
-            <TouchableWithoutFeedback
-              onPress={() => {
-                dispatch({ type: SET_MULTIPLE, names: ['header', 'data', 'isSubCategory'], values: ["Фильтр", state.initialData, false] })
-              }}>
-              <View style={styles.headerLeft}>
-                <Icon name="arrow-back" size={20} style={{ paddingLeft: 20 }} />
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-          <View style={styles.headerMiddle}>
-            <Text style={styles.title}>{state.header.toUpperCase()}</Text>
-          </View>
-          {!state.isSubCategory && (
-            <TouchableWithoutFeedback onPress={() => {
-              navigation.goBack();
-            }}>
-              <View style={styles.headerLeft}>
-                <MaterialCommunityIcons
-                  name="close"
-                  size={20}
-                  style={{ paddingRight: 20 }}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          )}
-        </View>
-        <FlatList
-          keyExtractor={e => e.text}
-          data={state.data}
-          renderItem={({ item }) => (
-            <FilterItem
-              iconName={item.iconName}
-              text={state.isSubCategory ? item.value : item.name}
-              color={item.color}
-              smallIcon={item.smallIcon}
-              setData={(data, title, isSubCategory) => {
-                dispatch({ type: SET_MULTIPLE, names: ['header', 'data', 'isSubCategory'], values: [title, data, isSubCategory] })
-              }}
-              subFilterList={item.values}
-            />
-          )}
-        />
-      </View>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    // backgroundColor: 'transparent',
-    flexDirection: 'column',
-    flex: 1,
-  },
-  fade: {
-    backgroundColor: 'gray',
-    opacity: 0.3,
-    flex: 3,
-  },
-  contentWrap: {
-    flex: 7,
-  },
-  header: {
-    height: 50,
-    elevation: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#ccc',
-  },
-  headerRigh: {
-    flex: 1,
-  },
-  headerMiddle: {
-    flex: 5,
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    paddingLeft: 50,
-  },
-});
-
-export default Filter;

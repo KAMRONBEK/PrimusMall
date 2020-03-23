@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.primusmall",
+    package = "uz.primusmall.app",
 )
 
 android_resource(
     name = "res",
-    package = "com.primusmall",
+    package = "uz.primusmall.app",
     res = "src/main/res",
 )
 

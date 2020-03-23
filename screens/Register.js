@@ -72,7 +72,7 @@ const Register = ({ navigation, dispatch }) => {
         iconName={'phone'}
         legend={'Номер телефона'}
         secondaryIconName={'close'}
-        onChangeText={e => updateState('username', e)}
+        onChangeText={e => updateState('phone', e)}
         value={state.username}
       />
       <TextInputField

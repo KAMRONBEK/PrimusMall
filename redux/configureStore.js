@@ -1,5 +1,5 @@
 import { combineReducers, createStore } from 'redux';
-import { user, cart, favorite, category } from './reducers';
+import { user, cart, favorite, category, search, order } from './reducers';
 
 export const configureStore = () => {
   return createStore(
@@ -7,7 +7,9 @@ export const configureStore = () => {
       user,
       favorite,
       cart,
-      category
+      category,
+      search,
+      order
     }),
   );
 };

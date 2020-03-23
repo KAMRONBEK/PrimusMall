@@ -1,4 +1,4 @@
-package com.primusmall;
+package uz.primusmall.app;
 
 import android.app.Application;
 import android.util.Log;

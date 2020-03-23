@@ -1,29 +1,30 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import colors from '../constants/colors';
+import strings from '../localization/strings';
 
 const Order = ({item}) => {
-  let backgroundColor = '';
-  let textColor = '';
-  let status = '';
+  let backgroundColor = colors.white;
+  let textColor = colors.black;
+  let status = item.status.name;
 
-  switch (item.status) {
-    case 'waiting': {
+  switch (item.status_id) {
+    case '3': {
       backgroundColor = colors.superLightOrange;
       textColor = colors.orange;
-      status = 'Ожидается доставка';
+      // status = 'Ожидается доставка';
       break;
     }
-    case 'delivered': {
+    case '4': {
       backgroundColor = colors.superLightGreen;
       textColor = colors.green;
-      status = 'Доставлено';
+      // status = 'Доставлено';
       break;
     }
-    case 'canceled': {
+    case '5': {
       backgroundColor = colors.superLightRed;
       textColor = colors.red;
-      status = 'Отменен';
+      // status = 'Отменен';
       break;
     }
   }
@@ -36,7 +37,7 @@ const Order = ({item}) => {
           backgroundColor: backgroundColor,
         },
       ]}>
-      <Text style={styles.orderNumber}>Заказ #{item.orderNumber}</Text>
+      <Text style={styles.orderNumber}>Заказ #{item.order_number}</Text>
       <Text
         style={[
           styles.status,
@@ -46,15 +47,22 @@ const Order = ({item}) => {
         ]}>
         {status}
       </Text>
-      <Text style={styles.price}>
-        Общая сумма: {item.price}
-        {item.currency}
-      </Text>
+      <View style={styles.row}>
+        <Text style={styles.price}>
+          Общая сумма: {item.total_price_value} +{' '}
+        </Text>
+        <Text style={styles.highlightText}>
+          {strings.delivery} {item.shipping_price}
+        </Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+  },
   container: {
     borderRadius: 30,
     padding: 20,
@@ -68,6 +76,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   price: {
+    marginTop: 10,
+  },
+  highlightText: {
+    color: colors.orange,
     marginTop: 10,
   },
 });

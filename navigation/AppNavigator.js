@@ -152,17 +152,13 @@ const ShopStack = createStackNavigator({
   Shop: {
     screen: Shop,
     navigationOptions: {
-      header: ({navigation}) => (
-        <Header hasDrawer rightRender navigation={navigation} />
-      ),
+      header: ({navigation}) => <Header hasDrawer rightRender />,
     },
   },
   ShopPage: {
     screen: ShopPage,
     navigationOptions: {
-      header: ({navigation}) => (
-        <Header backwardArrow rightRender navigation={navigation} />
-      ),
+      header: ({navigation}) => <Header backwardArrow rightRender />,
     },
   },
 });
@@ -174,7 +170,7 @@ const ProfileStack = createStackNavigator(
   {
     defaultNavigationOptions: {
       header: ({navigation}) => (
-        <Header hasDrawer dropdown rightRender navigation={navigation} />
+        <Header hasDrawer rightRender navigation={navigation} />
       ),
     },
   },
@@ -256,21 +252,30 @@ let FavoritesStack = createStackNavigator(
   },
 );
 
+let MainStack = createStackNavigator({
+  Main: {
+    screen: Main,
+    navigationOptions: {
+      header: () => <Header hasDrawer rightRender />,
+    },
+  },
+});
+
 const TabNavigator = createMaterialTopTabNavigator(
   {
     Main: {
-      screen: Main,
+      screen: MainStack,
       navigationOptions: {
         tabBarIcon: () => {
           return <Icon name="home" size={25} />;
         },
       },
     },
-    Profile: {
-      screen: ProfileStack,
+    Categories: {
+      screen: CategoriesStack,
       navigationOptions: {
         tabBarIcon: () => {
-          return <Icon name="user-alternative" size={22} />;
+          return <Icon name="list-sort" size={20} />;
         },
       },
     },
@@ -282,11 +287,11 @@ const TabNavigator = createMaterialTopTabNavigator(
         },
       },
     },
-    Categories: {
-      screen: CategoriesStack,
+    Profile: {
+      screen: ProfileStack,
       navigationOptions: {
         tabBarIcon: () => {
-          return <Icon name="list-sort" size={20} />;
+          return <Icon name="user-alternative" size={22} />;
         },
       },
     },
@@ -384,7 +389,7 @@ const SwitchNavigator = createSwitchNavigator(
     AuthNavigator,
     DrawerNavigator,
   },
-  {},
+  {initialRouteName: 'DrawerNavigator'},
 );
 
 const MainNavigator = createAppContainer(SwitchNavigator);

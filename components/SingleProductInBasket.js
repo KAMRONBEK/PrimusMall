@@ -51,9 +51,9 @@ const SingleProductInBasket = ({ item, dispatch, index }) => {
             <Text style={styles.text}>
               {strings.size}
               {': '}
-              {item.size}
+              {item.offerIndex && item.offer[item.offerIndex].name}
             </Text>
-            <View
+            {/* <View
               style={[
                 styles.text,
                 { flexDirection: 'row', alignItems: 'center' },
@@ -72,7 +72,7 @@ const SingleProductInBasket = ({ item, dispatch, index }) => {
                 }}
                 color={item.color}
               />
-            </View>
+            </View> */}
           </View>
         </View>
         <View style={styles.flex}>

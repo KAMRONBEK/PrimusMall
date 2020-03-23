@@ -7,17 +7,19 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   TouchableWithoutFeedbackComponent,
+  Clipboard,
 } from 'react-native';
 import RoundButton from '../components/RoundButton';
 import colors from '../constants/colors';
 import BlackButton from '../components/BlackButton';
 import api from '../api/api';
-import {userLoaded} from '../redux/actions/user';
 import {connect} from 'react-redux';
 import manager from '../oauth/OAuthManager';
 import {userLoggedIn} from '../redux/actions/user';
+import {AccessToken, LoginManager} from 'react-native-fbsdk';
+import requests from '../api/api';
 
-const Login = ({navigation, dispatch}) => {
+const Login = ({navigation, dispatch, user}) => {
   const [state, setState] = useState({username: '+998'});
   const [loading, setloading] = useState(false);
   const [error, setError] = useState('');
@@ -43,17 +45,35 @@ const Login = ({navigation, dispatch}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Вход</Text>
+      {/* <LoginButton
+        loginBehaviorAndroid="web_only"
+        permissions={['public_profile', 'email']}
+        onLoginFinished={(error, result) => {
+          alert(JSON.stringify(result));
+          if (error) {
+            console.warn('login has error: ' + result.error);
+          } else if (result.isCancelled) {
+            console.warn('login is cancelled.');
+          } else {
+            AccessToken.getCurrentAccessToken().then(data => {
+              console.warn();
+            });
+          }
+          console.warn(error);
+        }}
+        onLogoutFinished={() => console.warn('logout.')}
+      /> */}
       <View>
         <View style={styles.error}>
           <Text style={styles.errorText}>{error}</Text>
         </View>
         <TextInputField
-          placeholder={'Phone number'}
-          iconName={'phone'}
+          placeholder={'Email'}
+          iconName={'e-mail'}
+          legend={'Email'}
           secondaryIconName={'close'}
-          legend={'Номер телефона'}
-          value={state.username}
-          onChangeText={data => updateState('username', data)}
+          onChangeText={e => updateState('email', e)}
+          value={state.email}
         />
         <TextInputField
           placeholder={'Password'}
@@ -90,27 +110,15 @@ const Login = ({navigation, dispatch}) => {
           <TouchableWithoutFeedback
             onPress={() => {
               manager
-                .authorize('google', {scopes: 'email'})
+                .authorize('google', {scopes: 'profile'})
                 .then(response => {
-                  console.warn(response);
-                })
-                .catch(error => {
-                  console.warn(error);
-                });
-              // .finally(res => {
-              //   console.warn(res);
-              // });
-            }}>
-            <View>
-              <BlackButton iconName="google-plus" />
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              manager
-                .authorize('facebook', {scopes: 'profile,email'})
-                .then(response => {
-                  console.warn(response);
+                  requests.auth
+                    .social('Google', response.response.credentials.accessToken)
+                    .then(res => {
+                      // console.warn(res.data);
+                      dispatch(userLoggedIn({...user, ...res.data}));
+                      navigation.navigate('Main');
+                    });
                 })
                 .catch(error => {
                   console.warn(error);
@@ -118,6 +126,66 @@ const Login = ({navigation, dispatch}) => {
                 .finally(res => {
                   console.warn(res);
                 });
+              // LoginManager.logOut();
+            }}>
+            <View>
+              <BlackButton iconName="google-plus" />
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              // manager
+              //   .authorize('facebook', {scopes: 'profile,email'})
+              //   .then(response => {
+              //     console.warn(response);
+              //   })
+              //   .catch(error => {
+              //     console.warn(error);
+              //   })
+              //   .finally(res => {
+              //     console.warn(res);
+              //   });
+              LoginManager.logInWithPermissions([
+                'public_profile',
+                'email',
+              ]).then(
+                result => {
+                  setloading(true);
+                  console.warn(result);
+                  if (result.isCancelled) {
+                    console.warn('Login cancelled');
+                    setloading(false);
+                  } else {
+                    console.warn(result.grantedPermissions);
+                    AccessToken.getCurrentAccessToken()
+                      .then(data => {
+                        console.warn(data);
+                        requests.auth
+                          .social('Facebook', data.accessToken)
+                          .then(res => {
+                            console.warn(res.data);
+                            dispatch(userLoggedIn({...user, ...res.data}));
+                            navigation.navigate('Main');
+                          });
+                        // Clipboard.setString(JSON.stringify(data));
+                        // let request = new GraphRequest('/me', (err, res) => {
+                        //   console.warn(err, res);
+                        // });
+                        // new GraphRequestManager().addRequest(request).start();
+                      })
+                      .finally(() => {
+                        setloading(false);
+                        setTimeout(() => {
+                          LoginManager.logOut();
+                        }, 60000);
+                      });
+                  }
+                },
+                function(error) {
+                  console.warn('Login fail with error: ' + error);
+                  LoginManager.logOut();
+                },
+              );
             }}>
             <View>
               <BlackButton iconName="facebook" />
@@ -165,4 +233,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect()(Login);
+const mapStateToProps = ({user}) => ({
+  user,
+});
+
+export default connect(mapStateToProps)(Login);

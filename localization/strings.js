@@ -1,4 +1,5 @@
 export default {
+  confirm: 'Подтвердить',
   ru: 'Русский',
   uz: 'Узбекский',
   login: 'Вход',
@@ -8,7 +9,8 @@ export default {
   selectLanguage: 'Выбрать язык',
   waiting: 'Ожидается доставка',
   delivered: 'Доставлено',
-  order: 'Заказы',
+  order: 'Заказ',
+  orders: 'Заказы',
   noFavoriteItem: 'Нет любимого предмета',
   article: 'Артикул: ',
   size: 'Размер',
@@ -84,4 +86,9 @@ export default {
   byHighRating: 'По высокий рейтинг',
   byLowRating: 'По низкий рейтинг',
   searchItem: 'Поиск предмета',
+  pickSizeFirst: 'Пожалуйста, выберите размер',
+  provideValidData: 'Пожалуйста, заполните все поля ',
+  delivery: 'Доставка',
+  success: 'Успешно',
+  orderRecieved: 'Ваш заказ принят',
 };

@@ -1,4 +1,4 @@
-package com.primusmall;
+package uz.primusmall.app;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

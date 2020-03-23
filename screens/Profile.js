@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,52 +10,78 @@ import {
 import colors from '../constants/colors';
 import Feather from 'react-native-vector-icons/Feather';
 import TextInputField from '../components/TextInputField';
-import { TouchableWithoutFeedback, FlatList } from 'react-native';
+import {TouchableWithoutFeedback, FlatList} from 'react-native';
 import Order from '../components/Order';
 import strings from '../localization/strings';
-import { connect } from 'react-redux'
-import placeholder from '../assets/black-profile.png'
-import { reducer, SET } from '../utils/state';
+import {connect} from 'react-redux';
+import placeholder from '../assets/black-profile.png';
+import {reducer, SET} from '../utils/state';
 import ImagePicker from 'react-native-image-picker';
 import requests from '../api/api';
+import {userLoaded} from '../redux/actions';
+import RoundButton from '../components/RoundButton';
 
-
-const Profile = ({ user, }) => {
-  let { data: initial, token } = user;
-  const [data, dispatcher] = useReducer(reducer, { ...initial, editing: true });
+const Profile = ({user, dispatch, isAuthorized, navigation}) => {
+  let {data: initial, token, orders} = user;
+  const [data, dispatcher] = useReducer(reducer, {...initial, editing: true});
+  useEffect(() => {
+    if (!isAuthorized) {
+      return;
+    }
+    requests.user
+      .getOrders(token)
+      .then(res => {
+        dispatch(userLoaded({...user, orders: res.data}));
+      })
+      .catch();
+  }, []); // eslint-disable-line
   let updateState = (name, value) => {
-    dispatcher({ type: SET, name, value });
-  }
+    dispatcher({type: SET, name, value});
+  };
   let pickImage = () => {
     const options = {
       title: 'Select Avatar',
     };
-    ImagePicker.showImagePicker(options, (response) => {
-
+    ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
       } else if (response.error) {
       } else if (response.customButton) {
       } else {
-        updateState('image', { uri: response.uri, type: response.type, name: response.fileName })
+        updateState('image', {
+          uri: response.uri,
+          type: response.type,
+          name: response.fileName,
+        });
       }
     });
-  }
+  };
   let applyChanges = () => {
-    let { image: avatar, name, username, user_address, } = data;
-    let newState = { name, username, user_address };
+    let {image: avatar, name, phone, user_address = ''} = data;
+    let newState = {name, phone, user_address};
     if (avatar) {
-      newState.avatar = avatar
+      newState.avatar = avatar;
     }
-    requests.user.updateUser(newState, token).then(res => {
-      console.warn(res.data)
-    }).catch(res => {
-      console.warn(res.response)
-    })
-  }
+    requests.user
+      .updateUser(newState, token)
+      .then(res => {
+        dispatch(userLoaded({...user, data: res.data.data}));
+      })
+      .catch(res => {
+        console.warn(res.response);
+      });
+  };
   if (!initial || !token) {
-    return <View style={styles.centeredContainer}>
-      <Text style={styles.bigText}>{strings.pleaseLogin}</Text>
-    </View>
+    return (
+      <View style={styles.centeredContainer}>
+        <RoundButton
+          isFilled
+          backgroundColor={colors.red}
+          text={'РЕГИСТРАЦИЯ'}
+          textColor={colors.white}
+          onPress={() => navigation.navigate('Login', {})}
+        />
+      </View>
+    );
   }
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -74,34 +100,43 @@ const Profile = ({ user, }) => {
                     borderRadius: 84,
                     height: 84,
                   }}
-                  source={data.avatar ? {
-                    uri:
-                      data.avatar.path,
-                  } : data.image ? data.image : placeholder}
+                  source={
+                    data.avatar
+                      ? {
+                          uri: data.avatar.path,
+                        }
+                      : data.image
+                      ? data.image
+                      : placeholder
+                  }
                 />
               </View>
-              <View
-                style={[
-                  styles.plusIcon,
-                  {
-                    backgroundColor: colors.superLightGray,
-                  },
-                ]}>
-                <Feather name="plus" />
-              </View>
+              {!data.editing && (
+                <View
+                  style={[
+                    styles.plusIcon,
+                    {
+                      backgroundColor: colors.superLightGray,
+                    },
+                  ]}>
+                  <Feather name="plus" />
+                </View>
+              )}
             </View>
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.infoWrap}>
           <TextInputField
             notEntry={data.editing}
-            textValue={data.username}
+            textValue={data.phone}
             legend="Номер телефона"
             iconName="phone"
             textWeight="bold"
             fontSize={18}
             noBorder={data.editing}
-            onChangeText={e => { updateState('username', e) }}
+            onChangeText={e => {
+              updateState('phone', e);
+            }}
           />
           <TextInputField
             notEntry={data.editing}
@@ -111,7 +146,9 @@ const Profile = ({ user, }) => {
             textWeight="bold"
             fontSize={18}
             noBorder={data.editing}
-            onChangeText={e => { updateState('email', e) }}
+            onChangeText={e => {
+              updateState('email', e);
+            }}
           />
           <TextInputField
             notEntry={data.editing}
@@ -121,17 +158,19 @@ const Profile = ({ user, }) => {
             textWeight="bold"
             fontSize={18}
             noBorder={data.editing}
-            onChangeText={e => { updateState('user_address', e) }}
+            onChangeText={e => {
+              updateState('user_address', e);
+            }}
           />
 
-          <TouchableWithoutFeedback onPress={() => {
-            if (!data.editing) {
-              updateState('editing', !data.editing)
-              applyChanges()
-              return;
-            }
-            updateState('editing', !data.editing)
-          }}>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              updateState('editing', !data.editing);
+              if (!data.editing) {
+                applyChanges();
+                return;
+              }
+            }}>
             <Text
               style={[
                 styles.change,
@@ -139,45 +178,39 @@ const Profile = ({ user, }) => {
                   color: data.editing ? colors.blue : colors.orange,
                 },
               ]}>
-              {data.editing ? "Изменить" : "Сохранить"}
+              {data.editing ? 'Изменить' : 'Сохранить'}
             </Text>
           </TouchableWithoutFeedback>
         </View>
-        <View style={styles.orderWrap}>
-          <Text style={styles.order}>{strings.order}</Text>
-          <FlatList
-            keyExtractor={(e, index) => index.toString()}
-            data={[]}
-            renderItem={Order}
-          />
-          <TouchableWithoutFeedback
-            onPress={() => {
-              // console.warn('otahon huyet qimang');
-            }}>
-            <Text
-              style={[
-                styles.change,
-                {
-                  color: colors.blue,
-                },
-              ]}>
-              История заказов
-            </Text>
-          </TouchableWithoutFeedback>
-        </View>
+        {orders && orders.length > 0 ? (
+          <View style={styles.orderWrap}>
+            <Text style={styles.order}>{strings.orders}</Text>
+            <FlatList
+              keyExtractor={(e, index) => index.toString()}
+              data={orders}
+              renderItem={Order}
+            />
+          </View>
+        ) : null}
       </View>
     </ScrollView>
   );
-}
+};
 
-const mapStateToProps = ({ user }) => ({
-  user
+const mapStateToProps = ({user}) => ({
+  user,
+  isAuthorized: !!user.token,
 });
 
-export default connect(mapStateToProps)(Profile)
+export default connect(mapStateToProps)(Profile);
 
 const styles = StyleSheet.create({
-  bigText: { fontSize: 19, fontWeight: 'bold', color: colors.black,textAlign:'center' },
+  bigText: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: colors.black,
+    textAlign: 'center',
+  },
   container: {
     padding: 30,
     flex: 1,
@@ -185,7 +218,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   top: {
-    // width: Dimensions.get("window").width - 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -232,6 +264,6 @@ const styles = StyleSheet.create({
   centeredContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });

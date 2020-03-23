@@ -5294,6 +5294,11 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-native-fbsdk@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-1.1.1.tgz#91a787a046bc90d29907a2269321191cd301517c"
+  integrity sha512-1hlOeQ8rXOYXd7/XKvKXKOsURxHi4EbHWCZO1aIWQWO6pdyK1i/56KuC9KDTGo8TjNTFfA/2H5vJCG040gI75Q==
+
 react-native-gesture-handler@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.4.1.tgz#c38d9e57637b95e221722a79f2bafac62e3aeb21"
@@ -5304,17 +5309,17 @@ react-native-gesture-handler@^1.4.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
-react-native-oauth@^2.1.18:
-  version "2.1.18"
-  resolved "https://registry.yarnpkg.com/react-native-oauth/-/react-native-oauth-2.1.18.tgz#69f2ec104f2c2ab80c7efb6ad179f618bd0ddf22"
-  integrity sha512-+ZNjZAq6J451HlBFvO32AFYzgaDVY9lc9dWg40AYki38sznET/3g2MPO2SIgJ8l7kV3dNddOskYa3IHfbdqL3w==
-  dependencies:
-    invariant "^2.2.1"
-    valib "^2.0.0"
 react-native-image-picker@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-2.1.0.tgz#5e1eec36a8c547236fe54c1b0657e89dd0502360"
   integrity sha512-ng5g9G5GvEsDpNz+ObUYTU2muJ1drngv9U+XEx2haD9iIudh18C5eL1V+a21vDKtccsqqpYX1U393zNzdZl1fA==
+
+"react-native-oauth@git://github.com/orihero/react-native-oauth.git":
+  version "2.1.18"
+  resolved "git://github.com/orihero/react-native-oauth.git#d32c3393dc7e65ac8efcbe02eb0d7c0f14cdb343"
+  dependencies:
+    invariant "^2.2.1"
+    valib "^2.0.0"
 
 react-native-reanimated@^1.2.0:
   version "1.2.0"
