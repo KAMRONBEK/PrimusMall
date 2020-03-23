@@ -59,7 +59,7 @@ const Header = ({
             value={text}
             onChangeText={val => dispatch(setText(val))}
             onSubmitEditing={() => {
-              navigation.navigate('Catalog');
+              navigation.navigate('Catalog', {index: -1, search: text});
             }}
             returnKeyType="search"
           />

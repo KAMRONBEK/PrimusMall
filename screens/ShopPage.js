@@ -3,7 +3,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
 } from 'react-native';
 import api from '../api/api';
