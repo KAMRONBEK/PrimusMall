@@ -21,7 +21,7 @@ import {connect} from 'react-redux';
 
 const Catalog = ({navigation, search}) => {
   const {navigate} = navigation;
-  let index = navigation.getParam('index') || -1;
+  let index = navigation.getParam('index');
   let item = navigation.getParam('item') || {};
   let items = navigation.getParam('childs') || [];
   let {name: title} = item;

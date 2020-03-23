@@ -60,8 +60,8 @@ let requests = {
     getCategory: id => axios.get(`${url}/category/${id}`).then(res => res),
     getStores: () => axios.get(`${url}/stores`).then(res => res),
     getStore: id => axios.get(`${url}/store/${id}`).then(res => res),
-    getStoreProducts: id =>
-      axios.get(`${url}/store/${id}/products`).then(res => res),
+    getStoreProducts: (id, page = 1) =>
+      axios.get(`${url}/store/${id}/products?page=${page}`).then(res => res),
     getProduct: id => axios.get(`${url}/product/${id}`).then(res => res),
     getBanner: () => axios.get(`${url}/banners/main`),
     getShippingTypes: () => axios.get(`${url}/shippingtypelist`),

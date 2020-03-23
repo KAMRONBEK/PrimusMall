@@ -22,27 +22,38 @@ const ShopContent = ({navigation}) => {
       });
     });
   }, [item.id]);
+  let fetchProducts = () => {
+    console.warn('FETCHING');
+    api.main
+      .getStoreProducts(item.id, Math.ceil(products.length / 20) + 1)
+      .then(({data: res}) => {
+        setProducts([...products, ...res.data]);
+      });
+  };
   let {header_image: header, banners} = shop;
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {header && <Image style={styles.image} source={{uri: header.path}} />}
-      {banners && (
-        <FlatList
-          keyExtractor={e => e.id}
-          data={banners}
-          numColumns={2}
-          renderItem={itemProps => <BannerItem {...itemProps} />}
-        />
+    <FlatList
+      ListHeaderComponent={() => (
+        <>
+          {header && <Image style={styles.image} source={{uri: header.path}} />}
+          {banners && (
+            <FlatList
+              keyExtractor={e => e.id}
+              data={banners}
+              numColumns={2}
+              renderItem={itemProps => <BannerItem {...itemProps} />}
+            />
+          )}
+        </>
       )}
-      {products && (
-        <FlatList
-          keyExtractor={e => e.id}
-          data={products}
-          numColumns={2}
-          renderItem={itemProps => <ProductCart {...itemProps} />}
-        />
-      )}
-    </ScrollView>
+      extraData={[header, banners]}
+      keyExtractor={e => e.id}
+      data={products}
+      numColumns={2}
+      onEndReached={fetchProducts}
+      onEndReachedThreshold={0.5}
+      renderItem={itemProps => <ProductCart {...itemProps} />}
+    />
   );
 };
 
