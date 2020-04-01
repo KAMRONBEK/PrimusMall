@@ -8,6 +8,7 @@ import {
     Text,
     TouchableWithoutFeedback,
     View,
+    Modal,
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {connect} from 'react-redux';
@@ -17,6 +18,7 @@ import colors from '../constants/colors';
 import strings from '../localization/strings';
 import {addToCart, toggleFavorite} from '../redux/actions';
 import {warnUser} from '../utils/warn';
+import {ImageViewer} from "react-native-image-zoom-viewer";
 
 const ProductPage = ({navigation, dispatch, favorite}) => {
     let data = navigation.getParam('item');
@@ -33,8 +35,27 @@ const ProductPage = ({navigation, dispatch, favorite}) => {
             .catch(({response}) => console.warn(response));
     }, [data.id]);
     const openStore = () => navigation.navigate('ShopPage', {item: store});
+    const [isOpen, setIsOpen] = useState(false);
+    const [imgUri, setImgUri] = useState('');
+    const fullScreenImageHandler = (uri) => {
+        setIsOpen(true);
+        setImgUri(uri)
+    };
+
     return (
         <React.Fragment>
+            <Modal visible={isOpen} onRequestClose={() => setIsOpen(false)}>
+                <ImageViewer
+                    imageUrls={[{
+                        url: item.preview_image,
+                        width: Dimensions.get('window').width,
+                        height: 300,
+                    }]}
+                    enableSwipeDown={true}
+                    onSwipeDown={() => setIsOpen(false)}
+                    onCancel={() => setIsOpen(false)}
+                />
+            </Modal>
             <ScrollView>
                 <View
                     style={[
@@ -58,16 +79,18 @@ const ProductPage = ({navigation, dispatch, favorite}) => {
                                 itemWidth={Dimensions.get('window').width - 60}
                                 data={[{image: item.preview_image}, ...item.images]}
                                 renderItem={({item: element}) => (
-                                    <Image
-                                        source={{
-                                            uri: element.image,
-                                        }}
-                                        resizeMode={'cover'}
-                                        style={{
-                                            height: 300,
-                                            width: Dimensions.get('window').width - 60,
-                                        }}
-                                    />
+                                    <TouchableWithoutFeedback onPress={() => fullScreenImageHandler(element.image)}>
+                                        <Image
+                                            source={{
+                                                uri: element.image,
+                                            }}
+                                            resizeMode={'cover'}
+                                            style={{
+                                                height: 300,
+                                                width: Dimensions.get('window').width - 60,
+                                            }}
+                                        />
+                                    </TouchableWithoutFeedback>
                                 )}
                                 layoutCardOffset={'18'}
                             />
