@@ -28,7 +28,7 @@ export default function Home({navigation, language}) {
           marginBottom: 15,
         }}>
         <RoundButton
-          onPress={() => navigate('Login', {})}
+          onPress={() => navigate('Main', {})}
           text={strings.ru}
           borderColor={colors.black}
         />
@@ -37,7 +37,7 @@ export default function Home({navigation, language}) {
         text={strings.uz}
         borderColor={colors.black}
         onPress={() => {
-          navigate('Login', {});
+          navigate('Main', {});
         }}
       />
     </View>
