@@ -55,74 +55,74 @@ import Loader from '../screens/Loader';
 // });
 
 const CheckoutStack = createStackNavigator(
-  {
-    Checkout: {
-      screen: Checkout,
-      navigationOptions: {
-        header: null,
-      },
+    {
+        Checkout: {
+            screen: Checkout,
+            navigationOptions: {
+                header: null,
+            },
+        },
+        Checkout_2: {
+            screen: Checkout_2,
+            navigationOptions: {
+                header: null,
+            },
+        },
+        Checkout_3: {
+            screen: Checkout_3,
+            navigationOptions: {
+                header: null,
+            },
+        },
+        Checkout_4: {
+            screen: Checkout_4,
+            navigationOptions: {
+                header: null,
+            },
+        },
+        Checkout_5: {
+            screen: Checkout_5,
+            navigationOptions: {
+                header: null,
+            },
+        },
+        Checkout_6: {
+            screen: Checkout_6,
+            navigationOptions: {
+                header: null,
+            },
+        },
     },
-    Checkout_2: {
-      screen: Checkout_2,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Checkout_3: {
-      screen: Checkout_3,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Checkout_4: {
-      screen: Checkout_4,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Checkout_5: {
-      screen: Checkout_5,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Checkout_6: {
-      screen: Checkout_6,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {},
+    {},
 );
 const BasketStack = createStackNavigator(
-  {
-    Basket: {
-      screen: Basket,
-      navigationOptions: {
-        header: ({navigation}) => (
-          <Header backwardArrow rightRender navigation={navigation} />
-        ),
-      },
+    {
+        Basket: {
+            screen: Basket,
+            navigationOptions: {
+                header: ({navigation}) => (
+                    <Header backwardArrow rightRender navigation={navigation}/>
+                ),
+            },
+        },
+        Checkout: {
+            screen: CheckoutStack,
+            navigationOptions: {
+                header: () => <Header backwardArrow/>,
+            },
+        },
     },
-    Checkout: {
-      screen: CheckoutStack,
-      navigationOptions: {
-        header: () => <Header backwardArrow />,
-      },
+    {
+        defaultNavigationOptions: {
+            header: ({navigation}) => (
+                <Header
+                    simpleTitle={strings.checkout}
+                    backwardArrow
+                    navigation={navigation}
+                />
+            ),
+        },
     },
-  },
-  {
-    defaultNavigationOptions: {
-      header: ({navigation}) => (
-        <Header
-          simpleTitle={strings.checkout}
-          backwardArrow
-          navigation={navigation}
-        />
-      ),
-    },
-  },
 );
 
 // const FilterStack = createStackNavigator(
@@ -149,31 +149,43 @@ const BasketStack = createStackNavigator(
 // );
 
 const ShopStack = createStackNavigator({
-  Shop: {
-    screen: Shop,
-    navigationOptions: {
-      header: ({navigation}) => <Header hasDrawer rightRender />,
+    Shop: {
+        screen: Shop,
+        navigationOptions: {
+            header: ({navigation}) => <Header hasDrawer rightRender/>,
+        },
     },
-  },
-  ShopPage: {
-    screen: ShopPage,
-    navigationOptions: {
-      header: ({navigation}) => <Header backwardArrow rightRender />,
+    ShopPage: {
+        screen: ShopPage,
+        navigationOptions: {
+            header: ({navigation}) => <Header backwardArrow rightRender/>,
+        },
     },
-  },
 });
 
 const ProfileStack = createStackNavigator(
-  {
-    screen: Profile,
-  },
-  {
-    defaultNavigationOptions: {
-      header: ({navigation}) => (
-        <Header hasDrawer rightRender navigation={navigation} />
-      ),
+    {
+        screen: Profile,
+        Login: {
+            screen: Login,
+            navigationOptions: {
+                header: null,
+            },
+        },
+        Register: {
+            screen: Register,
+            navigationOptions: {
+                header: null,
+            },
+        },
     },
-  },
+    {
+        defaultNavigationOptions: {
+            header: ({navigation}) => (
+                <Header hasDrawer rightRender navigation={navigation}/>
+            ),
+        },
+    },
 );
 
 // const RestOfStackNavigator = createStackNavigator({
@@ -210,192 +222,171 @@ const ProfileStack = createStackNavigator(
 // });
 
 let CategoriesStack = createStackNavigator(
-  {
-    Categories: {
-      screen: Categories,
-      navigationOptions: {
-        header: ({navigation}) => (
-          <Header hasDrawer dropdown rightRender navigation={navigation} />
-        ),
-      },
+    {
+        Categories: {
+            screen: Categories,
+            navigationOptions: {
+                header: ({navigation}) => (
+                    <Header hasDrawer dropdown rightRender navigation={navigation}/>
+                ),
+            },
+        },
+        Catalog,
+        Filter,
+        Sort,
     },
-    Catalog,
-    Filter,
-    Sort,
-  },
-  {
-    mode: 'modal',
-    transparentCard: true,
-    cardStyle: {
-      backgroundColor: 'transparent',
-      opacity: 1,
+    {
+        mode: 'modal',
+        transparentCard: true,
+        cardStyle: {
+            backgroundColor: 'transparent',
+            opacity: 1,
+        },
+        navigationOptions: {
+            mode: 'modal',
+        },
+        defaultNavigationOptions: {
+            header: null,
+        },
     },
-    navigationOptions: {
-      mode: 'modal',
-    },
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
 );
 
 let FavoritesStack = createStackNavigator(
-  {
-    Favorite,
-  },
-  {
-    defaultNavigationOptions: {
-      header: ({navigation}) => (
-        <Header hasDrawer dropdown rightRender navigation={navigation} />
-      ),
+    {
+        Favorite,
     },
-  },
+    {
+        defaultNavigationOptions: {
+            header: ({navigation}) => (
+                <Header hasDrawer dropdown rightRender navigation={navigation}/>
+            ),
+        },
+    },
 );
 
 let MainStack = createStackNavigator({
-  Main: {
-    screen: Main,
-    navigationOptions: {
-      header: () => <Header hasDrawer rightRender />,
+    Main: {
+        screen: Main,
+        navigationOptions: {
+            header: () => <Header hasDrawer rightRender/>,
+        },
     },
-  },
-  ShopStack: {
-    screen: ShopStack,
-    navigationOptions: {
-      header: null,
+    ShopStack: {
+        screen: ShopStack,
+        navigationOptions: {
+            header: null,
+        },
     },
-  },
 });
 
 const TabNavigator = createMaterialTopTabNavigator(
-  {
-    Main: {
-      screen: MainStack,
-      navigationOptions: {
-        tabBarIcon: () => {
-          return <Icon name="home" size={25} />;
+    {
+        Main: {
+            screen: MainStack,
+            navigationOptions: {
+                tabBarIcon: () => {
+                    return <Icon name="home" size={25}/>;
+                },
+            },
         },
-      },
-    },
-    Categories: {
-      screen: CategoriesStack,
-      navigationOptions: {
-        tabBarIcon: () => {
-          return <Icon name="list-sort" size={20} />;
+        Categories: {
+            screen: CategoriesStack,
+            navigationOptions: {
+                tabBarIcon: () => {
+                    return <Icon name="list-sort" size={20}/>;
+                },
+            },
         },
-      },
-    },
-    Favorite: {
-      screen: FavoritesStack,
-      navigationOptions: {
-        tabBarIcon: () => {
-          return <Icon name="heart-empty" size={22} />;
+        Favorite: {
+            screen: FavoritesStack,
+            navigationOptions: {
+                tabBarIcon: () => {
+                    return <Icon name="heart-empty" size={22}/>;
+                },
+            },
         },
-      },
-    },
-    Profile: {
-      screen: ProfileStack,
-      navigationOptions: {
-        tabBarIcon: () => {
-          return <Icon name="user-alternative" size={22} />;
+        Profile: {
+            screen: ProfileStack,
+            navigationOptions: {
+                tabBarIcon: () => {
+                    return <Icon name="user-alternative" size={22}/>;
+                },
+            },
         },
-      },
     },
-  },
-  {
-    swipeEnabled: true,
-    lazy: true,
-    tabBarOptions: {
-      showIcon: true,
-      style: {
-        backgroundColor: colors.superLightGray,
-        elevation: 0,
-      },
-      tabStyle: {},
-      showLabel: false,
-      indicatorStyle: {
-        top: 0,
-        width: 50,
-        marginLeft: 20,
-        marginRight: 20,
-        backgroundColor: colors.red,
-        height: 3,
-      },
+    {
+        swipeEnabled: true,
+        lazy: true,
+        tabBarOptions: {
+            showIcon: true,
+            style: {
+                backgroundColor: colors.superLightGray,
+                elevation: 0,
+            },
+            tabStyle: {},
+            showLabel: false,
+            indicatorStyle: {
+                top: 0,
+                width: 50,
+                marginLeft: 20,
+                marginRight: 20,
+                backgroundColor: colors.red,
+                height: 3,
+            },
+        },
+        tabBarPosition: 'bottom',
     },
-    tabBarPosition: 'bottom',
-  },
 );
 
 let ProductStack = createStackNavigator({
-  ProductPage: {
-    screen: ProductPage,
-    navigationOptions: {
-      header: ({navigation}) => (
-        <Header backwardArrow rightRender navigation={navigation} />
-      ),
+    ProductPage: {
+        screen: ProductPage,
+        navigationOptions: {
+            header: ({navigation}) => (
+                <Header backwardArrow rightRender navigation={navigation}/>
+            ),
+        },
     },
-  },
 });
 
 // Drawer
 const DrawerNavigator = createDrawerNavigator(
-  {
-    all: createStackNavigator(
-      {
-        TabNavigator,
-        ProductStack,
-        ShopStack,
-        BasketStack,
-      },
-      {
-        headerMode: 'none',
-        mode: 'modal',
-        transparentCard: true,
-        cardStyle: {
-          backgroundColor: 'transparent',
-          opacity: 1,
+    {
+        Home: {
+            screen: Home,
+            navigationOptions: {
+                header: null,
+            },
         },
-      },
-    ),
-  },
-  {
-    contentComponent: DrawerContent,
-  },
-);
-
-const AuthNavigator = createStackNavigator(
-  {
-    Home: {
-      screen: Home,
-      navigationOptions: {
-        header: null,
-      },
+        all: createStackNavigator(
+            {
+                TabNavigator,
+                ProductStack,
+                ShopStack,
+                BasketStack,
+            },
+            {
+                headerMode: 'none',
+                mode: 'modal',
+                transparentCard: true,
+                cardStyle: {
+                    backgroundColor: 'transparent',
+                    opacity: 1,
+                },
+            },
+        ),
     },
-    Login: {
-      screen: Login,
-      navigationOptions: {
-        header: null,
-      },
+    {
+        contentComponent: DrawerContent,
     },
-    Register: {
-      screen: Register,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  },
-  {
-    // initialRouteName: 'Login',
-  },
 );
 
 const SwitchNavigator = createSwitchNavigator(
-  {
-    Loader,
-    AuthNavigator,
-    DrawerNavigator,
-  },
-  {initialRouteName: 'DrawerNavigator'},
+    {
+        Loader,
+        DrawerNavigator,
+    },
+    {initialRouteName: 'DrawerNavigator'},
 );
 
 const MainNavigator = createAppContainer(SwitchNavigator);
