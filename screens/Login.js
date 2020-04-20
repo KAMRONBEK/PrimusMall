@@ -117,7 +117,7 @@ const Login = ({navigation, dispatch, user}) => {
                     .then(res => {
                       // console.warn(res.data);
                       dispatch(userLoggedIn({...user, ...res.data}));
-                      navigation.navigate('Main');
+                      navigation.navigate('Profile');
                     });
                 })
                 .catch(error => {
@@ -165,7 +165,7 @@ const Login = ({navigation, dispatch, user}) => {
                           .then(res => {
                             console.warn(res.data);
                             dispatch(userLoggedIn({...user, ...res.data}));
-                            navigation.navigate('Main');
+                            navigation.navigate('Profile');
                           });
                         // Clipboard.setString(JSON.stringify(data));
                         // let request = new GraphRequest('/me', (err, res) => {

@@ -71,19 +71,19 @@ let requests = {
   },
   user: {
     getUser: token =>
-      axios.get(`${url}/user/get`, {
+      axios.get(`${url}/user/get?token=${token}`, {
         headers: {Authorization: `Bearer ${token}`},
       }),
     updateUser: (credentials, token) =>
-      axios.post(`${url}/user/update`, formData(credentials), {
+      axios.post(`${url}/user/update?token=${token}`, formData(credentials), {
         headers: {Authorization: `Bearer ${token}`},
       }),
     createOrder: (data, token) =>
-      axios.post(`${url}/user/orders/create`, data, {
+      axios.post(`${url}/user/orders/create?token=${token}`, data, {
         headers: {Authorization: `Bearer ${token}`},
       }),
     getOrders: token =>
-      axios.get(`${url}/user/orders`, {
+      axios.get(`${url}/user/orders?token=${token}`, {
         headers: {Authorization: `Bearer ${token}`},
       }),
   },
