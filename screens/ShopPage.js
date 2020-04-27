@@ -31,32 +31,34 @@ const ShopContent = ({navigation}) => {
           {header && <Image style={styles.image} source={{uri: header.path}} />}
           {banners && (
             <FlatList
-              keyExtractor={(e) => e.id}
+              keyExtractor={e => e.id}
               data={banners}
               numColumns={2}
-              renderItem={(itemProps) => <BannerItem {...itemProps} />}
+              renderItem={itemProps => <BannerItem {...itemProps} />}
             />
           )}
         </>
       )}
       extraData={[header, banners]}
-      keyExtractor={(e) => e.id}
+      keyExtractor={e => e.id}
       data={products}
       numColumns={2}
       onEndReached={fetchProducts}
       onEndReachedThreshold={0.1}
-      renderItem={(itemProps) => <ProductCart {...itemProps} />}
+      renderItem={itemProps => <ProductCart {...itemProps} />}
     />
   );
 };
+
+let {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 20,
   },
   image: {
-    width: Dimensions.get('window').width,
-    height: 300,
+    width,
+    height: width / 2.466,
   },
 });
 

@@ -1,14 +1,21 @@
 import React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import TextInputField from '../components/TextInputField';
 import strings from '../localization/strings';
 import RoundButton from '../components/RoundButton';
 import colors from '../constants/colors';
-import { connect } from 'react-redux';
-import { setShippingAddress } from '../redux/actions/order';
+import {connect} from 'react-redux';
+import {setShippingAddress} from '../redux/actions/order';
 
-const Checkout_3 = ({ navigation, shipping_address, dispatch }) => {
-  let { navigate } = navigation;
+const Checkout_3 = ({navigation, shipping_address, dispatch}) => {
+  let {navigate} = navigation;
+  let confirmAddress = () => {
+    let {state, city, street, house, flat} = shipping_address;
+    if (!state || !city || !street || !house || !flat) {
+      alert(strings.provideValidData);
+    }
+    navigate('Checkout_5', {});
+  };
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Адрес доставки</Text>
@@ -17,35 +24,45 @@ const Checkout_3 = ({ navigation, shipping_address, dispatch }) => {
         legend={strings.city}
         secondaryIconName="close"
         textValue={shipping_address.state}
-        onChangeText={(state) => { dispatch(setShippingAddress({ state })) }}
+        onChangeText={state => {
+          dispatch(setShippingAddress({state}));
+        }}
       />
       <TextInputField
         iconName="compass"
         legend={strings.district}
         secondaryIconName="close"
         textValue={shipping_address.city}
-        onChangeText={(city) => { dispatch(setShippingAddress({ city })) }}
+        onChangeText={city => {
+          dispatch(setShippingAddress({city}));
+        }}
       />
       <TextInputField
         iconName="compass"
         legend={strings.street}
         secondaryIconName="close"
         textValue={shipping_address.street}
-        onChangeText={(street) => { dispatch(setShippingAddress({ street })) }}
+        onChangeText={street => {
+          dispatch(setShippingAddress({street}));
+        }}
       />
       <TextInputField
         iconName="home"
         legend={strings.home}
         secondaryIconName="close"
         textValue={shipping_address.house}
-        onChangeText={(house) => { dispatch(setShippingAddress({ house })) }}
+        onChangeText={house => {
+          dispatch(setShippingAddress({house}));
+        }}
       />
       <TextInputField
         iconName="home"
         legend={strings.apartment}
         secondaryIconName="close"
         textValue={shipping_address.flat}
-        onChangeText={(flat) => { dispatch(setShippingAddress({ flat })) }}
+        onChangeText={flat => {
+          dispatch(setShippingAddress({flat}));
+        }}
       />
       <View
         style={{
@@ -57,7 +74,7 @@ const Checkout_3 = ({ navigation, shipping_address, dispatch }) => {
         backgroundColor={colors.red}
         text={strings.next}
         textColor={colors.white}
-        onPress={() => navigate('Checkout_5', {})}
+        onPress={confirmAddress}
       />
     </ScrollView>
   );
@@ -77,8 +94,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ order: { shipping_address } }) => ({
-  shipping_address
-})
+const mapStateToProps = ({order: {shipping_address}}) => ({
+  shipping_address,
+});
 
 export default connect(mapStateToProps)(Checkout_3);
