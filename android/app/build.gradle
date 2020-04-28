@@ -131,8 +131,8 @@ android {
         applicationId "uz.primusmall.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 173
-        versionName "1.7.3"
+        versionCode 174
+        versionName "1.7.4"
     }
     splits {
         abi {
