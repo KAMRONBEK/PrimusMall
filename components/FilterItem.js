@@ -22,7 +22,7 @@ const FilterItem = ({
 	item
 }) => {
 	let isLink = !!subFilterList;
-	let toggleCheckbox = val => {
+	let toggleCheckbox = () => {
 		if (!filters[id]) {
 			let f = { ...filters, [id]: { [item.slug]: true } };
 			setFilters(f);
@@ -42,7 +42,7 @@ const FilterItem = ({
 		<TouchableWithoutFeedback
 			onPress={() => {
 				if (isLink) {
-					setData(subFilterList, text, true, item);
+					setData(subFilterList, text, true, index, item);
 					return;
 				}
 				toggleCheckbox();
@@ -72,7 +72,7 @@ const FilterItem = ({
 								uncheckedIcon="circle-o"
 								checkedColor="red"
 								value={filters[id] && filters[id][item.slug]}
-								onPress={toggleCheckbox}
+								onValueChange={toggleCheckbox}
 							/>
 						)}
 					</View>

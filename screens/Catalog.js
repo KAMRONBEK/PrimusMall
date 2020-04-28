@@ -50,6 +50,8 @@ const Catalog = ({ navigation, search }) => {
 		if (!endReach) {
 			setLoading(true);
 		}
+		console.warn("FETCHING", { filters });
+
 		let str = normalizeFilters(filters);
 		requests.main
 			.filterProducts(str)
@@ -85,6 +87,8 @@ const Catalog = ({ navigation, search }) => {
 		populateProducts(true);
 	}, [filters]); //eslint-disable-line
 	useEffect(() => {
+		console.warn("SORT INDEX CHANGED", sortIndex);
+
 		setLoading(true);
 		setProducts([]);
 		setFilters({ ...filters, sort: sortList[sortIndex].value });

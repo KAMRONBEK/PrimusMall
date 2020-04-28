@@ -120,9 +120,9 @@ const Filter = ({ navigation }) => {
 					extraData={state.filters}
 					renderItem={({ item, ...rest }) => {
 						if (
-							item.type !== "switch" &&
-							!state.isSubCategory &&
-							(!item.values || item.values.length <= 0)
+							item.type === "switch" ||
+							(!state.isSubCategory &&
+								(!item.values || item.values.length <= 0))
 						)
 							return null;
 						return (
@@ -136,6 +136,7 @@ const Filter = ({ navigation }) => {
 									data,
 									title,
 									isSubCategory,
+									i,
 									parent
 								) => {
 									dispatch({
