@@ -99,7 +99,7 @@ function Main({navigation, category}) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView forceInset={'bottom-only'} style={styles.safeArea}>
       <FlatList
         extraData={state.banner}
         ListHeaderComponent={() => (

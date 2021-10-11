@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import {Dimensions, FlatList, Image, StyleSheet} from 'react-native';
 import api from '../api/api';
 import BannerItem from '../components/BannerItem';
 import ProductCart from '../components/ProductCart';
@@ -14,6 +8,7 @@ const ShopContent = ({navigation}) => {
   let item = navigation.getParam('item');
   const [shop, setShop] = useState({});
   const [products, setProducts] = useState([]);
+  const [pageIndex, setPageIndex] = useState(1);
   useEffect(() => {
     api.main.getStore(item.id).then(({data}) => {
       setShop(data.data);
@@ -23,12 +18,10 @@ const ShopContent = ({navigation}) => {
     });
   }, [item.id]);
   let fetchProducts = () => {
-    console.warn('FETCHING');
-    api.main
-      .getStoreProducts(item.id, Math.ceil(products.length / 20) + 1)
-      .then(({data: res}) => {
-        setProducts([...products, ...res.data]);
-      });
+    api.main.getStoreProducts(item.id, pageIndex + 1).then(({data: res}) => {
+      setProducts([...products, ...res.data]);
+      setPageIndex(pageIndex + 1);
+    });
   };
   let {header_image: header, banners} = shop;
   return (
@@ -51,19 +44,21 @@ const ShopContent = ({navigation}) => {
       data={products}
       numColumns={2}
       onEndReached={fetchProducts}
-      onEndReachedThreshold={0.5}
+      onEndReachedThreshold={0.1}
       renderItem={itemProps => <ProductCart {...itemProps} />}
     />
   );
 };
+
+let {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 20,
   },
   image: {
-    width: Dimensions.get('window').width,
-    height: 300,
+    width,
+    height: width / 2.466,
   },
 });
 

@@ -65,6 +65,7 @@ const BlurFooter = ({
 									color: colors.white
 								}
 							]}
+							numberOfLines={1}
 						>
 							{buttonText}
 						</Text>

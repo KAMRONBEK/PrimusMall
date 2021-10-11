@@ -28,12 +28,18 @@ const Profile = ({user, dispatch, isAuthorized, navigation}) => {
     if (!isAuthorized) {
       return;
     }
+    console.log(token);
     requests.user
       .getOrders(token)
       .then(res => {
         dispatch(userLoaded({...user, orders: res.data}));
+        console.warn(data);
       })
-      .catch();
+      .catch(e => {
+        console.warn(e.response);
+
+        navigation.navigate('Login');
+      });
   }, []); // eslint-disable-line
   let updateState = (name, value) => {
     dispatcher({type: SET, name, value});
