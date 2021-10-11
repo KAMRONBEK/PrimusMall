@@ -6,6 +6,7 @@ import requests from '../api/api'
 import { userLoaded, cartLoaded, favoritesLoaded } from '../redux/actions'
 
 const Loader = ({ user, dispatch, navigation }) => {
+	//minor update
     let bootstrap = async () => {
         let token = await AsyncStorage.getItem('@token');
         let cart = await AsyncStorage.getItem('@cart') || JSON.stringify({ items: [] })
